@@ -1,4 +1,6 @@
 import Mathlib.Analysis.InnerProductSpace.PiL2
+import Mathlib.Analysis.Calculus.Deriv.Prod
+import Mathlib.Analysis.Calculus.Deriv.Comp
 
 /-!
 # Spheres and ellipsoids of revolution
@@ -102,5 +104,25 @@ theorem northPole_mem {a b : ℝ} (hb : b ≠ 0) : vec3 0 0 b ∈ ellipsoid a b 
 theorem southPole_mem {a b : ℝ} (hb : b ≠ 0) : vec3 0 0 (-b) ∈ ellipsoid a b := by
   rw [mem_ellipsoid]
   simp [hb]
+
+/-! ## Coordinates, inner products and derivatives -/
+
+theorem norm_vec3_sq (x y z : ℝ) : ‖vec3 x y z‖ ^ 2 = x ^ 2 + y ^ 2 + z ^ 2 := by
+  rw [norm_sq_eq]
+  simp
+
+theorem inner_vec3 (x y z x' y' z' : ℝ) :
+    inner (vec3 x y z) (vec3 x' y' z') = x * x' + y * y' + z * z' := by
+  simp [vec3, PiLp.inner_apply, Fin.sum_univ_three]
+
+/-- A curve in space is differentiated coordinate by coordinate. -/
+theorem hasDerivAt_vec3 {f g h : ℝ → ℝ} {f' g' h' t : ℝ} (hf : HasDerivAt f f' t)
+    (hg : HasDerivAt g g' t) (hh : HasDerivAt h h' t) :
+    HasDerivAt (fun s => vec3 (f s) (g s) (h s)) (vec3 f' g' h') t := by
+  have hp : HasDerivAt (fun s => ![f s, g s, h s]) ![f', g', h'] t := by
+    rw [hasDerivAt_pi]
+    intro i
+    fin_cases i <;> simpa
+  exact (EuclideanSpace.equiv (Fin 3) ℝ).symm.toContinuousLinearMap.hasFDerivAt.comp_hasDerivAt t hp
 
 end Geodesy

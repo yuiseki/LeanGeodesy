@@ -1,11 +1,13 @@
 # LeanGeodesy
 
-Machine-checked foundations of geodetic coordinates, in Lean 4 with Mathlib.
+Machine-checked foundations of geodetic coordinates and map projections, in
+Lean 4 with Mathlib.
 
-A GPS receiver reports a latitude, a longitude and a height. This library
-proves, from the definitions up, what those three numbers mean: which
-ellipsoid they refer to, why latitude and longitude are different kinds of
-quantity, and how they name a point in space. It is written to understand
+A GPS receiver reports a latitude, a longitude and a height, and a web map
+draws them with Web Mercator. This library proves, from the definitions up,
+what those numbers mean: which ellipsoid they refer to, why latitude and
+longitude are different kinds of quantity, how they name a point in space,
+and what a projection keeps and distorts when it draws that point flat. It is written to understand
 the principles behind GIS, not to compute with them, so every statement is
 a theorem about real numbers and nothing is evaluated in floating point.
 
@@ -28,6 +30,12 @@ WGS84
 GeodeticLatitude  GeodeticLongitude
   ↓
 GeodeticCoordinate
+  ↓
+Curvature
+  ↓
+Projection.Mercator
+  ↓
+Projection.WebMercator
 ```
 
 ### Angle
@@ -148,11 +156,78 @@ The theorems say what makes these coordinates geodetic:
 - on a sphere of radius `R` the point is `(R + h) n` (`toECEF_of_sphere`),
   at distance `R + h` from the centre (`norm_toECEF_of_sphere`).
 
+### Curvature
+
+At a point of the ellipsoid the surface curves differently along the
+meridian and across it. Across it the radius is `N`; along it the radius is
+
+```
+M = a (1 - e²) / (1 - e² sin² φ)^(3/2)
+```
+
+which the library derives rather than states: differentiating the meridian
+point `(N cos φ, N (1 - e²) sin φ)` in `φ` gives `(-M sin φ, M cos φ)`
+(`hasDerivAt_meridianPoint_fst`, `hasDerivAt_meridianPoint_snd`). In space
+the tangent to the meridian has length `M`, the tangent to the parallel has
+length `N cos φ`, and the two are perpendicular. Their ratio is
+`N / M = (1 - e² sin² φ) / (1 - e²)` (`N_div_M`).
+
+### Projection.Mercator
+
+Mercator keeps longitude as the easting and stretches latitude into the
+northing `y = arsinh (tan φ) = ln (tan (π/4 + φ/2))` (`mercatorY`,
+`mercatorY_eq_log_tan`). The library proves that
+
+- `y` is a strictly increasing, odd bijection from the open latitudes
+  `(-π/2, π/2)` onto the real line, inverted by the Gudermannian function
+  `gd y = arctan (sinh y)` (`mercatorY_bijOn`, `gd_mercatorY`,
+  `mercatorY_gd`);
+- `y` tends to infinity at the pole, so the poles can never be drawn
+  (`tendsto_mercatorY_pi_div_two`);
+- its derivative is `sec φ` (`hasDerivAt_mercatorY`).
+
+On a sphere of radius `R` the tangents to the meridian and the parallel
+have lengths `R` and `R cos φ`; on the map their images have lengths
+`R sec φ` and `R`. Both are stretched by `sec φ`, and since both pairs are
+perpendicular, every direction is stretched by exactly `sec φ`
+(`conformal`). That is what conformal means. Scale still grows with
+latitude: distances double at 60° (`scaleFactor_60`) and areas quadruple,
+which is why Greenland looks as large as Africa.
+
+### Projection.WebMercator
+
+Web Mercator (EPSG:3857), the projection of OpenStreetMap and most web maps,
+applies the spherical formulas to WGS 84 latitude and longitude on a sphere
+of radius `a = 6378137 m`.
+
+- Eastings fill `(-π a, π a]` (`x_mem`), with
+  `20037508.34 m < π a < 20037508.35 m` (`halfExtent_bounds`).
+- The map is cut off at `maxLatitude = gd π`, the latitude whose northing
+  is `π a` (`y_maxLatitude`), and a latitude is inside the map exactly when
+  it is within that cut-off (`y_mem_iff`). So the world is a square, which
+  is what lets it be cut into square tiles.
+- At zoom `z` the square is `256 · 2^z` pixels wide; every point of it lands
+  on a pixel (`pixel_mem`), and each zoom level doubles pixel coordinates
+  (`pixelX_succ`).
+- One pixel covers `2π a cos φ / (256 · 2^z)` metres of ground
+  (`groundResolution_eq`), between 156543.03 m and 156543.04 m on the
+  equator at zoom 0 (`groundResolution_zero_bounds`), and half as much at
+  each further zoom level (`groundResolution_succ`).
+
+Measured against the WGS 84 ellipsoid rather than the sphere, Web Mercator
+is not conformal. It stretches the meridian `N / M` times as much as the
+parallel (`scale_ratio`). That ratio is `1` on a sphere
+(`meridianScale_eq_parallelScale_of_sphere`), greater than `1` between the
+poles of any flattened ellipsoid (`meridianScale_gt_parallelScale`), and
+between 1.006739 and 1.006740 on the WGS 84 equator
+(`wgs84_equator_scale_ratio`). So a small circle on the Earth is drawn as an
+ellipse elongated north to south by about 0.67 %.
+
 ## Scope
 
-The library stops at geodetic coordinates. Distances and geodesics on the
-sphere or ellipsoid, the inverse ECEF conversion, datum transformations and
-map projections are outside it.
+Geodesics and distances on the sphere or ellipsoid, the inverse ECEF
+conversion, datum transformations, coordinate reference systems and
+projections other than Mercator are not covered yet.
 
 ## Build
 
@@ -182,4 +257,7 @@ rejects any `sorry` or `admit` in the sources.
 | `LeanGeodesy/GeodeticLongitude.lean` | Longitude as an angle modulo a full turn |
 | `LeanGeodesy/GeodeticLatitude.lean` | Geodetic and geocentric latitude, the meridian ellipse |
 | `LeanGeodesy/GeodeticCoordinate.lean` | Latitude, longitude, height and ECEF |
+| `LeanGeodesy/Curvature.lean` | Meridian radius of curvature and the tangents of the ellipsoid |
+| `LeanGeodesy/Projection/Mercator.lean` | The Mercator function, its inverse, and conformality on the sphere |
+| `LeanGeodesy/Projection/WebMercator.lean` | EPSG:3857, the square world, tiles, and distortion on the ellipsoid |
 | `LeanGeodesy/Axioms.lean` | Axiom audit of the main theorems |

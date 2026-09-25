@@ -5,3 +5,6 @@ import LeanGeodesy.WGS84
 import LeanGeodesy.GeodeticLongitude
 import LeanGeodesy.GeodeticLatitude
 import LeanGeodesy.GeodeticCoordinate
+import LeanGeodesy.Curvature
+import LeanGeodesy.Projection.Mercator
+import LeanGeodesy.Projection.WebMercator
