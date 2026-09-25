@@ -24,6 +24,12 @@ ellipsoid normal of `GeodeticCoordinate`) and proves
   `centralAngle_meridian_add`), along the equator it is the difference in
   longitude the shorter way round (`centralAngle_equator`), and the poles
   are antipodal (`centralAngle_poles`);
+- that great circles are shortest: a path sampled at points in between
+  turns through at least the central angle (`angle_le_sum_angle`,
+  `greatCircleDistance_le_sum`), while the great-circle arc (`greatArc`)
+  turns through exactly the central angle however it is sampled in order
+  (`sum_angle_greatArc`), and every point of it makes the triangle
+  inequality an equality (`angle_add_angle_greatArc`);
 - one minute of latitude on a 6371 km sphere is about 1853 m, the origin of
   the nautical mile (`arcMinute_bounds`).
 
@@ -34,7 +40,8 @@ into their parts along and across a third. The parts across have lengths
 `sin α` and `sin β`, so by Cauchy-Schwarz the inner product is at least
 `cos α cos β - sin α sin β = cos (α + β)`, and `arccos` is decreasing.
 
-Geodesics on the ellipsoid, which are not plane curves, are not covered.
+That the arc is the only path attaining the central angle, and geodesics on
+the ellipsoid, which are not plane curves, are not covered.
 -/
 
 namespace Geodesy
@@ -103,6 +110,121 @@ theorem angle_le_angle_add_angle {u v w : V} (hu : ‖u‖ = 1) (hv : ‖v‖ = 
   calc angle u w = arccos (inner u w) := angle_eq_arccos_inner hu hw
     _ ≤ arccos (cos (α + β)) := arccos_le_arccos_of_le hkey
     _ = α + β := arccos_cos (add_nonneg (angle_nonneg u v) (angle_nonneg v w)) hab
+
+
+/-! ## Great circles are shortest
+
+A path on the sphere from `u` to `w`, sampled at points `u = p₀, p₁, …, pₙ = w`,
+turns through at least the central angle `θ` between `u` and `w`
+(`angle_le_sum_angle`). Along the great-circle arc `greatArc u w` the sum is
+exactly `θ` for every sampling in order (`sum_angle_greatArc`). The length
+of a curve on the sphere is the supremum of such sums, so this is what makes
+the great-circle arc the shortest way from `u` to `w`. -/
+
+/-- Chains of unit vectors: the angle from the first to the last is at most
+the sum of the angles between consecutive ones. -/
+theorem angle_le_sum_angle (p : ℕ → V) (hp : ∀ i, ‖p i‖ = 1) (n : ℕ) :
+    angle (p 0) (p n) ≤ ∑ i ∈ Finset.range n, angle (p i) (p (i + 1)) := by
+  induction n with
+  | zero => simp [angle_self, (norm_ne_zero_iff.mp (by rw [hp 0]; exact one_ne_zero))]
+  | succ n ih =>
+    rw [Finset.sum_range_succ]
+    exact (angle_le_angle_add_angle (hp 0) (hp n) (hp (n + 1))).trans (by linarith)
+
+variable {u w : V}
+
+/-- The unit vector perpendicular to `u` in the plane of `u` and `w`, pointing
+towards `w`. -/
+noncomputable def arcNormal (u w : V) : V := (sin (angle u w))⁻¹ • (w - (inner w u : ℝ) • u)
+
+/-- The great-circle arc from `u` to `w`, at the fraction `t` of the way. -/
+noncomputable def greatArc (u w : V) (t : ℝ) : V :=
+  cos (t * angle u w) • u + sin (t * angle u w) • arcNormal u w
+
+theorem inner_self_of_norm_one {v : V} (hv : ‖v‖ = 1) : (inner v v : ℝ) = 1 := by
+  rw [real_inner_self_eq_norm_sq, hv, one_pow]
+
+theorem greatArc_zero : greatArc u w 0 = u := by simp [greatArc]
+
+section Arc
+
+variable (hu : ‖u‖ = 1) (hw : ‖w‖ = 1) (hs : 0 < sin (angle u w))
+include hu hw hs
+
+omit hw hs in
+theorem inner_u_arcNormal : (inner u (arcNormal u w) : ℝ) = 0 := by
+  rw [arcNormal, real_inner_smul_right, inner_sub_right, real_inner_smul_right,
+    inner_self_of_norm_one hu, real_inner_comm w u]
+  ring
+
+theorem inner_arcNormal_self : (inner (arcNormal u w) (arcNormal u w) : ℝ) = 1 := by
+  have hn : ‖w - (inner w u : ℝ) • u‖ = sin (angle u w) := by
+    rw [norm_sub_inner_smul hw hu, angle_comm]
+  rw [arcNormal, real_inner_smul_left, real_inner_smul_right, real_inner_self_eq_norm_sq, hn]
+  field_simp
+  ring
+
+/-- Points of the arc are the cosine of the angle apart. -/
+theorem inner_greatArc (s t : ℝ) :
+    (inner (greatArc u w s) (greatArc u w t) : ℝ) = cos ((s - t) * angle u w) := by
+  have h1 := inner_u_arcNormal (w := w) hu
+  have h2 := inner_arcNormal_self hu hw hs
+  have h0 := inner_self_of_norm_one hu
+  have h1' : (inner (arcNormal u w) u : ℝ) = 0 := by rw [real_inner_comm]; exact h1
+  simp only [greatArc, inner_add_left, inner_add_right, real_inner_smul_left,
+    real_inner_smul_right, h0, h1, h1', h2]
+  rw [sub_mul, cos_sub]
+  ring
+
+/-- The arc stays on the unit sphere. -/
+theorem norm_greatArc (t : ℝ) : ‖greatArc u w t‖ = 1 := by
+  have h := inner_greatArc hu hw hs t t
+  rw [sub_self, zero_mul, cos_zero, real_inner_self_eq_norm_sq] at h
+  nlinarith [norm_nonneg (greatArc u w t)]
+
+theorem greatArc_one : greatArc u w 1 = w := by
+  have hc : cos (angle u w) = inner w u := by
+    rw [cos_angle, hu, hw, mul_one, div_one, real_inner_comm]
+  rw [greatArc, one_mul, arcNormal, smul_smul, mul_inv_cancel₀ hs.ne', one_smul, hc]
+  abel
+
+/-- Points of the arc at fractions `s` and `t` are `|s - t| θ` apart. -/
+theorem angle_greatArc {s t : ℝ} (hs' : s ∈ Set.Icc (0 : ℝ) 1) (ht : t ∈ Set.Icc (0 : ℝ) 1) :
+    angle (greatArc u w s) (greatArc u w t) = |s - t| * angle u w := by
+  have hθ := angle_nonneg u w
+  have hθπ := angle_le_pi u w
+  rw [angle_eq_arccos_inner (norm_greatArc hu hw hs s) (norm_greatArc hu hw hs t),
+    inner_greatArc hu hw hs, ← cos_abs, abs_mul, abs_of_nonneg hθ]
+  have hst : |s - t| ≤ 1 := abs_le.mpr ⟨by linarith [hs'.1, ht.2], by linarith [hs'.2, ht.1]⟩
+  exact arccos_cos (by positivity) (by nlinarith [abs_nonneg (s - t)])
+
+/-- Sampling the arc in order, the angles add up to exactly `θ`. -/
+theorem sum_angle_greatArc (τ : ℕ → ℝ) (n : ℕ) (hmono : Monotone τ)
+    (h0 : τ 0 = 0) (hn : τ n = 1) (hmem : ∀ i, i ≤ n → τ i ∈ Set.Icc (0 : ℝ) 1) :
+    ∑ i ∈ Finset.range n, angle (greatArc u w (τ i)) (greatArc u w (τ (i + 1))) = angle u w := by
+  have hterm : ∀ i ∈ Finset.range n, angle (greatArc u w (τ i)) (greatArc u w (τ (i + 1))) =
+      (τ (i + 1) - τ i) * angle u w := by
+    intro i hi
+    have hi' := Finset.mem_range.mp hi
+    rw [angle_greatArc hu hw hs (hmem i hi'.le) (hmem (i + 1) hi'), abs_sub_comm,
+      abs_of_nonneg (sub_nonneg.mpr (hmono (Nat.le_succ i)))]
+  rw [Finset.sum_congr rfl hterm, ← Finset.sum_mul, Finset.sum_range_sub, hn, h0, sub_zero,
+    one_mul]
+
+/-- A point of the arc between `u` and `w` makes the triangle inequality an
+equality: the detour through it costs nothing. -/
+theorem angle_add_angle_greatArc {t : ℝ} (ht : t ∈ Set.Icc (0 : ℝ) 1) :
+    angle u (greatArc u w t) + angle (greatArc u w t) w = angle u w := by
+  have h0 : (0 : ℝ) ∈ Set.Icc (0 : ℝ) 1 := ⟨le_rfl, zero_le_one⟩
+  have h1 : (1 : ℝ) ∈ Set.Icc (0 : ℝ) 1 := ⟨zero_le_one, le_rfl⟩
+  have e0 := angle_greatArc hu hw hs h0 ht
+  have e1 := angle_greatArc hu hw hs ht h1
+  rw [greatArc_zero] at e0
+  rw [greatArc_one hu hw hs] at e1
+  rw [e0, e1, zero_sub, abs_neg, abs_of_nonneg ht.1, abs_of_nonpos (by linarith [ht.2])]
+  ring
+
+end Arc
 
 
 end AngleTriangle
@@ -274,6 +396,15 @@ theorem greatCircleDistance_triangle (hR : 0 ≤ R) (φ₁ lam₁ φ₂ lam₂ �
       greatCircleDistance R φ₁ lam₁ φ₂ lam₂ + greatCircleDistance R φ₂ lam₂ φ₃ lam₃ := by
   simp only [greatCircleDistance, ← mul_add]
   exact mul_le_mul_of_nonneg_left (centralAngle_triangle _ _ _ _ _ _) hR
+
+/-- A journey through places `(φ i, lam i)` is never shorter than the
+great-circle distance from the first to the last. -/
+theorem greatCircleDistance_le_sum (hR : 0 ≤ R) (φ lam : ℕ → ℝ) (n : ℕ) :
+    greatCircleDistance R (φ 0) (lam 0) (φ n) (lam n) ≤
+      ∑ i ∈ Finset.range n, greatCircleDistance R (φ i) (lam i) (φ (i + 1)) (lam (i + 1)) := by
+  simp only [greatCircleDistance, ← Finset.mul_sum]
+  exact mul_le_mul_of_nonneg_left
+    (angle_le_sum_angle (fun i => direction (φ i) (lam i)) (fun i => norm_direction _ _) n) hR
 
 /-- On a sphere of radius 6371 km, one minute of latitude is between 1853 m
 and 1854 m. This is where the nautical mile, defined as 1852 m, comes from. -/

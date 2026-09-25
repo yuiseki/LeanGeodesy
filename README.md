@@ -253,6 +253,19 @@ same vector as the ellipsoid normal `GeodeticCoordinate.normal`) and proves
   `centralAngle_meridian_add`), along the equator it is the difference in
   longitude the shorter way round (`centralAngle_equator`), and the poles
   are antipodal (`centralAngle_poles`);
+- that great circles are shortest. A path from `u` to `w` sampled at
+  points in between turns through at least the central angle `θ`
+  (`angle_le_sum_angle`, `greatCircleDistance_le_sum`), by the triangle
+  inequality and induction. The great-circle arc
+  `greatArc u w t = cos (t θ) u + sin (t θ) n`, with `n` the unit vector
+  perpendicular to `u` towards `w`, runs from `u` to `w` on the sphere
+  (`greatArc_zero`, `greatArc_one`, `norm_greatArc`), its points at
+  fractions `s` and `t` are `|s - t| θ` apart (`angle_greatArc`), so
+  however it is sampled in order the angles add up to exactly `θ`
+  (`sum_angle_greatArc`), and each of its points makes the triangle
+  inequality an equality (`angle_add_angle_greatArc`). Since the length
+  of a curve is the supremum of such sums, no path is shorter than the
+  arc;
 - one minute of latitude on a 6371 km sphere is between 1853 m and 1854 m,
   which is where the nautical mile comes from (`arcMinute_bounds`).
 
@@ -304,10 +317,10 @@ other file refers to the labels.
 
 ## Scope
 
-Geodesics on the ellipsoid, the proof that great circles are shortest
-among all curves, the inverse ECEF conversion, datum transformations,
-transformations between CRSs, CRS registries and projections other than
-Mercator are not covered yet.
+Geodesics on the ellipsoid, curve length itself (and so the statement that
+the great-circle arc is the only shortest path), the inverse ECEF
+conversion, datum transformations, transformations between CRSs, CRS
+registries and projections other than Mercator are not covered yet.
 
 ## Build
 

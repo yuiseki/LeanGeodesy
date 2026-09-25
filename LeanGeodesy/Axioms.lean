@@ -390,3 +390,31 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.maxLatitude_deg_bounds' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.maxLatitude_deg_bounds
+
+/-- info: 'Geodesy.Geodesic.angle_le_sum_angle' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.angle_le_sum_angle
+
+/-- info: 'Geodesy.Geodesic.greatArc_one' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.greatArc_one
+
+/-- info: 'Geodesy.Geodesic.norm_greatArc' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.norm_greatArc
+
+/-- info: 'Geodesy.Geodesic.angle_greatArc' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.angle_greatArc
+
+/-- info: 'Geodesy.Geodesic.sum_angle_greatArc' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.sum_angle_greatArc
+
+/-- info: 'Geodesy.Geodesic.angle_add_angle_greatArc' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.angle_add_angle_greatArc
+
+/-- info: 'Geodesy.Geodesic.greatCircleDistance_le_sum' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.greatCircleDistance_le_sum
