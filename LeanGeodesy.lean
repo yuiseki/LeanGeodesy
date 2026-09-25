@@ -6,6 +6,7 @@ import LeanGeodesy.GeodeticLongitude
 import LeanGeodesy.GeodeticLatitude
 import LeanGeodesy.GeodeticCoordinate
 import LeanGeodesy.Curvature
+import LeanGeodesy.MeridianArc
 import LeanGeodesy.Projection.Mercator
 import LeanGeodesy.Projection.WebMercator
 import LeanGeodesy.Projection.CutoffLatitude

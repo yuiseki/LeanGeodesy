@@ -442,3 +442,47 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Geodesic.mem_greatArc_of_angularLength_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Geodesic.mem_greatArc_of_angularLength_eq
+
+/-- info: 'Geodesy.ReferenceEllipsoid.meridianRadius_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.meridianRadius_zero
+
+/-- info: 'Geodesy.ReferenceEllipsoid.meridianRadius_pi_div_two' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.meridianRadius_pi_div_two
+
+/-- info: 'Geodesy.ReferenceEllipsoid.meridianRadius_mem' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.meridianRadius_mem
+
+/-- info: 'Geodesy.ReferenceEllipsoid.meridianRadius_strictMonoOn' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.meridianRadius_strictMonoOn
+
+/-- info: 'Geodesy.ReferenceEllipsoid.hasDerivAt_meridianArc' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.hasDerivAt_meridianArc
+
+/-- info: 'Geodesy.ReferenceEllipsoid.meridianArc_strictMono' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.meridianArc_strictMono
+
+/-- info: 'Geodesy.ReferenceEllipsoid.meridianArc_neg' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.meridianArc_neg
+
+/-- info: 'Geodesy.ReferenceEllipsoid.meridianArc_of_sphere' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.meridianArc_of_sphere
+
+/-- info: 'Geodesy.ReferenceEllipsoid.meridianArc_bounds' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.meridianArc_bounds
+
+/-- info: 'Geodesy.ReferenceEllipsoid.meridianArc_band_lt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.meridianArc_band_lt
+
+/-- info: 'Geodesy.wgs84_first_degree_lt_last_degree' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.wgs84_first_degree_lt_last_degree

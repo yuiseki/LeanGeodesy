@@ -32,7 +32,7 @@ GeodeticLatitude  GeodeticLongitude
   ↓
 GeodeticCoordinate
   ↓
-Curvature
+Curvature ── MeridianArc
   ↓
 Projection.Mercator
   ↓
@@ -177,6 +177,29 @@ point `(N cos φ, N (1 - e²) sin φ)` in `φ` gives `(-M sin φ, M cos φ)`
 the tangent to the meridian has length `M`, the tangent to the parallel has
 length `N cos φ`, and the two are perpendicular. Their ratio is
 `N / M = (1 - e² sin² φ) / (1 - e²)` (`N_div_M`).
+
+### MeridianArc
+
+The distance along the meridian from the equator to latitude `φ` is
+`m(φ) = ∫₀^φ M(ψ) dψ` (`meridianArc`). It has no closed form on an ellipsoid,
+and geodetic software evaluates it by series; the library proves what the
+integral says.
+
+- `m` grows at rate `M` (`hasDerivAt_meridianArc`), so it is strictly
+  increasing (`meridianArc_strictMono`), and it is odd (`meridianArc_neg`).
+- On a sphere it is `a φ` (`meridianArc_of_sphere`).
+- `M` runs from `b² / a` at the equator to `a² / b` at the poles
+  (`meridianRadius_zero`, `meridianRadius_pi_div_two`,
+  `meridianRadius_mem`), so `(b² / a) φ ≤ m(φ) ≤ (a² / b) φ` for `0 ≤ φ`
+  (`meridianArc_bounds`).
+- On a flattened ellipsoid `M` grows strictly towards the pole
+  (`meridianRadius_strictMonoOn`), so a band of latitude of a given width
+  is longer along the meridian the further it is from the equator
+  (`meridianArc_band_lt`). On WGS 84 the first degree north of the equator
+  is shorter than the last degree before the pole
+  (`wgs84_first_degree_lt_last_degree`). Measuring exactly this, in Lapland
+  and in Peru, is how the eighteenth century learned that the Earth is
+  flattened.
 
 ### Projection.Mercator
 
@@ -360,6 +383,7 @@ labels outside `CRS/EPSG.lean`.
 | `LeanGeodesy/GeodeticLatitude.lean` | Geodetic and geocentric latitude, the meridian ellipse |
 | `LeanGeodesy/GeodeticCoordinate.lean` | Latitude, longitude, height and ECEF |
 | `LeanGeodesy/Curvature.lean` | Meridian radius of curvature and the tangents of the ellipsoid |
+| `LeanGeodesy/MeridianArc.lean` | Meridian arc length as an integral of `M`, and its bounds |
 | `LeanGeodesy/Projection/Mercator.lean` | The Mercator function, its inverse, and conformality on the sphere |
 | `LeanGeodesy/Projection/WebMercator.lean` | EPSG:3857, the square world, tiles, and distortion on the ellipsoid |
 | `LeanGeodesy/Projection/CutoffLatitude.lean` | The cut-off latitude is between 85.05° and 85.06° |
