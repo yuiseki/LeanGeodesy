@@ -486,3 +486,23 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.wgs84_first_degree_lt_last_degree' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.wgs84_first_degree_lt_last_degree
+
+/-- info: 'Geodesy.inv_cube_bounds' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.inv_cube_bounds
+
+/-- info: 'Geodesy.integral_poly_sin' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.integral_poly_sin
+
+/-- info: 'Geodesy.ReferenceEllipsoid.meridianRadius_poly_bounds' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.meridianRadius_poly_bounds
+
+/-- info: 'Geodesy.ReferenceEllipsoid.quarterMeridian_bounds' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.quarterMeridian_bounds
+
+/-- info: 'Geodesy.wgs84_quarterMeridian_bounds' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.wgs84_quarterMeridian_bounds

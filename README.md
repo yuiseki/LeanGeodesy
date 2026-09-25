@@ -200,6 +200,15 @@ integral says.
   (`wgs84_first_degree_lt_last_degree`). Measuring exactly this, in Lapland
   and in Peru, is how the eighteenth century learned that the Earth is
   flattened.
+- On WGS 84 the quarter meridian, from the equator to the pole, is between
+  10001960 m and 10001975 m (`wgs84_quarterMeridian_bounds`). The metre was
+  defined in 1791 as a ten-millionth of it, so the Earth turned out about
+  0.02 % larger than intended. The proof squeezes `1 / s³`, with
+  `s = √(1 - e² sin² ψ)`, between the second-order binomial series of
+  `(1 - x)^(-3/2)` and that series plus `3 x³` (`inv_cube_bounds`, checked
+  by factoring out `(1 - s)³`), and integrates the polynomials exactly with
+  `∫₀^{π/2} sin² = π/4` and `∫₀^{π/2} sin⁴ = 3π/16` (`integral_poly_sin`,
+  `quarterMeridian_bounds`).
 
 ### Projection.Mercator
 
@@ -384,6 +393,7 @@ labels outside `CRS/EPSG.lean`.
 | `LeanGeodesy/GeodeticCoordinate.lean` | Latitude, longitude, height and ECEF |
 | `LeanGeodesy/Curvature.lean` | Meridian radius of curvature and the tangents of the ellipsoid |
 | `LeanGeodesy/MeridianArc.lean` | Meridian arc length as an integral of `M`, and its bounds |
+| `LeanGeodesy/QuarterMeridian.lean` | The WGS 84 quarter meridian is 10001960 m to 10001975 m |
 | `LeanGeodesy/Projection/Mercator.lean` | The Mercator function, its inverse, and conformality on the sphere |
 | `LeanGeodesy/Projection/WebMercator.lean` | EPSG:3857, the square world, tiles, and distortion on the ellipsoid |
 | `LeanGeodesy/Projection/CutoffLatitude.lean` | The cut-off latitude is between 85.05° and 85.06° |
