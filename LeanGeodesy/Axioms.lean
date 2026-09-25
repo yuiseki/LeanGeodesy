@@ -374,3 +374,19 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Geodesic.arcMinute_bounds' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Geodesic.arcMinute_bounds
+
+/-- info: 'Geodesy.Projection.cos_maxLatitude' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.cos_maxLatitude
+
+/-- info: 'Geodesy.Projection.exp_pi_bounds' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.exp_pi_bounds
+
+/-- info: 'Geodesy.Projection.inv_cosh_pi_bounds' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.inv_cosh_pi_bounds
+
+/-- info: 'Geodesy.Projection.maxLatitude_deg_bounds' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.maxLatitude_deg_bounds

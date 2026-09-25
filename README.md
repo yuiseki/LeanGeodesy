@@ -211,7 +211,11 @@ of radius `a = 6378137 m`.
 - The map is cut off at `maxLatitude = gd π`, the latitude whose northing
   is `π a` (`y_maxLatitude`), and a latitude is inside the map exactly when
   it is within that cut-off (`y_mem_iff`). So the world is a square, which
-  is what lets it be cut into square tiles.
+  is what lets it be cut into square tiles. The cut-off is between 85.05°
+  and 85.06° (`maxLatitude_deg_bounds`): its cosine is `1 / cosh π`
+  (`cos_maxLatitude`), `e^π` is between 23.14 and 23.15 by the Taylor series
+  (`exp_pi_bounds`), and `cos 85.05° = sin 4.95°` and `cos 85.06° = sin 4.94°`
+  are bounded the same way.
 - At zoom `z` the square is `256 · 2^z` pixels wide; every point of it lands
   on a pixel (`pixel_mem`), and each zoom level doubles pixel coordinates
   (`pixelX_succ`).
@@ -337,6 +341,7 @@ labels outside `CRS/EPSG.lean`.
 | `LeanGeodesy/Curvature.lean` | Meridian radius of curvature and the tangents of the ellipsoid |
 | `LeanGeodesy/Projection/Mercator.lean` | The Mercator function, its inverse, and conformality on the sphere |
 | `LeanGeodesy/Projection/WebMercator.lean` | EPSG:3857, the square world, tiles, and distortion on the ellipsoid |
+| `LeanGeodesy/Projection/CutoffLatitude.lean` | The cut-off latitude is between 85.05° and 85.06° |
 | `LeanGeodesy/Geodesic.lean` | Central angle, haversine, great-circle distance as a metric |
 | `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |
 | `LeanGeodesy/CRS/WGS84.lean` | The WGS 84 geographic CRS |
