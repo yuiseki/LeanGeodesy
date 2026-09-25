@@ -426,3 +426,19 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Geodesic.angle_add_angle_eq_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Geodesic.angle_add_angle_eq_iff
+
+/-- info: 'Geodesy.Geodesic.angle_le_angularLength' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.angle_le_angularLength
+
+/-- info: 'Geodesy.Geodesic.angularLength_greatArc' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.angularLength_greatArc
+
+/-- info: 'Geodesy.Geodesic.angularLength_greatArc_le' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.angularLength_greatArc_le
+
+/-- info: 'Geodesy.Geodesic.mem_greatArc_of_angularLength_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.mem_greatArc_of_angularLength_eq

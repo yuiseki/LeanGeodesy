@@ -2,6 +2,7 @@ import LeanGeodesy.GeodeticCoordinate
 import LeanGeodesy.Projection.Mercator
 import Mathlib.Geometry.Euclidean.Angle.Unoriented.Basic
 import Mathlib.Data.Real.Pi.Bounds
+import Mathlib.Data.ENNReal.Real
 
 /-!
 # Great-circle distance
@@ -28,8 +29,13 @@ ellipsoid normal of `GeodeticCoordinate`) and proves
   turns through at least the central angle (`angle_le_sum_angle`,
   `greatCircleDistance_le_sum`), while the great-circle arc (`greatArc`)
   turns through exactly the central angle however it is sampled in order
-  (`sum_angle_greatArc`), and every point of it makes the triangle
-  inequality an equality (`angle_add_angle_greatArc`);
+  (`sum_angle_greatArc`), and the points that make the triangle inequality
+  an equality are exactly the points of the arc (`angle_add_angle_eq_iff`);
+- that, with the length of a curve defined as the supremum of such sums
+  (`angularLength`), the arc has length exactly the central angle, no curve
+  from `u` to `w` is shorter (`angularLength_greatArc`,
+  `angularLength_greatArc_le`), and a curve on the sphere that is as short
+  runs along the arc (`mem_greatArc_of_angularLength_eq`);
 - one minute of latitude on a 6371 km sphere is about 1853 m, the origin of
   the nautical mile (`arcMinute_bounds`).
 
@@ -40,8 +46,10 @@ into their parts along and across a third. The parts across have lengths
 `sin α` and `sin β`, so by Cauchy-Schwarz the inner product is at least
 `cos α cos β - sin α sin β = cos (α + β)`, and `arccos` is decreasing.
 
-That the arc is the only path attaining the central angle, and geodesics on
-the ellipsoid, which are not plane curves, are not covered.
+The length here is the length of a curve in the sphere with its great-circle
+metric. That it agrees with the arc length of a smooth curve, the integral
+of its speed, is not proved. Geodesics on the ellipsoid, which are not plane
+curves, are not covered.
 -/
 
 namespace Geodesy
@@ -290,6 +298,89 @@ theorem angle_add_angle_eq_iff {p : V} (hp : ‖p‖ = 1) :
 
 end Arc
 
+
+/-! ## Curve length
+
+The length of a curve in a metric space is the supremum, over all ways of
+sampling it in order, of the distances between consecutive samples. On the
+sphere with the great-circle metric the distance is the angle, so the
+(angular) length of a curve `γ` on `[0, 1]` is the supremum of the sums
+above. It can be infinite, so it takes values in `ℝ≥0∞`. -/
+
+/-- `τ 0 = 0 ≤ τ 1 ≤ ... ≤ τ n = 1`: a way of sampling `[0, 1]` in order. -/
+def IsPartition (n : ℕ) (τ : ℕ → ℝ) : Prop := Monotone τ ∧ τ 0 = 0 ∧ τ n = 1
+
+theorem IsPartition.mem {n : ℕ} {τ : ℕ → ℝ} (h : IsPartition n τ) {i : ℕ} (hi : i ≤ n) :
+    τ i ∈ Set.Icc (0 : ℝ) 1 :=
+  ⟨h.2.1 ▸ h.1 (Nat.zero_le i), h.2.2 ▸ h.1 hi⟩
+
+/-- The sum of the angles between consecutive samples. -/
+noncomputable def sampledAngle (γ : ℝ → V) (n : ℕ) (τ : ℕ → ℝ) : ℝ :=
+  ∑ i ∈ Finset.range n, angle (γ (τ i)) (γ (τ (i + 1)))
+
+/-- The angular length of a curve on `[0, 1]`. -/
+noncomputable def angularLength (γ : ℝ → V) : ENNReal :=
+  ⨆ (n : ℕ) (τ : ℕ → ℝ) (_ : IsPartition n τ), ENNReal.ofReal (sampledAngle γ n τ)
+
+theorem sampledAngle_le_angularLength (γ : ℝ → V) {n : ℕ} {τ : ℕ → ℝ} (h : IsPartition n τ) :
+    ENNReal.ofReal (sampledAngle γ n τ) ≤ angularLength γ :=
+  le_iSup₂_of_le n τ (le_iSup_of_le h le_rfl)
+
+/-- Sampling only the two ends. -/
+def endsPartition : ℕ → ℝ := fun i => if i = 0 then 0 else 1
+
+theorem isPartition_ends : IsPartition 1 endsPartition := by
+  refine ⟨fun i j hij => ?_, by simp [endsPartition], by simp [endsPartition]⟩
+  simp only [endsPartition]
+  split_ifs <;> first | (exfalso; omega) | norm_num
+
+/-- Sampling the two ends and the point at `t`. -/
+def throughPartition (t : ℝ) : ℕ → ℝ := fun i => if i = 0 then 0 else if i = 1 then t else 1
+
+theorem isPartition_through {t : ℝ} (ht : t ∈ Set.Icc (0 : ℝ) 1) :
+    IsPartition 2 (throughPartition t) := by
+  refine ⟨fun i j hij => ?_, by simp [throughPartition], by simp [throughPartition]⟩
+  simp only [throughPartition]
+  split_ifs <;> first | (exfalso; omega) | linarith [ht.1, ht.2]
+
+/-- Every curve from `u` to `w` is at least as long as the central angle. -/
+theorem angle_le_angularLength (γ : ℝ → V) (h0 : γ 0 = u) (h1 : γ 1 = w) :
+    ENNReal.ofReal (angle u w) ≤ angularLength γ := by
+  have := sampledAngle_le_angularLength γ isPartition_ends
+  simpa [sampledAngle, endsPartition, h0, h1] using this
+
+section ArcLength
+
+variable (hu : ‖u‖ = 1) (hw : ‖w‖ = 1) (hs : 0 < sin (angle u w))
+include hu hw hs
+
+/-- The great-circle arc is exactly as long as the central angle. -/
+theorem angularLength_greatArc : angularLength (greatArc u w) = ENNReal.ofReal (angle u w) := by
+  refine le_antisymm ?_ (angle_le_angularLength _ (greatArc_zero) (greatArc_one hu hw hs))
+  refine iSup₂_le fun n τ => iSup_le fun h => ?_
+  rw [sampledAngle, sum_angle_greatArc hu hw hs τ n h.1 h.2.1 h.2.2 (fun i hi => h.mem hi)]
+
+/-- So no curve from `u` to `w` is shorter than the great-circle arc. -/
+theorem angularLength_greatArc_le (γ : ℝ → V) (h0 : γ 0 = u) (h1 : γ 1 = w) :
+    angularLength (greatArc u w) ≤ angularLength γ := by
+  rw [angularLength_greatArc hu hw hs]
+  exact angle_le_angularLength γ h0 h1
+
+/-- And a curve on the sphere from `u` to `w` that is as short as the arc runs
+along it: each of its points is a point of the arc. -/
+theorem mem_greatArc_of_angularLength_eq (γ : ℝ → V) (hγ : ∀ t ∈ Set.Icc (0 : ℝ) 1, ‖γ t‖ = 1)
+    (h0 : γ 0 = u) (h1 : γ 1 = w) (hL : angularLength γ = ENNReal.ofReal (angle u w))
+    {t : ℝ} (ht : t ∈ Set.Icc (0 : ℝ) 1) :
+    ∃ s ∈ Set.Icc (0 : ℝ) 1, γ t = greatArc u w s := by
+  have hle := sampledAngle_le_angularLength γ (isPartition_through ht)
+  rw [hL] at hle
+  have hsum : sampledAngle γ 2 (throughPartition t) = angle u (γ t) + angle (γ t) w := by
+    simp [sampledAngle, Finset.sum_range_succ, throughPartition, h0, h1]
+  rw [hsum, ENNReal.ofReal_le_ofReal_iff (angle_nonneg u w)] at hle
+  have hge := angle_le_angle_add_angle hu (hγ t ht) hw
+  exact eq_greatArc_of_angle_add_angle hu hw hs (hγ t ht) (le_antisymm hle hge)
+
+end ArcLength
 
 end AngleTriangle
 

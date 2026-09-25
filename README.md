@@ -262,10 +262,18 @@ same vector as the ellipsoid normal `GeodeticCoordinate.normal`) and proves
   (`greatArc_zero`, `greatArc_one`, `norm_greatArc`), its points at
   fractions `s` and `t` are `|s - t| θ` apart (`angle_greatArc`), so
   however it is sampled in order the angles add up to exactly `θ`
-  (`sum_angle_greatArc`), and each of its points makes the triangle
-  inequality an equality (`angle_add_angle_greatArc`). Since the length
-  of a curve is the supremum of such sums, no path is shorter than the
-  arc;
+  (`sum_angle_greatArc`). The points that make the triangle inequality an
+  equality are exactly the points of the arc (`angle_add_angle_eq_iff`):
+  splitting such a point along `u`, along `n` and the rest, equality forces
+  the first two parts to be `cos α` and `sin α`, and the unit length leaves
+  nothing for the rest;
+- that the arc is the shortest curve. The length of a curve in a metric
+  space is the supremum of such sums over all samplings in order
+  (`angularLength`, valued in `ℝ≥0∞` since it may be infinite). Every curve
+  from `u` to `w` is at least `θ` long (`angle_le_angularLength`), the arc
+  is exactly `θ` long (`angularLength_greatArc`), and a curve on the sphere
+  that is only `θ` long passes only through points of the arc
+  (`mem_greatArc_of_angularLength_eq`);
 - one minute of latitude on a 6371 km sphere is between 1853 m and 1854 m,
   which is where the nautical mile comes from (`arcMinute_bounds`).
 
@@ -317,8 +325,8 @@ other file refers to the labels.
 
 ## Scope
 
-Geodesics on the ellipsoid, curve length itself (and so the statement that
-the great-circle arc is the only shortest path), the inverse ECEF
+Geodesics on the ellipsoid, the agreement of the metric length above with
+the arc length of smooth curves (the integral of speed), the inverse ECEF
 conversion, datum transformations, transformations between CRSs, CRS
 registries and projections other than Mercator are not covered yet.
 
