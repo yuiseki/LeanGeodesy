@@ -8,3 +8,7 @@ import LeanGeodesy.GeodeticCoordinate
 import LeanGeodesy.Curvature
 import LeanGeodesy.Projection.Mercator
 import LeanGeodesy.Projection.WebMercator
+import LeanGeodesy.CRS.Basic
+import LeanGeodesy.CRS.WGS84
+import LeanGeodesy.CRS.WebMercator
+import LeanGeodesy.CRS.EPSG

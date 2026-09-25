@@ -17,3 +17,8 @@ jobs:
           if grep -R -nE '\b(sorry|admit)\b' LeanGeodesy LeanGeodesy.lean; then
             exit 1
           fi
+      - name: Proofs do not depend on EPSG labels
+        run: |
+          if grep -rlE 'CRS\.EPSG|epsg[0-9]+' LeanGeodesy LeanGeodesy.lean | grep -vxE 'LeanGeodesy/CRS/EPSG\.lean|LeanGeodesy\.lean'; then
+            exit 1
+          fi

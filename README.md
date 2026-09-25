@@ -7,9 +7,10 @@ A GPS receiver reports a latitude, a longitude and a height, and a web map
 draws them with Web Mercator. This library proves, from the definitions up,
 what those numbers mean: which ellipsoid they refer to, why latitude and
 longitude are different kinds of quantity, how they name a point in space,
-and what a projection keeps and distorts when it draws that point flat. It is written to understand
-the principles behind GIS, not to compute with them, so every statement is
-a theorem about real numbers and nothing is evaluated in floating point.
+what a projection keeps and distorts when it draws that point flat, and
+what a coordinate reference system is. It is written to understand the
+principles behind GIS, not to compute with them, so every statement is a
+theorem about real numbers and nothing is evaluated in floating point.
 
 The whole library is proved with no `sorry`, no `admit` and no `axiom` of its
 own (see [Axiom audit](#axiom-audit)).
@@ -36,6 +37,8 @@ Curvature
 Projection.Mercator
   ↓
 Projection.WebMercator
+  ↓
+CRS
 ```
 
 ### Angle
@@ -223,11 +226,53 @@ between 1.006739 and 1.006740 on the WGS 84 equator
 (`wgs84_equator_scale_ratio`). So a small circle on the Earth is drawn as an
 ellipse elongated north to south by about 0.67 %.
 
+### CRS
+
+This layer does not formalise the EPSG specifications. It defines what a
+coordinate reference system is as a mathematical object, and then
+constructs WGS 84 and Web Mercator as examples of that definition.
+
+- A `GeographicCRS` is given by its reference ellipsoid. Its coordinates
+  are a geodetic latitude and longitude, and each one means a point of that
+  ellipsoid (`GeographicCRS.toPoint_mem`), the ECEF position at height zero
+  (`toPoint_eq_toECEF`).
+- A `ProjectedCRS` is given by a geographic CRS, a domain of its
+  coordinates, an image in the plane, and a forward map and an inverse
+  that map each into the other and undo each other. The forward map is
+  then a bijection from the domain onto the image (`forward_bijOn`), and
+  projecting and unprojecting round-trip on each side
+  (`unproject_project`, `project_unproject`).
+- Coordinates carry their CRS in their type (`C.Coordinate`,
+  `P.Coordinate`), so a coordinate cannot be read against the wrong system
+  by accident.
+
+The examples:
+
+- `wgs84Geographic` is the geographic CRS on the WGS 84 ellipsoid.
+- `webMercatorCRS` is the projected CRS over it whose forward map is
+  `Projection.webMercator` (`webMercatorCRS_forward`) and whose inverse is
+  built from `Projection.webMercatorInverse`. Its domain is the latitudes
+  within `maxLatitude` (`webMercatorCRS_domain`), and a coordinate is in it
+  exactly when its latitude is strictly between the poles and its
+  projection lands in the square (`mem_webMercatorCRS_domain_iff`), which is
+  the existing `Projection.y_mem_iff` seen from the CRS. The poles are
+  outside it (`northPole_not_mem_webMercatorCRS_domain`).
+
+A datum is modelled only by its ellipsoid. Its realisations, units, axis
+order and areas of use are outside the definition.
+
+EPSG identifiers are kept apart from all of this. `CRS/EPSG.lean` attaches
+`EPSG:4326` to `wgs84Geographic` and `EPSG:3857` to `webMercatorCRS` as
+labels saying which published definitions they are meant to correspond to.
+A label is not a proof of that correspondence. No theorem uses an
+identifier, no EPSG table or constant is assumed, and CI checks that no
+other file refers to the labels.
+
 ## Scope
 
 Geodesics and distances on the sphere or ellipsoid, the inverse ECEF
-conversion, datum transformations, coordinate reference systems and
-projections other than Mercator are not covered yet.
+conversion, datum transformations, transformations between CRSs, CRS
+registries and projections other than Mercator are not covered yet.
 
 ## Build
 
@@ -244,7 +289,8 @@ Lean `v4.16.0`, Mathlib `v4.16.0`.
 axioms (`propext`, `Classical.choice`, `Quot.sound`, which come in through
 Mathlib's real numbers) with `#guard_msgs`. Adding an axiom or leaving a
 proof unfinished changes the printed axioms and fails `lake build`. CI also
-rejects any `sorry` or `admit` in the sources.
+rejects any `sorry` or `admit` in the sources, and any reference to the EPSG
+labels outside `CRS/EPSG.lean`.
 
 ## Files
 
@@ -260,4 +306,8 @@ rejects any `sorry` or `admit` in the sources.
 | `LeanGeodesy/Curvature.lean` | Meridian radius of curvature and the tangents of the ellipsoid |
 | `LeanGeodesy/Projection/Mercator.lean` | The Mercator function, its inverse, and conformality on the sphere |
 | `LeanGeodesy/Projection/WebMercator.lean` | EPSG:3857, the square world, tiles, and distortion on the ellipsoid |
+| `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |
+| `LeanGeodesy/CRS/WGS84.lean` | The WGS 84 geographic CRS |
+| `LeanGeodesy/CRS/WebMercator.lean` | The Web Mercator projected CRS over WGS 84 |
+| `LeanGeodesy/CRS/EPSG.lean` | `EPSG:4326` and `EPSG:3857` as labels, used by no proof |
 | `LeanGeodesy/Axioms.lean` | Axiom audit of the main theorems |

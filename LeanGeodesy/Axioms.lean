@@ -258,3 +258,63 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.wgs84_equator_scale_ratio' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.wgs84_equator_scale_ratio
+
+/-- info: 'Geodesy.GeographicCRS.toPoint_mem' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.GeographicCRS.toPoint_mem
+
+/-- info: 'Geodesy.GeographicCRS.toPoint_eq_toECEF' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.GeographicCRS.toPoint_eq_toECEF
+
+/-- info: 'Geodesy.ProjectedCRS.unproject_project' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ProjectedCRS.unproject_project
+
+/-- info: 'Geodesy.ProjectedCRS.project_unproject' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ProjectedCRS.project_unproject
+
+/-- info: 'Geodesy.ProjectedCRS.forward_bijOn' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ProjectedCRS.forward_bijOn
+
+/-- info: 'Geodesy.ProjectedCRS.inverse_bijOn' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ProjectedCRS.inverse_bijOn
+
+/-- info: 'Geodesy.ProjectedCRS.toPoint_project' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ProjectedCRS.toPoint_project
+
+/-- info: 'Geodesy.wgs84Geographic_toPoint_mem' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.wgs84Geographic_toPoint_mem
+
+/-- info: 'Geodesy.webMercatorCRS_forward' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.webMercatorCRS_forward
+
+/-- info: 'Geodesy.webMercatorCRS_project' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.webMercatorCRS_project
+
+/-- info: 'Geodesy.webMercatorCRS_domain' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.webMercatorCRS_domain
+
+/-- info: 'Geodesy.mem_webMercatorCRS_domain_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.mem_webMercatorCRS_domain_iff
+
+/-- info: 'Geodesy.northPole_not_mem_webMercatorCRS_domain' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.northPole_not_mem_webMercatorCRS_domain
+
+/-- info: 'Geodesy.webMercatorCRS_unproject_project' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.webMercatorCRS_unproject_project
+
+/-- info: 'Geodesy.webMercatorCRS_project_unproject' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.webMercatorCRS_project_unproject
