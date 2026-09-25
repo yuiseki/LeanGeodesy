@@ -224,6 +224,70 @@ theorem angle_add_angle_greatArc {t : ℝ} (ht : t ∈ Set.Icc (0 : ℝ) 1) :
   rw [e0, e1, zero_sub, abs_neg, abs_of_nonneg ht.1, abs_of_nonpos (by linarith [ht.2])]
   ring
 
+/-- Conversely, a point that makes the triangle inequality an equality lies
+on the arc: the arc is the only way from `u` to `w` with no detour. -/
+theorem eq_greatArc_of_angle_add_angle {p : V} (hp : ‖p‖ = 1)
+    (h : angle u p + angle p w = angle u w) :
+    ∃ t ∈ Set.Icc (0 : ℝ) 1, p = greatArc u w t := by
+  set θ := angle u w with hθ
+  set n := arcNormal u w with hn
+  set α := angle u p with hα
+  have hθpos : 0 < θ := by
+    rcases (angle_nonneg u w).lt_or_eq with h' | h'
+    · exact h'
+    · have h0 : sin θ = 0 := by rw [hθ, ← h', sin_zero]
+      linarith
+  have hαθ : α ≤ θ := by linarith [angle_nonneg p w]
+  have hα0 : 0 ≤ α := angle_nonneg u p
+  have huu := inner_self_of_norm_one hu
+  have hun : (inner u n : ℝ) = 0 := inner_u_arcNormal (w := w) hu
+  have hnn : (inner n n : ℝ) = 1 := inner_arcNormal_self hu hw hs
+  have hnu : (inner n u : ℝ) = 0 := by rw [real_inner_comm]; exact hun
+  -- `w = cos θ u + sin θ n`.
+  have hw' : w = cos θ • u + sin θ • n := by
+    have := greatArc_one hu hw hs
+    rw [greatArc, one_mul] at this
+    exact this.symm
+  -- The components of `p` along `u` and `n`.
+  set a := (inner p u : ℝ) with ha
+  set b := (inner p n : ℝ) with hb
+  have ha' : a = cos α := by rw [ha, hα, cos_angle, hu, hp, one_mul, div_one, real_inner_comm]
+  have hpw : (inner p w : ℝ) = cos (θ - α) := by
+    rw [show θ - α = angle p w by linarith, cos_angle, hp, hw, one_mul, div_one]
+  have hb' : b = sin α := by
+    have e : (inner p w : ℝ) = a * cos θ + b * sin θ := by
+      rw [hw', inner_add_right, real_inner_smul_right, real_inner_smul_right]
+      ring
+    rw [hpw, cos_sub, ha'] at e
+    have : sin θ * (b - sin α) = 0 := by linarith
+    rcases mul_eq_zero.mp this with h0 | h0
+    · exact absurd h0 hs.ne'
+    · linarith
+  -- The rest of `p` is perpendicular to `u` and `n`, and has length zero.
+  set r := p - a • u - b • n with hr
+  have hrr : (inner r r : ℝ) = 1 - a ^ 2 - b ^ 2 := by
+    have hpp := inner_self_of_norm_one hp
+    have hup : (inner u p : ℝ) = a := by rw [ha, real_inner_comm]
+    have hnp : (inner n p : ℝ) = b := by rw [hb, real_inner_comm]
+    simp only [hr, inner_sub_left, inner_sub_right, real_inner_smul_left, real_inner_smul_right,
+      hpp, huu, hun, hnu, hnn, hup, hnp, ← ha, ← hb]
+    ring
+  have hr0 : r = 0 := by
+    rw [ha', hb', show 1 - cos α ^ 2 - sin α ^ 2 = 0 by nlinarith [sin_sq_add_cos_sq α]] at hrr
+    exact inner_self_eq_zero.mp hrr
+  refine ⟨α / θ, ⟨div_nonneg hα0 hθpos.le, (div_le_one hθpos).mpr hαθ⟩, ?_⟩
+  rw [greatArc, div_mul_cancel₀ α hθpos.ne', ← hn, ← ha', ← hb']
+  rw [hr, sub_sub, sub_eq_zero] at hr0
+  exact hr0
+
+/-- So the points with no detour are exactly the points of the arc. -/
+theorem angle_add_angle_eq_iff {p : V} (hp : ‖p‖ = 1) :
+    angle u p + angle p w = angle u w ↔ ∃ t ∈ Set.Icc (0 : ℝ) 1, p = greatArc u w t := by
+  constructor
+  · exact eq_greatArc_of_angle_add_angle hu hw hs hp
+  · rintro ⟨t, ht, rfl⟩
+    exact angle_add_angle_greatArc hu hw hs ht
+
 end Arc
 
 

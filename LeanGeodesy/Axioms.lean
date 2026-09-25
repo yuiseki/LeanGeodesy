@@ -418,3 +418,11 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Geodesic.greatCircleDistance_le_sum' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Geodesic.greatCircleDistance_le_sum
+
+/-- info: 'Geodesy.Geodesic.eq_greatArc_of_angle_add_angle' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.eq_greatArc_of_angle_add_angle
+
+/-- info: 'Geodesy.Geodesic.angle_add_angle_eq_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.angle_add_angle_eq_iff
