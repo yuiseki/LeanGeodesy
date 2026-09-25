@@ -36,10 +36,13 @@ Curvature
   ↓
 Projection.Mercator
   ↓
-Projection.WebMercator
+Projection.WebMercator        Geodesic
   ↓
 CRS
 ```
+
+`Geodesic` uses only the layers up to `GeodeticCoordinate` (and the sphere
+point of `Projection.Mercator`), so it sits beside the projections.
 
 ### Angle
 
@@ -226,6 +229,33 @@ between 1.006739 and 1.006740 on the WGS 84 equator
 (`wgs84_equator_scale_ratio`). So a small circle on the Earth is drawn as an
 ellipse elongated north to south by about 0.67 %.
 
+### Geodesic
+
+On a spherical Earth the shortest way between two places runs along a great
+circle, and its length is the radius times the central angle, the angle
+between the two places seen from the centre. The library defines the
+central angle through the unit vectors of the two places (`direction`, the
+same vector as the ellipsoid normal `GeodeticCoordinate.normal`) and proves
+
+- the spherical law of cosines (`cos_centralAngle`) and the haversine
+  formula (`haversine`);
+- that the great-circle distance is a metric: symmetric, zero only between
+  a place and itself, at most half the circumference, and satisfying the
+  triangle inequality (`greatCircleDistance_comm`,
+  `greatCircleDistance_eq_zero_iff`, `greatCircleDistance_le`,
+  `greatCircleDistance_triangle`);
+- the special cases: along a meridian the central angle is the difference
+  in latitude and distances add up (`centralAngle_same_meridian`,
+  `centralAngle_meridian_add`), along the equator it is the difference in
+  longitude the shorter way round (`centralAngle_equator`), and the poles
+  are antipodal (`centralAngle_poles`);
+- one minute of latitude on a 6371 km sphere is between 1853 m and 1854 m,
+  which is where the nautical mile comes from (`arcMinute_bounds`).
+
+The triangle inequality rests on the triangle inequality for angles between
+unit vectors (`angle_le_angle_add_angle`), which Mathlib `v4.16.0` lists only
+as `proof_wanted` and which is proved here.
+
 ### CRS
 
 This layer does not formalise the EPSG specifications. It defines what a
@@ -270,9 +300,10 @@ other file refers to the labels.
 
 ## Scope
 
-Geodesics and distances on the sphere or ellipsoid, the inverse ECEF
-conversion, datum transformations, transformations between CRSs, CRS
-registries and projections other than Mercator are not covered yet.
+Geodesics on the ellipsoid, the proof that great circles are shortest
+among all curves, the inverse ECEF conversion, datum transformations,
+transformations between CRSs, CRS registries and projections other than
+Mercator are not covered yet.
 
 ## Build
 
@@ -306,6 +337,7 @@ labels outside `CRS/EPSG.lean`.
 | `LeanGeodesy/Curvature.lean` | Meridian radius of curvature and the tangents of the ellipsoid |
 | `LeanGeodesy/Projection/Mercator.lean` | The Mercator function, its inverse, and conformality on the sphere |
 | `LeanGeodesy/Projection/WebMercator.lean` | EPSG:3857, the square world, tiles, and distortion on the ellipsoid |
+| `LeanGeodesy/Geodesic.lean` | Central angle, haversine, great-circle distance as a metric |
 | `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |
 | `LeanGeodesy/CRS/WGS84.lean` | The WGS 84 geographic CRS |
 | `LeanGeodesy/CRS/WebMercator.lean` | The Web Mercator projected CRS over WGS 84 |

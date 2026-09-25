@@ -318,3 +318,59 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.webMercatorCRS_project_unproject' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.webMercatorCRS_project_unproject
+
+/-- info: 'Geodesy.Geodesic.angle_le_angle_add_angle' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.angle_le_angle_add_angle
+
+/-- info: 'Geodesy.Geodesic.normal_eq_direction' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.normal_eq_direction
+
+/-- info: 'Geodesy.Geodesic.cos_centralAngle' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.cos_centralAngle
+
+/-- info: 'Geodesy.Geodesic.haversine' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.haversine
+
+/-- info: 'Geodesy.Geodesic.centralAngle_eq_zero_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.centralAngle_eq_zero_iff
+
+/-- info: 'Geodesy.Geodesic.centralAngle_triangle' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.centralAngle_triangle
+
+/-- info: 'Geodesy.Geodesic.centralAngle_same_meridian' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.centralAngle_same_meridian
+
+/-- info: 'Geodesy.Geodesic.centralAngle_meridian_add' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.centralAngle_meridian_add
+
+/-- info: 'Geodesy.Geodesic.centralAngle_equator' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.centralAngle_equator
+
+/-- info: 'Geodesy.Geodesic.centralAngle_poles' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.centralAngle_poles
+
+/-- info: 'Geodesy.Geodesic.greatCircleDistance_le' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.greatCircleDistance_le
+
+/-- info: 'Geodesy.Geodesic.greatCircleDistance_eq_zero_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.greatCircleDistance_eq_zero_iff
+
+/-- info: 'Geodesy.Geodesic.greatCircleDistance_triangle' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.greatCircleDistance_triangle
+
+/-- info: 'Geodesy.Geodesic.arcMinute_bounds' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Geodesic.arcMinute_bounds
