@@ -1270,3 +1270,51 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Tiles.morton_jumps' does not depend on any axioms -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.morton_jumps
+
+/-- info: 'Geodesy.Tiles.hilbertD_lt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.hilbertD_lt
+
+/-- info: 'Geodesy.Tiles.hilbertD_zero' depends on axioms: [propext] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.hilbertD_zero
+
+/-- info: 'Geodesy.Tiles.hilbertD_last' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.hilbertD_last
+
+/-- info: 'Geodesy.Tiles.hilbertD_adj' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.hilbertD_adj
+
+/-- info: 'Geodesy.Tiles.hilbertD_inj' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.hilbertD_inj
+
+/-- info: 'Geodesy.Tiles.hilbertD_injective' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.hilbertD_injective
+
+/-- info: 'Geodesy.Tiles.encode_decode' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.encode_decode
+
+/-- info: 'Geodesy.Tiles.decode_encode' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.decode_encode
+
+/-- info: 'Geodesy.Tiles.hilbert_adjacent' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.hilbert_adjacent
+
+/-- info: 'Geodesy.Tiles.hilbertD_halve' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.hilbertD_halve
+
+/-- info: 'Geodesy.Tiles.parent_hilbert_decode' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.parent_hilbert_decode
+
+/-- info: 'Geodesy.Tiles.morton_not_adjacent' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.morton_not_adjacent
