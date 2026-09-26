@@ -236,7 +236,9 @@ those derivatives are the meridian and parallel tangents of `Curvature`,
 E = M²,   F = 0,   G = (N cos φ)²        (firstFormE_eq, firstFormF_eq, firstFormG_eq)
 ```
 
-`M` and `N cos φ` are the local rulers north-south and east-west. The metric
+`M` and `N cos φ` are the local rulers north-south and east-west. The
+coefficients depend on the latitude only, with `E' = 2 M M'` and
+`G' = -2 N cos φ M sin φ` (`hasDerivAt_firstFormE`, `hasDerivAt_firstFormG`). The metric
 `g(u, v) = M² uφ vφ + (N cos φ)² uλ vλ` (`metric`) is symmetric, bilinear and
 non-negative, and positive definite on the open latitudes
 (`metric_self_eq_zero_iff`); at the poles `G = 0` (`firstFormG_pole`) and the
@@ -288,14 +290,32 @@ velocity.
   (`clairaut_G_mul_lon'`), geodesics have constant speed
   (`geodesic_speed_const`), and with `sin A = N cos φ λ' / speed`
   (`sinAzimuth_eq`), `N cos φ sin A` is constant (`clairaut`).
+- The latitude component comes from the same metric. With
+  `M' = 3 e² sin φ cos φ M / (1 - e² sin² φ)` (`hasDerivAt_meridianRadius`),
+  `E' = 2 M M'` and `G' = -2 N cos φ M sin φ` (`hasDerivAt_firstFormE`,
+  `hasDerivAt_firstFormG`), the velocity pairs with the rate of change of
+  `∂r/∂φ` to `½ E' φ'² + ½ G' λ'²` (`inner_vel_rLat'`), so
+  `⟨r'', ∂r/∂φ⟩ = E φ'' + ½ E' φ'² - ½ G' λ'²` (`inner_acc_rLat`).
+
+The affine geodesic equation on the ellipsoid, in both directions, with its
+conservation law:
+
+| | Equation | Theorem |
+| --- | --- | --- |
+| Latitude | `E φ'' + ½ E' φ'² - ½ G' λ'² = 0` | `geodesic_latitude_equation` |
+| Latitude, Christoffel form | `φ'' + Γ^φ_{φφ} φ'² + Γ^φ_{λλ} λ'² = 0`, `Γ^φ_{φφ} = E'/2E`, `Γ^φ_{λλ} = -G'/2E` | `geodesic_latitude_equation_christoffel` |
+| Longitude | `G λ'' + G' φ' λ' = 0`, that is `d/dt (G λ') = 0` | `geodesic_longitude_equation`, `hasDerivAt_G_mul_lon'` |
+| Clairaut | `G λ'` constant; `N cos φ sin A` constant | `clairaut_G_mul_lon'`, `clairaut` |
+
 - Conversely, where `φ' ≠ 0`, the two conservation laws give back both
-  components of the geodesic equation (`isGeodesicAt_of_conserved`): the
-  latitude component in first-integral form. The expanded second-order
-  latitude equation needs `dM/dφ` and is not derived.
+  components (`isGeodesicAt_of_conserved`): constant speed forces
+  `φ' ⟨r'', ∂r/∂φ⟩ = 0`.
 - Where `φ' = 0` the conservation laws are not enough: a parallel run at
   constant speed satisfies both, but is a geodesic exactly when it is the
   equator (`parallelCurve_isGeodesic_iff`, `equator_isGeodesic`), since its
   acceleration, pointing at the axis, has a component along the meridian.
+  The latitude equation shows the same thing: for a parallel it reduces to
+  `-½ G'(φ₀) = N cos φ₀ M sin φ₀ = 0` (`parallelCurve_latitude_equation_iff`).
 
 Existence of geodesics through a point in a given direction, the inverse
 problem between two points, and geodesic distance on the ellipsoid are not
