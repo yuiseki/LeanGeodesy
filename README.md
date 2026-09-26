@@ -38,6 +38,8 @@ Projection.Mercator
   ↓
 Projection.WebMercator        Geodesic
   ↓
+Projection.Distortion ── Projection.Cylindrical
+  ↓
 CRS (and CRS.Transformation, which uses ECEFInverse and Helmert)
 ```
 
@@ -305,6 +307,41 @@ between 1.006739 and 1.006740 on the WGS 84 equator
 (`wgs84_equator_scale_ratio`). So a small circle on the Earth is drawn as an
 ellipse elongated north to south by about 0.67 %.
 
+### Projection.Distortion and Projection.Cylindrical
+
+A projection sends a ground step north, of length `M` per unit latitude,
+and a ground step east, of length `N cos φ` per unit longitude, to two
+vectors on the map: its partial derivatives. Everything about its local
+distortion follows from them (`LocalDistortion`).
+
+- The scale along the meridian is `h`, along the parallel `k`, and the area
+  scale is the determinant over `M N cos φ`.
+- When the two images are perpendicular a small circle becomes an ellipse
+  with semi-axes `h` and `k`, Tissot's indicatrix (`tissot`), and the area
+  scale is `h k` (`areaScale_of_orthogonal`).
+- A projection is conformal, stretching every step equally, exactly when
+  the images are perpendicular and `h = k` (`isConformal_iff`); its area
+  scale is then `h²` (`areaScale_of_isConformal`).
+
+Cylindrical projections of the sphere, `x = R λ`, `y = R g(φ)`, have
+`k = sec φ` always, `h = |g'(φ)|`, and area scale `|g'(φ)| sec φ`
+(`cylindrical_k`, `cylindrical_h`, `cylindrical_areaScale`).
+
+| Projection | `g(φ)` | `h` | `k` | area scale |
+| --- | --- | --- | --- | --- |
+| Mercator | `arsinh (tan φ)` | `sec φ` | `sec φ` | `sec² φ` |
+| Plate carrée | `φ` | `1` | `sec φ` | `sec φ` |
+| Lambert cylindrical equal-area | `sin φ` | `cos φ` | `sec φ` | `1` |
+
+A cylindrical projection with north up and the equator on the `x` axis
+that is conformal at every latitude is Mercator's
+(`eq_mercatorY_of_isConformal`), one that is equal-area everywhere is
+Lambert's (`eq_sin_of_isEqualArea`), and none is both at any latitude but
+the equator (`eq_zero_of_isConformal_of_isEqualArea`). On an ellipsoid the
+spherical Mercator formulas, as Web Mercator uses them, have scales
+`a sec φ / M` and `a sec φ / N` and are not conformal
+(`ellipsoidalMercator_not_isConformal`).
+
 ### Geodesic
 
 On a spherical Earth the shortest way between two places runs along a great
@@ -448,6 +485,8 @@ labels outside `CRS/EPSG.lean`.
 | `LeanGeodesy/Projection/Mercator.lean` | The Mercator function, its inverse, and conformality on the sphere |
 | `LeanGeodesy/Projection/WebMercator.lean` | EPSG:3857, the square world, tiles, and distortion on the ellipsoid |
 | `LeanGeodesy/Projection/CutoffLatitude.lean` | The cut-off latitude is between 85.05° and 85.06° |
+| `LeanGeodesy/Projection/Distortion.lean` | Scales, area scale, Tissot's indicatrix, conformality |
+| `LeanGeodesy/Projection/Cylindrical.lean` | Mercator, plate carrée and Lambert; uniqueness |
 | `LeanGeodesy/Geodesic.lean` | Central angle, haversine, great-circle distance as a metric |
 | `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |
 | `LeanGeodesy/CRS/WGS84.lean` | The WGS 84 geographic CRS |
