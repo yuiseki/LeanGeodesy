@@ -44,6 +44,13 @@ in `Curvature`), so its squared speed is `M² φ'² + (N cos φ)² λ'²`
 between `dr u` and `dr v` is `g(u, v) / √(I(u) I(v))` (`cos_angle_dr`), and
 they are perpendicular exactly when `g(u, v) = 0` (`metric_eq_zero_iff`).
 
+The area element comes from the same coefficients:
+`√(E G - F²) = M N cos φ` (`areaElement_eq`), so `dA = M N cos φ dφ dλ`. On a
+sphere of radius `R`, `M = N = R` (`meridianRadius_ofSphere`,
+`primeVerticalRadius_ofSphere`), the line element is
+`R² dφ² + R² cos² φ dλ²` (`firstForm_ofSphere`) and the area element
+`R² cos φ` (`areaElement_ofSphere`).
+
 Longitude is an unwrapped real coordinate here: the form is local.
 -/
 
@@ -235,6 +242,56 @@ theorem cos_angle_dr (φ lam : ℝ) (u v : ℝ × ℝ) :
 theorem metric_eq_zero_iff (φ lam : ℝ) (u v : ℝ × ℝ) :
     E.metric φ u v = 0 ↔ (inner (E.dr φ lam u) (E.dr φ lam v) : ℝ) = 0 := by
   rw [inner_dr]
+
+/-! ## The area element -/
+
+/-- The area element `√(E G - F²)`. -/
+noncomputable def areaElement (φ lam : ℝ) : ℝ :=
+  √(E.firstFormE φ lam * E.firstFormG φ lam - E.firstFormF φ lam ^ 2)
+
+/-- `√(E G - F²) = M N cos φ`, so `dA = M N cos φ dφ dλ`. It vanishes at the poles. -/
+theorem areaElement_eq {φ : ℝ} (hc : 0 ≤ cos φ) (lam : ℝ) :
+    E.areaElement φ lam = E.meridianRadius φ * E.primeVerticalRadius φ * cos φ := by
+  rw [areaElement, firstFormE_eq, firstFormF_eq, firstFormG_eq,
+    show E.meridianRadius φ ^ 2 * (E.primeVerticalRadius φ * cos φ) ^ 2 - 0 ^ 2 =
+      (E.meridianRadius φ * E.primeVerticalRadius φ * cos φ) ^ 2 by ring,
+    sqrt_sq (mul_nonneg (mul_pos (E.meridianRadius_pos φ) (E.primeVerticalRadius_pos φ)).le hc)]
+
+theorem areaElement_pos {φ : ℝ} (hc : 0 < cos φ) (lam : ℝ) : 0 < E.areaElement φ lam := by
+  rw [E.areaElement_eq hc.le]
+  exact mul_pos (mul_pos (E.meridianRadius_pos φ) (E.primeVerticalRadius_pos φ)) hc
+
+end ReferenceEllipsoid
+
+/-! ## The sphere -/
+
+namespace ReferenceEllipsoid
+
+variable {R : ℝ} (hR : 0 < R)
+
+theorem e2_ofSphere : (ofSphere R hR).e2 = 0 := ((ofSphere R hR).isSphere_tfae.out 0 2).mp rfl
+
+/-- On a sphere `M = R`. -/
+theorem meridianRadius_ofSphere (φ : ℝ) : (ofSphere R hR).meridianRadius φ = R := by
+  rw [meridianRadius, W2, e2_ofSphere hR]
+  simp [ofSphere]
+
+/-- On a sphere `N = R`. -/
+theorem primeVerticalRadius_ofSphere (φ : ℝ) : (ofSphere R hR).primeVerticalRadius φ = R := by
+  rw [primeVerticalRadius, e2_ofSphere hR]
+  simp [ofSphere]
+
+/-- On a sphere `ds² = R² dφ² + R² cos² φ dλ²`. -/
+theorem firstForm_ofSphere (φ : ℝ) (v : ℝ × ℝ) :
+    (ofSphere R hR).firstForm φ v = R ^ 2 * v.1 ^ 2 + R ^ 2 * cos φ ^ 2 * v.2 ^ 2 := by
+  simp only [firstForm, metric, meridianRadius_ofSphere hR, primeVerticalRadius_ofSphere hR]
+  ring
+
+/-- On a sphere `dA = R² cos φ dφ dλ`. -/
+theorem areaElement_ofSphere {φ : ℝ} (hc : 0 ≤ cos φ) (lam : ℝ) :
+    (ofSphere R hR).areaElement φ lam = R ^ 2 * cos φ := by
+  rw [areaElement_eq _ hc, meridianRadius_ofSphere hR, primeVerticalRadius_ofSphere hR]
+  ring
 
 end ReferenceEllipsoid
 

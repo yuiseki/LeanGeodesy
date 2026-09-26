@@ -1018,3 +1018,27 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.ReferenceEllipsoid.metric_eq_zero_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.ReferenceEllipsoid.metric_eq_zero_iff
+
+/-- info: 'Geodesy.ReferenceEllipsoid.areaElement_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.areaElement_eq
+
+/-- info: 'Geodesy.ReferenceEllipsoid.areaElement_pos' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.areaElement_pos
+
+/-- info: 'Geodesy.ReferenceEllipsoid.meridianRadius_ofSphere' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.meridianRadius_ofSphere
+
+/-- info: 'Geodesy.ReferenceEllipsoid.primeVerticalRadius_ofSphere' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.primeVerticalRadius_ofSphere
+
+/-- info: 'Geodesy.ReferenceEllipsoid.firstForm_ofSphere' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.firstForm_ofSphere
+
+/-- info: 'Geodesy.ReferenceEllipsoid.areaElement_ofSphere' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.areaElement_ofSphere
