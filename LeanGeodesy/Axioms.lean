@@ -874,3 +874,43 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.constantBearing_iff_mercatorLine' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.constantBearing_iff_mercatorLine
+
+/-- info: 'Geodesy.Projection.norm_rhumb_tangent' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.norm_rhumb_tangent
+
+/-- info: 'Geodesy.Projection.rhumb_curveLength' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.rhumb_curveLength
+
+/-- info: 'Geodesy.Projection.parallel_hasBearing_east' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.parallel_hasBearing_east
+
+/-- info: 'Geodesy.Projection.parallel_curveLength' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.parallel_curveLength
+
+/-- info: 'Geodesy.Projection.centralAngle_A_B' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.centralAngle_A_B
+
+/-- info: 'Geodesy.Projection.greatCircleDistance_A_B' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.greatCircleDistance_A_B
+
+/-- info: 'Geodesy.Projection.greatCircle_initial_not_east' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.greatCircle_initial_not_east
+
+/-- info: 'Geodesy.Projection.greatArc_midpoint_not_on_parallel' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.greatArc_midpoint_not_on_parallel
+
+/-- info: 'Geodesy.Projection.greatCircleDistance_lt_rhumb_A_B' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.greatCircleDistance_lt_rhumb_A_B
+
+/-- info: 'Geodesy.Projection.mercator_distance_scaled_A_B' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.mercator_distance_scaled_A_B
