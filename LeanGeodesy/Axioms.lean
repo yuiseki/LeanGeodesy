@@ -734,3 +734,39 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.fromWebMercator_lon' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.fromWebMercator_lon
+
+/-- info: 'Geodesy.fromWebMercator_toWebMercator' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.fromWebMercator_toWebMercator
+
+/-- info: 'Geodesy.toWebMercator_fromWebMercator' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.toWebMercator_fromWebMercator
+
+/-- info: 'Geodesy.webMercatorConversion_bijOn' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.webMercatorConversion_bijOn
+
+/-- info: 'Geodesy.toWebMercator_equator' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.toWebMercator_equator
+
+/-- info: 'Geodesy.toWebMercator_primeMeridian' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.toWebMercator_primeMeridian
+
+/-- info: 'Geodesy.toWebMercator_maxLatitude' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.toWebMercator_maxLatitude
+
+/-- info: 'Geodesy.toWebMercator_neg_maxLatitude' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.toWebMercator_neg_maxLatitude
+
+/-- info: 'Geodesy.toWebMercator_antimeridian' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.toWebMercator_antimeridian
+
+/-- info: 'Geodesy.toWebMercator_x_ne_left' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.toWebMercator_x_ne_left
