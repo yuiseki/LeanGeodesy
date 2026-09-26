@@ -670,3 +670,23 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.tmB_sq_lt_one' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.tmB_sq_lt_one
+
+/-- info: 'Geodesy.Projection.hasDerivAt_mercatorY_arcsin' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.hasDerivAt_mercatorY_arcsin
+
+/-- info: 'Geodesy.Projection.hasDerivAt_tmX_lat' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.hasDerivAt_tmX_lat
+
+/-- info: 'Geodesy.Projection.hasDerivAt_tmX_lon' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.hasDerivAt_tmX_lon
+
+/-- info: 'Geodesy.Projection.hasDerivAt_tmY_lat' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.hasDerivAt_tmY_lat
+
+/-- info: 'Geodesy.Projection.hasDerivAt_tmY_lon' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.hasDerivAt_tmY_lon
