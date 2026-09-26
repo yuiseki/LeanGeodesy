@@ -1,6 +1,7 @@
 import LeanGeodesy.GeodeticCoordinate
 import LeanGeodesy.Curvature
 import Mathlib.Analysis.SpecialFunctions.Complex.Arg
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Inverse
 
 /-!
 # From ECEF back to geodetic coordinates
@@ -22,6 +23,9 @@ point of space. This file goes the other way.
   a root by the intermediate value theorem, and that root with the height
   formula lands on the point; on the axis the point is straight above or
   below the north pole.
+- On a sphere of radius `R` the inverse has a closed form: latitude
+  `arcsin (z / r)`, height `r - R` with `r` the distance from the centre
+  (`sphereInverse`), and it undoes `toECEF` (`sphereInverse_toECEF`).
 -/
 
 namespace Geodesy
@@ -181,5 +185,31 @@ theorem toECEF_surjective (E : ReferenceEllipsoid) :
       sin_pi_div_two, mul_zero, zero_mul, mul_one, hb]
     refine vec3_congr hx.symm hy.symm ?_
     ring
+
+/-- The closed-form inverse on a sphere of radius `R`. -/
+noncomputable def sphereInverse (R : ℝ) (P : E3) : GeodeticCoordinate :=
+  ⟨⟨arcsin (P 2 / ‖P‖), neg_pi_div_two_le_arcsin _, arcsin_le_pi_div_two _⟩,
+    ecefLongitude (P 0) (P 1), ‖P‖ - R⟩
+
+/-- It undoes `toECEF` for points above the centre and off the axis. -/
+theorem sphereInverse_toECEF (E : ReferenceEllipsoid) (hf : E.f = 0) (c : GeodeticCoordinate)
+    (hh : -E.a < c.height) (hc : 0 < cos c.lat.1) :
+    sphereInverse E.a (GeodeticCoordinate.toECEF E c) = c := by
+  have hN : E.primeVerticalRadius c.lat.1 = E.a := by
+    have he : E.e2 = 0 := (E.isSphere_tfae.out 0 2).mp hf
+    simp [ReferenceEllipsoid.primeVerticalRadius, he]
+  have hr := GeodeticCoordinate.norm_toECEF_of_sphere E c hf hh.le
+  have hz : (GeodeticCoordinate.toECEF E c) 2 = (E.a + c.height) * sin c.lat.1 := by
+    rw [GeodeticCoordinate.toECEF_of_sphere E c hf]
+    simp [GeodeticCoordinate.normal, vec3_smul]
+  have hpos : 0 < E.a + c.height := by linarith
+  have hlon := GeodeticCoordinate.ecefLongitude_toECEF E c hc (by rw [hN]; exact hpos)
+  obtain ⟨⟨φ, hφ⟩, lon, h⟩ := c
+  simp only at hr hz hlon hN hpos ⊢
+  simp only [sphereInverse, hr, hz, hlon, GeodeticCoordinate.mk.injEq, add_sub_cancel_left,
+    and_true]
+  apply Subtype.ext
+  simp only
+  rw [mul_div_cancel_left₀ _ hpos.ne', arcsin_sin hφ.1 hφ.2]
 
 end Geodesy
