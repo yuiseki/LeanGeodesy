@@ -39,6 +39,8 @@ Projection.Mercator
 Projection.WebMercator        Geodesic
   ↓
 Projection.Distortion ── Projection.Cylindrical ── Projection.TransverseMercator
+  │                       └─ Projection.EqualArea
+  └─ Projection.Azimuthal (with Geodesic)
   ↓
 CRS (and CRS.Transformation, which uses ECEFInverse and Helmert)
 ```
@@ -342,6 +344,38 @@ spherical Mercator formulas, as Web Mercator uses them, have scales
 `a sec φ / M` and `a sec φ / N` and are not conformal
 (`ellipsoidalMercator_not_isConformal`).
 
+### What each projection keeps
+
+`Projection.EqualArea` and `Projection.Azimuthal` add an equal-area and an
+azimuthal projection, so that what each projection keeps and loses can be
+compared as theorems. Each entry names the theorem.
+
+| Projection | Angles (conformal) | Areas | Azimuths from the centre |
+| --- | --- | --- | --- |
+| Mercator, sphere | kept: `mercator_isConformal` | enlarged: `mercator_areaScale`, `mercator_enlarges_cellArea` | lost: `mercator_not_preserves_azimuth` |
+| Web Mercator, WGS 84 | lost: `ellipsoidalMercator_not_isConformal` | enlarged everywhere: `webMercator_areaScale_gt_one`, `wgs84_webMercator_not_isEqualArea` | lost: `webMercator_not_preserves_azimuth` |
+| Lambert cylindrical equal-area | lost off the equator: `lambertCylindrical_not_isConformal` | kept, locally and for every cell: `lambert_isEqualArea`, `lambertCylindrical_preserves_cellArea` | |
+| Azimuthal equidistant, polar | lost: `azimuthalEquidistant_not_isConformal` | lost: `azimuthalEquidistant_not_isEqualArea` | kept: `azimuthalEquidistant_preserves_azimuth` |
+| Transverse Mercator, sphere | kept: `tm_isConformal` | enlarged off the central meridian: `one_lt_tmScale` | |
+
+The azimuthal equidistant projection centred on the north pole draws each
+point exactly `R` times the horizontal part of the initial velocity of the
+great-circle arc from the pole (`azimuthalEquidistant_preserves_azimuth`,
+using `hasDerivAt_greatArc_zero` and `arcNormal_northPole`), so it also
+keeps distances from the centre
+(`azimuthalEquidistant_preserves_distanceFromCentre`) and along meridians
+(`azimuthalEquidistant_h`), while stretching parallels by
+`(π/2 - φ) / cos φ > 1` (`one_lt_azimuthalEquidistant_k`).
+
+Cell areas are the integral of the area element `R · R cos φ`
+(`sphereCellArea`, `sphereCellArea_eq`). Mercator's enlargement of cells
+comes from `arsinh (tan φ) - sin φ` growing
+(`mercatorY_sub_sin_strictMonoOn`). Web Mercator's area scale on the
+ellipsoid is above `1` because `(1 - e²) cos² φ < (1 - e² sin² φ)²` when
+`0 < e² ≤ 1/3`. Mercator fails to keep azimuths from `(45° N, 0°)` to
+`(45° N, 90° E)`: the map line is due east, while the great circle leaves
+with a northward component.
+
 ### Projection.TransverseMercator
 
 Turning the sphere so that a chosen meridian plays the role of the equator
@@ -539,6 +573,8 @@ labels outside `CRS/EPSG.lean`.
 | `LeanGeodesy/Projection/CutoffLatitude.lean` | The cut-off latitude is between 85.05° and 85.06° |
 | `LeanGeodesy/Projection/Distortion.lean` | Scales, area scale, Tissot's indicatrix, conformality |
 | `LeanGeodesy/Projection/Cylindrical.lean` | Mercator, plate carrée and Lambert; uniqueness |
+| `LeanGeodesy/Projection/EqualArea.lean` | Lambert's equal-area projection, cell areas, Web Mercator's area scale |
+| `LeanGeodesy/Projection/Azimuthal.lean` | Azimuthal equidistant projection; Mercator does not keep azimuths |
 | `LeanGeodesy/Projection/TransverseMercator.lean` | Spherical transverse Mercator, conformality, UTM scale |
 | `LeanGeodesy/Geodesic.lean` | Central angle, haversine, great-circle distance as a metric |
 | `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |
