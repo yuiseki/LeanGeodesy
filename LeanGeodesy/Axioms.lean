@@ -586,3 +586,19 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.CRSTransformation.dist_transform' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.CRSTransformation.dist_transform
+
+/-- info: 'Geodesy.Projection.LocalDistortion.tissot' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.LocalDistortion.tissot
+
+/-- info: 'Geodesy.Projection.LocalDistortion.areaScale_of_orthogonal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.LocalDistortion.areaScale_of_orthogonal
+
+/-- info: 'Geodesy.Projection.LocalDistortion.isConformal_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.LocalDistortion.isConformal_iff
+
+/-- info: 'Geodesy.Projection.LocalDistortion.areaScale_of_isConformal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.LocalDistortion.areaScale_of_isConformal
