@@ -1042,3 +1042,23 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.ReferenceEllipsoid.areaElement_ofSphere' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.ReferenceEllipsoid.areaElement_ofSphere
+
+/-- info: 'Geodesy.Projection.norm_sq_latitudeCurve_eq_firstForm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.norm_sq_latitudeCurve_eq_firstForm
+
+/-- info: 'Geodesy.Projection.rhumb_speed_sq_eq_firstForm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.rhumb_speed_sq_eq_firstForm
+
+/-- info: 'Geodesy.Projection.sphereCellArea_integrand_eq_areaElement' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.sphereCellArea_integrand_eq_areaElement
+
+/-- info: 'Geodesy.Projection.LocalDistortion.ofEllipsoid_lengths_sq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.LocalDistortion.ofEllipsoid_lengths_sq
+
+/-- info: 'Geodesy.Projection.isConformal_iff_firstForm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.isConformal_iff_firstForm

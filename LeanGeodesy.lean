@@ -21,6 +21,7 @@ import LeanGeodesy.Projection.Azimuthal
 import LeanGeodesy.Projection.Rhumb
 import LeanGeodesy.Projection.RhumbVsGreatCircle
 import LeanGeodesy.Projection.Buffer
+import LeanGeodesy.Projection.FirstForm
 import LeanGeodesy.Projection.TransverseMercator
 import LeanGeodesy.Geodesic
 import LeanGeodesy.CRS.Basic
