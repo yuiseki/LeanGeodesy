@@ -1062,3 +1062,39 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.isConformal_iff_firstForm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.isConformal_iff_firstForm
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.hasDerivAt_position' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.hasDerivAt_position
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.inner_vel_rLon' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.inner_vel_rLon
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.inner_velocity_deriv_parallelTangent' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.inner_velocity_deriv_parallelTangent
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.hasDerivAt_G_mul_lon'' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.hasDerivAt_G_mul_lon'
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.clairaut_G_mul_lon'' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.clairaut_G_mul_lon'
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.inner_acc_vel' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.inner_acc_vel
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.geodesic_speed_const' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.geodesic_speed_const
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.sinAzimuth_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.sinAzimuth_eq
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.clairaut' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.clairaut

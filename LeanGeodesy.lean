@@ -24,6 +24,7 @@ import LeanGeodesy.Projection.Buffer
 import LeanGeodesy.Projection.FirstForm
 import LeanGeodesy.Projection.TransverseMercator
 import LeanGeodesy.Geodesic
+import LeanGeodesy.Geodesic.Ellipsoid
 import LeanGeodesy.CRS.Basic
 import LeanGeodesy.CRS.WGS84
 import LeanGeodesy.CRS.WebMercator
