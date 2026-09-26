@@ -638,3 +638,15 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.lambert_isEqualArea' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.lambert_isEqualArea
+
+/-- info: 'Geodesy.Projection.eq_mercatorY_of_isConformal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.eq_mercatorY_of_isConformal
+
+/-- info: 'Geodesy.Projection.eq_sin_of_isEqualArea' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.eq_sin_of_isEqualArea
+
+/-- info: 'Geodesy.Projection.eq_zero_of_isConformal_of_isEqualArea' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.eq_zero_of_isConformal_of_isEqualArea

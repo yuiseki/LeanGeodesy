@@ -1,4 +1,5 @@
 import LeanGeodesy.Projection.Distortion
+import Mathlib.Analysis.Calculus.MeanValue
 
 /-!
 # Cylindrical projections of the sphere
@@ -32,6 +33,14 @@ The choice of `g` decides what is kept:
 Mercator is conformal (`mercator_isConformal`), Lambert's is equal-area
 (`lambert_isEqualArea`), and plate carrée is neither away from the equator,
 but keeps distances along meridians (`plateCarree_h`).
+
+Conversely, a cylindrical projection with north up and the equator on the
+`x` axis that is conformal at every latitude is Mercator's
+(`eq_mercatorY_of_isConformal`), and one that is equal-area at every
+latitude is Lambert's (`eq_sin_of_isEqualArea`): the condition on `g'`
+fixes `g`. No cylindrical projection is both at any latitude but the
+equator (`eq_zero_of_isConformal_of_isEqualArea`), since `sec φ = cos φ`
+only there.
 -/
 
 namespace Geodesy.Projection
@@ -114,6 +123,74 @@ theorem plateCarree_h : (cylindricalDistortion hR 1 hc).h = 1 := by
 /-- Lambert's cylindrical projection (`g = sin`, `g' = cos φ`) is equal-area. -/
 theorem lambert_isEqualArea : (cylindricalDistortion hR (cos φ) hc).IsEqualArea := by
   rw [cylindrical_isEqualArea_iff, abs_of_pos hc]
+
+/-! ## Uniqueness -/
+
+omit hR hc in
+/-- Two functions with the same derivative on the open latitudes that agree at
+the equator agree everywhere between the poles. -/
+theorem eqOn_of_hasDerivAt_eq {f g d : ℝ → ℝ}
+    (hf : ∀ φ ∈ Set.Ioo (-(π / 2)) (π / 2), HasDerivAt f (d φ) φ)
+    (hg : ∀ φ ∈ Set.Ioo (-(π / 2)) (π / 2), HasDerivAt g (d φ) φ) (h0 : f 0 = g 0) :
+    ∀ φ ∈ Set.Ioo (-(π / 2)) (π / 2), f φ = g φ := by
+  have hpi := pi_pos
+  have hd : ∀ φ ∈ Set.Ioo (-(π / 2)) (π / 2), HasDerivAt (fun t => f t - g t) 0 φ := fun φ hφ => by
+    simpa using (hf φ hφ).sub (hg φ hφ)
+  intro φ hφ
+  have hmem0 : (0 : ℝ) ∈ Set.Ioo (-(π / 2)) (π / 2) := ⟨by linarith, by linarith⟩
+  have hconst := Convex.is_const_of_fderivWithin_eq_zero (convex_Ioo _ _)
+    (fun x hx => (hd x hx).differentiableAt.differentiableWithinAt)
+    (fun x hx => by
+      rw [fderivWithin_of_isOpen isOpen_Ioo hx, (hd x hx).hasFDerivAt.fderiv]
+      ext
+      simp) hφ hmem0
+  simp only [h0, sub_self] at hconst
+  linarith
+
+omit hR hc in
+/-- A cylindrical projection with north up that is conformal at every latitude
+between the poles, with the equator at height zero, is Mercator's. -/
+theorem eq_mercatorY_of_isConformal {g g' : ℝ → ℝ} (hR : 0 < R) (h0 : g 0 = 0)
+    (hg : ∀ φ ∈ Set.Ioo (-(π / 2)) (π / 2), HasDerivAt g (g' φ) φ) (hpos : ∀ φ, 0 < g' φ)
+    (hconf : ∀ φ (hφ : φ ∈ Set.Ioo (-(π / 2)) (π / 2)),
+      (cylindricalDistortion hR (g' φ) (cos_pos_of_mem_Ioo hφ)).IsConformal) :
+    ∀ φ ∈ Set.Ioo (-(π / 2)) (π / 2), g φ = mercatorY φ := by
+  refine eqOn_of_hasDerivAt_eq (d := fun φ => 1 / cos φ) (fun φ hφ => ?_)
+    (fun φ hφ => hasDerivAt_mercatorY (cos_pos_of_mem_Ioo hφ)) (by rw [h0, mercatorY_zero])
+  have h := (cylindrical_isConformal_iff hR (g' φ) (cos_pos_of_mem_Ioo hφ)).mp (hconf φ hφ)
+  rw [abs_of_pos (hpos φ)] at h
+  show HasDerivAt g (1 / cos φ) φ
+  rw [← h]
+  exact hg φ hφ
+
+omit hR hc in
+/-- A cylindrical projection with north up that is equal-area at every
+latitude between the poles, with the equator at height zero, is Lambert's. -/
+theorem eq_sin_of_isEqualArea {g g' : ℝ → ℝ} (hR : 0 < R) (h0 : g 0 = 0)
+    (hg : ∀ φ ∈ Set.Ioo (-(π / 2)) (π / 2), HasDerivAt g (g' φ) φ) (hpos : ∀ φ, 0 < g' φ)
+    (harea : ∀ φ (hφ : φ ∈ Set.Ioo (-(π / 2)) (π / 2)),
+      (cylindricalDistortion hR (g' φ) (cos_pos_of_mem_Ioo hφ)).IsEqualArea) :
+    ∀ φ ∈ Set.Ioo (-(π / 2)) (π / 2), g φ = sin φ := by
+  refine eqOn_of_hasDerivAt_eq (d := cos) (fun φ hφ => ?_) (fun φ _ => hasDerivAt_sin φ)
+    (by rw [h0, sin_zero])
+  have h := (cylindrical_isEqualArea_iff hR (g' φ) (cos_pos_of_mem_Ioo hφ)).mp (harea φ hφ)
+  rw [abs_of_pos (hpos φ)] at h
+  rw [← h]
+  exact hg φ hφ
+
+/-- A cylindrical projection that is both conformal and equal-area at a
+latitude between the poles is at the equator. -/
+theorem eq_zero_of_isConformal_of_isEqualArea (hφ : φ ∈ Set.Ioo (-(π / 2)) (π / 2))
+    (hconf : (cylindricalDistortion hR g' hc).IsConformal)
+    (harea : (cylindricalDistortion hR g' hc).IsEqualArea) : φ = 0 := by
+  have h1 := (cylindrical_isConformal_iff hR g' hc).mp hconf
+  have h2 := (cylindrical_isEqualArea_iff hR g' hc).mp harea
+  rw [h1] at h2
+  have hc1 : cos φ = 1 := by
+    field_simp at h2
+    nlinarith [cos_le_one φ]
+  have hpi := pi_pos
+  exact (cos_eq_one_iff_of_lt_of_lt (by linarith [hφ.1]) (by linarith [hφ.2])).mp hc1
 
 omit hR hc in
 /-- The northing functions have the derivatives used above. -/
