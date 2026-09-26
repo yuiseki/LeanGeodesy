@@ -846,3 +846,31 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.webMercator_not_preserves_azimuth' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.webMercator_not_preserves_azimuth
+
+/-- info: 'Geodesy.Projection.hasDerivAt_latitudeCurve' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.hasDerivAt_latitudeCurve
+
+/-- info: 'Geodesy.Projection.northComponent_latitudeCurve' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.northComponent_latitudeCurve
+
+/-- info: 'Geodesy.Projection.eastComponent_latitudeCurve' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.eastComponent_latitudeCurve
+
+/-- info: 'Geodesy.Projection.hasBearing_latitudeCurve_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.hasBearing_latitudeCurve_iff
+
+/-- info: 'Geodesy.Projection.rhumb_hasBearing' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.rhumb_hasBearing
+
+/-- info: 'Geodesy.Projection.mercator_rhumb_on_line' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.mercator_rhumb_on_line
+
+/-- info: 'Geodesy.Projection.constantBearing_iff_mercatorLine' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.constantBearing_iff_mercatorLine
