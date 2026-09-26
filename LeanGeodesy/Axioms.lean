@@ -1098,3 +1098,15 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.clairaut' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.clairaut
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.isGeodesicAt_of_conserved' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.isGeodesicAt_of_conserved
+
+/-- info: 'Geodesy.ReferenceEllipsoid.parallelCurve_isGeodesic_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.parallelCurve_isGeodesic_iff
+
+/-- info: 'Geodesy.ReferenceEllipsoid.equator_isGeodesic' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.equator_isGeodesic

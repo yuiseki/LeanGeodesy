@@ -34,6 +34,16 @@ this is the conservation law it brings:
   azimuth, `p sin A` is constant (`clairaut`): the form used in geodetic
   software, since `sin A = p λ' / ‖r'‖` (`sinAzimuth_eq`).
 
+Conversely, where `φ' ≠ 0` the two conservation laws give back both
+components of the geodesic equation (`isGeodesicAt_of_conserved`): constant
+speed forces `φ' ⟨r'', ∂r/∂φ⟩ = 0`. This is the latitude component in
+first-integral form; the expanded second-order latitude equation needs
+`dM/dφ`, which is not derived here. Where `φ' = 0` the conservation laws
+are not enough, as the parallels show: a parallel run at constant speed
+satisfies both, yet it is a geodesic exactly when it is the equator
+(`parallelCurve_isGeodesic_iff`), because its acceleration points at the
+axis and so has a component `N cos φ M sin φ` along the meridian.
+
 The curve is given by functions `lat`, `lon` with derivatives `lat'`, `lon'`
 and a velocity `dr (lat', lon')` (the actual velocity, `hasDerivAt_position`)
 with derivative `acc` (`EllipsoidCurve`). Longitude is an unwrapped real.
@@ -186,6 +196,102 @@ theorem clairaut (hg : γ.IsGeodesic) {s t : ℝ} (hs : 0 < cos (γ.lat s)) (ht 
   calc _ = (E.primeVerticalRadius (γ.lat s) * cos (γ.lat s)) ^ 2 * γ.lon' s / ‖γ.vel t‖ := by ring
     _ = (E.primeVerticalRadius (γ.lat t) * cos (γ.lat t)) ^ 2 * γ.lon' t / ‖γ.vel t‖ := by rw [h]
     _ = _ := by ring
+
+/-! ## The conservation laws characterise geodesics where `φ' ≠ 0` -/
+
+/-- Where `φ' ≠ 0`, constant `(N cos φ)² λ'` and constant speed make the curve a
+geodesic at that point. -/
+theorem isGeodesicAt_of_conserved
+    (hc : ∀ s t, (E.primeVerticalRadius (γ.lat s) * cos (γ.lat s)) ^ 2 * γ.lon' s =
+      (E.primeVerticalRadius (γ.lat t) * cos (γ.lat t)) ^ 2 * γ.lon' t)
+    (hv : ∀ s t, ‖γ.vel s‖ = ‖γ.vel t‖) {t : ℝ} (hlat : γ.lat' t ≠ 0) :
+    (inner (γ.acc t) (γ.rLat t) : ℝ) = 0 ∧ (inner (γ.acc t) (γ.rLon t) : ℝ) = 0 := by
+  have hlon : (inner (γ.acc t) (γ.rLon t) : ℝ) = 0 := by
+    have h := γ.hasDerivAt_G_mul_lon' t
+    have hfun : (fun s => (E.primeVerticalRadius (γ.lat s) * cos (γ.lat s)) ^ 2 * γ.lon' s) =
+        fun _ => (E.primeVerticalRadius (γ.lat t) * cos (γ.lat t)) ^ 2 * γ.lon' t := by
+      funext s; exact hc s t
+    rw [hfun] at h
+    exact h.unique (hasDerivAt_const t _)
+  have hvel : (inner (γ.acc t) (γ.vel t) : ℝ) = 0 := by
+    have h := HasDerivAt.inner ℝ (γ.hasDerivAt_vel t) (γ.hasDerivAt_vel t)
+    have hfun : (fun s => (inner (E.dr (γ.lat s) (γ.lon s) (γ.lat' s, γ.lon' s))
+        (E.dr (γ.lat s) (γ.lon s) (γ.lat' s, γ.lon' s)) : ℝ)) = fun _ => ‖γ.vel t‖ ^ 2 := by
+      funext s
+      rw [real_inner_self_eq_norm_sq]
+      exact congrArg (· ^ 2) (hv s t)
+    rw [hfun] at h
+    have h0 := h.unique (hasDerivAt_const t _)
+    have e : (inner (E.dr (γ.lat t) (γ.lon t) (γ.lat' t, γ.lon' t)) (γ.acc t) : ℝ) =
+        inner (γ.acc t) (γ.vel t) := real_inner_comm _ _
+    have e2 : (inner (γ.acc t) (E.dr (γ.lat t) (γ.lon t) (γ.lat' t, γ.lon' t)) : ℝ) =
+        inner (γ.acc t) (γ.vel t) := rfl
+    rw [e, e2] at h0
+    linarith
+  refine ⟨?_, hlon⟩
+  rw [inner_acc_vel, hlon, mul_zero, add_zero] at hvel
+  rcases mul_eq_zero.mp hvel with h | h
+  · exact absurd h hlat
+  · exact h
+
+end EllipsoidCurve
+
+/-! ## Parallels -/
+
+/-- The parallel at latitude `φ₀`, run eastward at one radian of longitude per
+unit time. -/
+noncomputable def parallelCurve (φ₀ : ℝ) : EllipsoidCurve E where
+  lat := fun _ => φ₀
+  lon := id
+  lat' := fun _ => 0
+  lon' := fun _ => 1
+  acc := fun s => vec3 (-(E.primeVerticalRadius φ₀ * cos φ₀ * cos s))
+    (-(E.primeVerticalRadius φ₀ * cos φ₀ * sin s)) 0
+  hasDerivAt_lat := fun _ => hasDerivAt_const _ _
+  hasDerivAt_lon := fun t => hasDerivAt_id t
+  hasDerivAt_vel := fun t => by
+    have hfun : (fun s => E.dr φ₀ (id s) (0, 1)) = fun s =>
+        vec3 (-(E.primeVerticalRadius φ₀ * cos φ₀ * sin s)) (E.primeVerticalRadius φ₀ * cos φ₀ * cos s) 0 := by
+      funext s; simp [dr, parallelTangent]
+    show HasDerivAt (fun s => E.dr φ₀ (id s) (0, 1)) _ t
+    rw [hfun]
+    refine hasDerivAt_vec3 ?_ ?_ (hasDerivAt_const _ _)
+    · simpa using ((hasDerivAt_sin t).const_mul (E.primeVerticalRadius φ₀ * cos φ₀)).neg
+    · convert (hasDerivAt_cos t).const_mul (E.primeVerticalRadius φ₀ * cos φ₀) using 1; ring
+
+/-- A parallel strictly between the poles is a geodesic exactly when it is the
+equator: otherwise its acceleration, pointing at the axis, has a component
+`N cos φ₀ · M sin φ₀` along the meridian. -/
+theorem parallelCurve_isGeodesic_iff {φ₀ : ℝ} (hc : 0 < cos φ₀) :
+    (E.parallelCurve φ₀).IsGeodesic ↔ sin φ₀ = 0 := by
+  have hlat : ∀ t, (inner ((E.parallelCurve φ₀).acc t) ((E.parallelCurve φ₀).rLat t) : ℝ) =
+      E.primeVerticalRadius φ₀ * cos φ₀ * (E.meridianRadius φ₀ * sin φ₀) := fun t => by
+    simp only [parallelCurve, EllipsoidCurve.rLat, meridianTangent, inner_vec3, id]
+    have := sin_sq_add_cos_sq t
+    linear_combination (E.primeVerticalRadius φ₀ * cos φ₀ * (E.meridianRadius φ₀ * sin φ₀)) * this
+  have hlon : ∀ t, (inner ((E.parallelCurve φ₀).acc t) ((E.parallelCurve φ₀).rLon t) : ℝ) = 0 :=
+    fun t => by
+      simp only [parallelCurve, EllipsoidCurve.rLon, parallelTangent, inner_vec3, id]
+      ring
+  have hp : 0 < E.primeVerticalRadius φ₀ * cos φ₀ := mul_pos (E.primeVerticalRadius_pos φ₀) hc
+  have hM := E.meridianRadius_pos φ₀
+  constructor
+  · intro hg
+    have h := (hg 0).1
+    rw [hlat] at h
+    rcases mul_eq_zero.mp h with h | h
+    · exact absurd h hp.ne'
+    · rcases mul_eq_zero.mp h with h | h
+      · exact absurd h hM.ne'
+      · exact h
+  · intro hs t
+    exact ⟨by rw [hlat, hs]; ring, hlon t⟩
+
+/-- In particular the equator is a geodesic. -/
+theorem equator_isGeodesic : (E.parallelCurve 0).IsGeodesic :=
+  (E.parallelCurve_isGeodesic_iff (by simp)).mpr sin_zero
+
+namespace EllipsoidCurve
 
 end EllipsoidCurve
 
