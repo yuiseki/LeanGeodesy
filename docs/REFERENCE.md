@@ -509,6 +509,45 @@ code and its numbers are not used in any proof.
   `2π R² (1 - cos (r / R))` it stands for (`capArea_eq`,
   `azimuthalEquidistant_enlarges_buffer`).
 
+### Tiles
+
+Web maps cut the square world into `2^z × 2^z` tiles of `256 × 256` pixels at
+zoom `z`. From the pixel coordinates of `Projection.WebMercator`:
+
+- Integer tile grid (`Tiles.Grid`). A point's tile is its pixel coordinate
+  over 256, rounded down (`tileX`, `tileY`); the tile contains the pixel
+  (`tileX_spec`). On the half-open square `-π a ≤ x < π a`,
+  `-π a < y ≤ π a`, indices lie in `0 .. 2^z - 1` (`tileX_lt`, `tileY_lt`).
+  The antimeridian and the southern cut-off are excluded because the index
+  there would be `2^z` (`tileX_halfExtent`); longitudes are not wrapped.
+  Zooming in doubles pixel coordinates, so the tile at zoom `z + 1` halves to
+  the tile at zoom `z` (`tileX_succ_div_two`, `tileY_succ_div_two`).
+- Quadtree (`Tiles.Quadtree`). A tile at zoom `z + 1` is its parent
+  `(x / 2, y / 2)` together with the quadkey digit `2 (y mod 2) + (x mod 2)`,
+  and this is a bijection `Tile (z + 1) ≃ Tile z × Fin 4` (`split`). The
+  children of a tile are exactly the tiles whose parent it is, and there are
+  four (`parent_eq_iff`, `card_children`). Repeating the split, tiles at zoom
+  `z` are quadtree paths of length `z`, coarsest digit first
+  (`tileEquivPath`, `tileEquivPath_succ`).
+- Morton codes (`Tiles.Morton`). The code of a tile at zoom `z + 1` is four
+  times its parent's code plus its child digit (`mortonEquiv_succ_val`), a
+  bijection onto the numbers below `4^z` (`mortonEquiv`). Tiles, quadtree
+  paths and Morton codes are in bijection and the triangle commutes
+  (`tile_path_morton_bijective`, `pathEquivMorton`, `mortonEquiv_eq_trans`).
+  The code is the path read in base 4 (`mortonEquiv_val_eq_path`), it
+  interleaves the bits of column and row (`morton_eq_interleave`), and
+  division by 4 gives the parent with the child digit as remainder
+  (`morton_div_four`, `morton_mod_four`). The Z-order jumps: at zoom 1 the
+  codes 1 and 2 are `(1, 0)` and `(0, 1)` (`morton_jumps`).
+- Back to Web Mercator. Every point of the half-open square lies in a tile at
+  each zoom (`tileOfPoint`), every tile contains a point
+  (`tileOfPoint_surjective`), and a point's tile at zoom `z + 1` has its tile
+  at zoom `z` as parent (`parent_tileOfPoint`), so its Morton code divided by
+  4 is the code one level up (`morton_tileOfPoint_succ_div_four`).
+
+The Hilbert curve, which orders the same quadtree so that consecutive tiles
+share an edge, is not covered.
+
 ### Projection.TransverseMercator
 
 Turning the sphere so that a chosen meridian plays the role of the equator
@@ -688,6 +727,9 @@ other file refers to the labels.
 | `LeanGeodesy/Projection/RhumbVsGreatCircle.lean` | Curve length; great circle versus rhumb line from 45° N 0° to 45° N 90° E |
 | `LeanGeodesy/Projection/Buffer.lean` | Azimuthal equidistant buffers: exact circles and disks, enlarged areas |
 | `LeanGeodesy/Projection/FirstForm.lean` | The first fundamental form behind rhumb lines, cell areas and conformality |
+| `LeanGeodesy/Tiles/Grid.lean` | The integer tile grid of Web Mercator |
+| `LeanGeodesy/Tiles/Quadtree.lean` | The tile quadtree; tiles as quadtree paths |
+| `LeanGeodesy/Tiles/Morton.lean` | Morton codes; tiles, paths and codes in bijection |
 | `LeanGeodesy/Projection/TransverseMercator.lean` | Spherical transverse Mercator, conformality, UTM scale |
 | `LeanGeodesy/Geodesic.lean` | Central angle, haversine, great-circle distance as a metric |
 | `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |
