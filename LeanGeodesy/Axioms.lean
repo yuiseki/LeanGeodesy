@@ -1170,3 +1170,15 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.isGeodesic_iff_equations' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.isGeodesic_iff_equations
+
+/-- info: 'Geodesy.Projection.sqrt_firstForm_lat' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.sqrt_firstForm_lat
+
+/-- info: 'Geodesy.Projection.norm_deriv_meridian' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.norm_deriv_meridian
+
+/-- info: 'Geodesy.Projection.meridianArc_eq_curveLength' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.meridianArc_eq_curveLength

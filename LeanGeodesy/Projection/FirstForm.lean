@@ -1,6 +1,7 @@
 import LeanGeodesy.FirstFundamentalForm
 import LeanGeodesy.Projection.RhumbVsGreatCircle
 import LeanGeodesy.Projection.EqualArea
+import LeanGeodesy.MeridianArc
 
 /-!
 # The first fundamental form behind distortion, rhumb lines and areas
@@ -23,6 +24,9 @@ Short connections between `FirstFundamentalForm` and the projection files.
   this form (`ellipsoidalMercatorDistortion_eq_ofEllipsoid`). Its area scale
   is the map Jacobian's area over the first fundamental form's area element,
   `|det (dLat, dLon)| / √(E G - F²)` (`areaScale_ofEllipsoid`).
+- The meridian moves at speed `√I(1, 0) = M` (`norm_deriv_meridian`,
+  `sqrt_firstForm_lat`), so the meridian arc `∫₀^φ M` is its curve length
+  (`meridianArc_eq_curveLength`).
 -/
 
 namespace Geodesy.Projection
@@ -109,6 +113,27 @@ theorem areaScale_ofEllipsoid (E : ReferenceEllipsoid) {φ : ℝ} (hc : 0 < cos 
       |LocalDistortion.det2 dLat dLon| / E.areaElement φ lam := by
   rw [E.areaElement_eq hc.le, LocalDistortion.areaScale]
   simp only [LocalDistortion.ofEllipsoid, mul_assoc]
+
+/-- `√I(1, 0) = M`: a unit step in latitude has length `M`. -/
+theorem sqrt_firstForm_lat (E : ReferenceEllipsoid) (φ : ℝ) :
+    √(E.firstForm φ (1, 0)) = E.meridianRadius φ := by
+  simp only [firstForm, metric, mul_one, mul_zero, add_zero]
+  exact sqrt_sq (E.meridianRadius_pos φ).le
+
+/-- The meridian through longitude `lam` moves at speed `√I(1, 0)`. -/
+theorem norm_deriv_meridian (E : ReferenceEllipsoid) (φ lam : ℝ) :
+    ‖deriv (fun φ => E.ellipsoidPoint φ lam) φ‖ = √(E.firstForm φ (1, 0)) := by
+  rw [deriv_lat, ← norm_dr E φ lam]
+  simp [dr]
+
+/-- The meridian arc from the equator to `φ` is the curve length of the meridian,
+the integral of its first-fundamental-form speed. -/
+theorem meridianArc_eq_curveLength (E : ReferenceEllipsoid) (φ lam : ℝ) :
+    E.meridianArc φ = curveLength (fun φ => E.ellipsoidPoint φ lam) 0 φ := by
+  rw [curveLength, meridianArc]
+  refine intervalIntegral.integral_congr fun ψ _ => ?_
+  simp only
+  rw [norm_deriv_meridian, sqrt_firstForm_lat]
 
 /-- The Web Mercator distortion on the ellipsoid is measured against the first
 fundamental form. -/
