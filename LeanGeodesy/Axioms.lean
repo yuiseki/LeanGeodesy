@@ -534,3 +534,19 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.sphereInverse_toECEF' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.sphereInverse_toECEF
+
+/-- info: 'Geodesy.Helmert.dist_apply' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Helmert.dist_apply
+
+/-- info: 'Geodesy.Helmert.comp_apply' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Helmert.comp_apply
+
+/-- info: 'Geodesy.Helmert.inv_apply' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Helmert.inv_apply
+
+/-- info: 'Geodesy.Helmert.apply_inv' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Helmert.apply_inv
