@@ -506,3 +506,7 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.wgs84_quarterMeridian_bounds' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.wgs84_quarterMeridian_bounds
+
+/-- info: 'Geodesy.GeodeticCoordinate.ecefLongitude_toECEF' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.GeodeticCoordinate.ecefLongitude_toECEF
