@@ -1,5 +1,6 @@
 import LeanGeodesy.Projection.Distortion
 import LeanGeodesy.Geodesic
+import LeanGeodesy.Projection.WebMercator
 
 /-!
 # An azimuthal projection
@@ -29,6 +30,15 @@ plane, so a direction there is read off by dropping the `z` coordinate
   `one_lt_azimuthalEquidistant_k`), so it is neither conformal nor
   equal-area (`azimuthalEquidistant_not_isConformal`,
   `azimuthalEquidistant_not_isEqualArea`).
+
+Mercator, and so Web Mercator, does not keep azimuths from a centre. From
+`c = (45° N, 0°)` to `p = (45° N, 90° E)` the map displacement points due
+east, since both points have the same northing, but the great circle from
+`c` to `p`, the shortest route, leaves `c` with a northward component
+(`mercator_not_preserves_azimuth`, `webMercator_not_preserves_azimuth`).
+Mercator is conformal and draws east as `+x` and north as `+y` at `c`
+(`hasDerivAt_mercator_lon`, `hasDerivAt_mercator_lat`), so a straight line
+on the map starts in a different direction from the route it joins.
 -/
 
 namespace Geodesy.Projection
@@ -187,5 +197,46 @@ theorem azimuthalEquidistant_not_isEqualArea (hφ : φ < π / 2) :
   exact lt_irrefl 1 this
 
 end Distortion
+
+/-! ## Mercator does not keep azimuths -/
+
+theorem inner_direction_45 :
+    (inner (direction (π / 4) 0) (direction (π / 4) (π / 2)) : ℝ) = 1 / 2 := by
+  rw [inner_direction, sub_eq_add_neg, zero_add, cos_neg, cos_pi_div_two, cos_pi_div_four,
+    sin_pi_div_four]
+  have h2 : √2 ^ 2 = 2 := sq_sqrt (by norm_num)
+  nlinarith
+
+theorem sin_angle_45_pos : 0 < sin (angle (direction (π / 4) 0) (direction (π / 4) (π / 2))) := by
+  rw [angle, norm_direction, norm_direction, mul_one, div_one, inner_direction_45, sin_arccos]
+  norm_num
+
+/-- From `(45° N, 0°)` to `(45° N, 90° E)`, Mercator's map displacement points due
+east, while the great circle leaves with a northward component: its initial
+direction has positive inner product with the unit northward tangent. -/
+theorem mercator_not_preserves_azimuth (hR : 0 < R) :
+    (mercator R (π / 4) (π / 2) - mercator R (π / 4) 0) 1 = 0 ∧
+      0 < (mercator R (π / 4) (π / 2) - mercator R (π / 4) 0) 0 ∧
+      0 < (inner (arcNormal (direction (π / 4) 0) (direction (π / 4) (π / 2)))
+        (meridianTangent 1 (π / 4) 0) : ℝ) := by
+  have hpi := pi_pos
+  refine ⟨by simp [mercator], by simp [mercator]; positivity, ?_⟩
+  have h2 : √2 ^ 2 = 2 := sq_sqrt (by norm_num)
+  have hs := sin_angle_45_pos
+  rw [arcNormal, real_inner_smul_left, inner_sub_left, real_inner_smul_left,
+    real_inner_comm (direction (π / 4) 0) (direction (π / 4) (π / 2)), inner_direction_45]
+  apply mul_pos (inv_pos.mpr hs)
+  simp only [direction, meridianTangent, inner_vec3, cos_pi_div_two, sin_pi_div_two, cos_zero,
+    sin_zero, cos_pi_div_four, sin_pi_div_four]
+  nlinarith
+
+/-- The same holds for Web Mercator, which is Mercator's projection of the sphere
+of radius `a`. -/
+theorem webMercator_not_preserves_azimuth :
+    (mercator webMercatorRadius (π / 4) (π / 2) - mercator webMercatorRadius (π / 4) 0) 1 = 0 ∧
+      0 < (mercator webMercatorRadius (π / 4) (π / 2) - mercator webMercatorRadius (π / 4) 0) 0 ∧
+      0 < (inner (arcNormal (direction (π / 4) 0) (direction (π / 4) (π / 2)))
+        (meridianTangent 1 (π / 4) 0) : ℝ) :=
+  mercator_not_preserves_azimuth webMercatorRadius_pos
 
 end Geodesy.Projection

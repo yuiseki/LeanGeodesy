@@ -838,3 +838,11 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.azimuthalEquidistant_not_isEqualArea' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.azimuthalEquidistant_not_isEqualArea
+
+/-- info: 'Geodesy.Projection.mercator_not_preserves_azimuth' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.mercator_not_preserves_azimuth
+
+/-- info: 'Geodesy.Projection.webMercator_not_preserves_azimuth' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.webMercator_not_preserves_azimuth
