@@ -33,7 +33,7 @@ GeodeticLatitude  GeodeticLongitude
 GeodeticCoordinate ── ECEFInverse ── Helmert
   ↓
 Curvature ── MeridianArc
-  ├─ FirstFundamentalForm
+  ├─ FirstFundamentalForm ── Geodesic.Ellipsoid
   ↓
 Projection.Mercator
   ↓
@@ -263,9 +263,39 @@ cell areas of `Projection.EqualArea` integrate the area element
 exactly when it multiplies the first fundamental form by a scalar `h²`
 (`isConformal_iff_firstForm`), with the reference lengths of every local
 distortion on the ellipsoid being `√E = M` and `√G = N cos φ`. This metric
-is the common ground for projection distortion and, later, for geodesics on
-the ellipsoid; the second fundamental form, curvature and the geodesic
-equation are not covered yet.
+is the common ground for projection distortion and for geodesics on the
+ellipsoid (`Geodesic.Ellipsoid`); the second fundamental form and curvature
+are not covered yet.
+
+### Geodesic.Ellipsoid
+
+A geodesic is a curve whose acceleration has no component along the
+surface: `⟨r'', ∂r/∂φ⟩ = 0` and `⟨r'', ∂r/∂λ⟩ = 0` (`IsGeodesic`), for a curve
+given by latitude and longitude with its velocity `dr (φ', λ')` and
+acceleration (`EllipsoidCurve`).
+
+- The longitude component of the geodesic equation comes from the first
+  fundamental form. The velocity pairs with `∂r/∂λ` to `G λ'` with
+  `G = (N cos φ)²` (`inner_vel_rLon`, from `inner_dr`), and because the
+  ellipsoid is a surface of revolution the velocity is perpendicular to the
+  rate of change of `∂r/∂λ` (`inner_velocity_deriv_parallelTangent`), so
+  `⟨r'', ∂r/∂λ⟩ = d/dt ((N cos φ)² λ')` (`hasDerivAt_G_mul_lon'`).
+- Clairaut's relation: along a geodesic `(N cos φ)² λ'` is constant
+  (`clairaut_G_mul_lon'`), geodesics have constant speed
+  (`geodesic_speed_const`), and with `sin A = N cos φ λ' / speed`
+  (`sinAzimuth_eq`), `N cos φ sin A` is constant (`clairaut`).
+- Conversely, where `φ' ≠ 0`, the two conservation laws give back both
+  components of the geodesic equation (`isGeodesicAt_of_conserved`): the
+  latitude component in first-integral form. The expanded second-order
+  latitude equation needs `dM/dφ` and is not derived.
+- Where `φ' = 0` the conservation laws are not enough: a parallel run at
+  constant speed satisfies both, but is a geodesic exactly when it is the
+  equator (`parallelCurve_isGeodesic_iff`, `equator_isGeodesic`), since its
+  acceleration, pointing at the axis, has a component along the meridian.
+
+Existence of geodesics through a point in a given direction, the inverse
+problem between two points, and geodesic distance on the ellipsoid are not
+covered.
 
 ### MeridianArc
 
@@ -614,7 +644,8 @@ other file refers to the labels.
 
 ## Scope
 
-Geodesics on the ellipsoid, the agreement of the metric length above with
+Solving for ellipsoidal geodesics (existence, the direct and inverse
+problems, geodesic distance), the agreement of the metric length above with
 the arc length of smooth curves (the integral of speed), the uniqueness of
 the ellipsoidal ECEF inverse, published transformation parameters, CRS
 registries, the ellipsoidal transverse Mercator projection, ellipsoidal
@@ -654,6 +685,7 @@ labels outside `CRS/EPSG.lean`.
 | `LeanGeodesy/Helmert.lean` | Helmert transformations and the linearised rotation |
 | `LeanGeodesy/Curvature.lean` | Meridian radius of curvature and the tangents of the ellipsoid |
 | `LeanGeodesy/FirstFundamentalForm.lean` | E, F, G, the metric, `ds²`, speeds, angles, the area element |
+| `LeanGeodesy/Geodesic/Ellipsoid.lean` | Geodesics on the ellipsoid, the geodesic equation's longitude component, Clairaut's relation |
 | `LeanGeodesy/MeridianArc.lean` | Meridian arc length as an integral of `M`, and its bounds |
 | `LeanGeodesy/QuarterMeridian.lean` | The WGS 84 quarter meridian is 10001960 m to 10001975 m |
 | `LeanGeodesy/Projection/Mercator.lean` | The Mercator function, its inverse, and conformality on the sphere |
