@@ -570,3 +570,19 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.smallRotation_error_small' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.smallRotation_error_small
+
+/-- info: 'Geodesy.GeographicCRS.toPoint3D_surjective' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.GeographicCRS.toPoint3D_surjective
+
+/-- info: 'Geodesy.CRSTransformation.toPoint3D_transform' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.CRSTransformation.toPoint3D_transform
+
+/-- info: 'Geodesy.CRSTransformation.toPoint3D_inverse_transform' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.CRSTransformation.toPoint3D_inverse_transform
+
+/-- info: 'Geodesy.CRSTransformation.dist_transform' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.CRSTransformation.dist_transform

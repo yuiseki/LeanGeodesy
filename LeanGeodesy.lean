@@ -17,4 +17,5 @@ import LeanGeodesy.Geodesic
 import LeanGeodesy.CRS.Basic
 import LeanGeodesy.CRS.WGS84
 import LeanGeodesy.CRS.WebMercator
+import LeanGeodesy.CRS.Transformation
 import LeanGeodesy.CRS.EPSG
