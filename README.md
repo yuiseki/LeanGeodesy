@@ -457,6 +457,31 @@ coordinate names the moved point (`toPoint3D_transform`), transforming back
 returns to the same point (`toPoint3D_inverse_transform`), and distances are
 multiplied by the scale (`dist_transform`).
 
+#### Converting EPSG:4326 and EPSG:3857
+
+`CRS/WebMercatorConversion.lean` connects the two constructed CRSs in the
+form GIS users need: EPSG:4326, the WGS 84 geographic 2D CRS (latitude and
+longitude, no height), to and from EPSG:3857, the Web Mercator projected 2D
+CRS. "WGS 84" alone names a datum, not a CRS; this is the geographic 2D CRS
+on it.
+
+- It is a coordinate conversion by a projection within one datum, not a
+  Helmert transformation: no ECEF position is involved, and the formulas are
+  `webMercatorCRS.forward` and `inverse`, reused.
+- The valid inputs and outputs are types: WGS 84 coordinates within the
+  cut-off latitude (`WebMercatorValidCoordinate`) and Web Mercator
+  coordinates in the square (`WebMercatorImageCoordinate`). `toWebMercator`
+  and `fromWebMercator` undo each other (`fromWebMercator_toWebMercator`,
+  `toWebMercator_fromWebMercator`) and form a bijection (`webMercatorEquiv`,
+  `webMercatorConversion_bijOn`).
+- The equator and prime meridian go to `y = 0` and `x = 0`, the cut-off
+  latitudes to the top and bottom edges, and the antimeridian to the right
+  edge; no longitude reaches the left edge.
+- Latitude and longitude are named fields here. Whether a file or an API
+  writes a coordinate as `(lat, lon)` or `(lon, lat)` is a matter of
+  serialisation, separate from what the CRS means, and is not modelled.
+- Heights, EPSG:4979 (geographic 3D) and ECEF are outside this conversion.
+
 A datum is modelled only by its ellipsoid. Its realisations, units, axis
 order and areas of use are outside the definition.
 
@@ -519,6 +544,7 @@ labels outside `CRS/EPSG.lean`.
 | `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |
 | `LeanGeodesy/CRS/WGS84.lean` | The WGS 84 geographic CRS |
 | `LeanGeodesy/CRS/WebMercator.lean` | The Web Mercator projected CRS over WGS 84 |
+| `LeanGeodesy/CRS/WebMercatorConversion.lean` | EPSG:4326 geographic 2D to and from EPSG:3857, as a bijection |
 | `LeanGeodesy/CRS/Transformation.lean` | Transformations between geographic CRSs through ECEF |
 | `LeanGeodesy/CRS/EPSG.lean` | `EPSG:4326` and `EPSG:3857` as labels, used by no proof |
 | `LeanGeodesy/Axioms.lean` | Axiom audit of the main theorems |
