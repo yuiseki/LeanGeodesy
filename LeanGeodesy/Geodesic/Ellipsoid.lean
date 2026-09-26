@@ -45,12 +45,34 @@ this is the conservation law it brings:
 Conversely, where `φ' ≠ 0` the two conservation laws give back both
 components of the geodesic equation (`isGeodesicAt_of_conserved`): constant
 speed forces `φ' ⟨r'', ∂r/∂φ⟩ = 0`. This is the latitude component in
-first-integral form; the expanded second-order latitude equation needs
-`dM/dφ`, which is not derived here. Where `φ' = 0` the conservation laws
+first-integral form. Where `φ' = 0` the conservation laws
 are not enough, as the parallels show: a parallel run at constant speed
 satisfies both, yet it is a geodesic exactly when it is the equator
 (`parallelCurve_isGeodesic_iff`), because its acceleration points at the
 axis and so has a component `N cos φ M sin φ` along the meridian.
+
+The latitude component comes out explicitly too. With `E' = 2 M M'` and
+`G' = -2 N cos φ M sin φ` from `FirstFundamentalForm`, the velocity pairs
+with `∂r/∂φ` to `E φ'` and with the rate of change of `∂r/∂φ` to
+`½ E' φ'² + ½ G' λ'²` (`inner_vel_rLat'`), so
+
+```
+⟨r'', ∂r/∂φ⟩ = E φ'' + ½ E' φ'² - ½ G' λ'²             (inner_acc_rLat)
+```
+
+and an affinely parametrised geodesic satisfies both
+
+```
+E φ'' + ½ E' φ'² - ½ G' λ'² = 0                        (geodesic_latitude_equation)
+G λ'' + G' φ' λ' = 0                                   (geodesic_longitude_equation)
+```
+
+the second being the expanded form of `d/dt (G λ') = 0`. Divided by `E`,
+the first is `φ'' + Γ^φ_{φφ} φ'² + Γ^φ_{λλ} λ'² = 0` with
+`Γ^φ_{φφ} = E' / 2E` and `Γ^φ_{λλ} = -G' / 2E`
+(`geodesic_latitude_equation_christoffel`). For the parallels it reduces to
+`-½ G'(φ₀) = 0`, recovering that only the equator is a geodesic
+(`parallelCurve_latitude_equation_iff`).
 
 The curve is given by functions `lat`, `lon` with derivatives `lat'`, `lon'`
 and a velocity `dr (lat', lon')` (the actual velocity, `hasDerivAt_position`)
@@ -244,6 +266,128 @@ theorem isGeodesicAt_of_conserved
   · exact absurd h hlat
   · exact h
 
+/-! ## The latitude component of the geodesic equation -/
+
+/-- The derivative of `∂r/∂φ` along the curve, using `M'`. -/
+noncomputable def rLat' (t : ℝ) : E3 :=
+  let φ := γ.lat t
+  let M := E.meridianRadius φ
+  let M' := 3 * E.e2 * sin φ * cos φ * M / E.W2 φ
+  vec3 (-((M' * sin φ + M * cos φ) * γ.lat' t) * cos (γ.lon t) + M * sin φ * sin (γ.lon t) * γ.lon' t)
+    (-((M' * sin φ + M * cos φ) * γ.lat' t) * sin (γ.lon t) - M * sin φ * cos (γ.lon t) * γ.lon' t)
+    ((M' * cos φ - M * sin φ) * γ.lat' t)
+
+theorem hasDerivAt_rLat (t : ℝ) : HasDerivAt γ.rLat (γ.rLat' t) t := by
+  have hM := (E.hasDerivAt_meridianRadius (γ.lat t)).comp t (γ.hasDerivAt_lat t)
+  have hs := (γ.hasDerivAt_lat t).sin
+  have hc := (γ.hasDerivAt_lat t).cos
+  have hl := γ.hasDerivAt_lon t
+  have hfun : γ.rLat = fun s => vec3 (-(E.meridianRadius (γ.lat s) * sin (γ.lat s)) * cos (γ.lon s))
+      (-(E.meridianRadius (γ.lat s) * sin (γ.lat s)) * sin (γ.lon s))
+      (E.meridianRadius (γ.lat s) * cos (γ.lat s)) := by
+    funext s; simp [rLat, meridianTangent]
+  rw [hfun, rLat']
+  refine hasDerivAt_vec3 ?_ ?_ ?_
+  · convert ((hM.mul hs).neg).mul hl.cos using 1
+    simp only [Function.comp]
+    ring
+  · convert ((hM.mul hs).neg).mul hl.sin using 1
+    simp only [Function.comp]
+    ring
+  · convert hM.mul hc using 1
+    simp only [Function.comp]
+    ring
+
+/-- `⟨r', ∂r/∂φ⟩ = E φ'`, from the first fundamental form. -/
+theorem inner_vel_rLat (t : ℝ) :
+    (inner (γ.vel t) (γ.rLat t) : ℝ) = E.meridianRadius (γ.lat t) ^ 2 * γ.lat' t := by
+  have h : γ.rLat t = E.dr (γ.lat t) (γ.lon t) (1, 0) := by simp [rLat, dr]
+  rw [vel, h, inner_dr, metric]
+  ring
+
+/-- `⟨r', d/dt ∂r/∂φ⟩ = ½ E' φ'² + ½ G' λ'²`. -/
+theorem inner_vel_rLat' (t : ℝ) :
+    (inner (γ.vel t) (γ.rLat' t) : ℝ) =
+      E.firstFormE' (γ.lat t) / 2 * γ.lat' t ^ 2 + E.firstFormG' (γ.lat t) / 2 * γ.lon' t ^ 2 := by
+  simp only [vel, dr, rLat', meridianTangent, parallelTangent, vec3_smul, vec3_add, inner_vec3,
+    firstFormE', firstFormG']
+  have hp := sin_sq_add_cos_sq (γ.lat t)
+  have hq := sin_sq_add_cos_sq (γ.lon t)
+  linear_combination
+    (E.meridianRadius (γ.lat t) * (3 * E.e2 * sin (γ.lat t) * cos (γ.lat t) *
+      E.meridianRadius (γ.lat t) / E.W2 (γ.lat t)) * γ.lat' t ^ 2) * hp +
+    ((E.meridianRadius (γ.lat t) * sin (γ.lat t) * (3 * E.e2 * sin (γ.lat t) * cos (γ.lat t) *
+      E.meridianRadius (γ.lat t) / E.W2 (γ.lat t)) * sin (γ.lat t) +
+      E.meridianRadius (γ.lat t) * sin (γ.lat t) * E.meridianRadius (γ.lat t) * cos (γ.lat t)) *
+      γ.lat' t ^ 2 - E.primeVerticalRadius (γ.lat t) * cos (γ.lat t) * E.meridianRadius (γ.lat t) *
+      sin (γ.lat t) * γ.lon' t ^ 2) * hq
+
+/-- The latitude component of the geodesic equation:
+`⟨r'', ∂r/∂φ⟩ = E φ'' + ½ E' φ'² - ½ G' λ'²`, for a curve whose `φ'` has
+derivative `φ''`. -/
+theorem inner_acc_rLat {t lat'' : ℝ} (h2 : HasDerivAt γ.lat' lat'' t) :
+    (inner (γ.acc t) (γ.rLat t) : ℝ) =
+      E.meridianRadius (γ.lat t) ^ 2 * lat'' + E.firstFormE' (γ.lat t) / 2 * γ.lat' t ^ 2 -
+        E.firstFormG' (γ.lat t) / 2 * γ.lon' t ^ 2 := by
+  have hinner := HasDerivAt.inner ℝ (γ.hasDerivAt_vel t) (γ.hasDerivAt_rLat t)
+  have hE : HasDerivAt (fun s => E.meridianRadius (γ.lat s) ^ 2)
+      (E.firstFormE' (γ.lat t) * γ.lat' t) t := by
+    convert ((E.hasDerivAt_meridianRadius (γ.lat t)).comp t (γ.hasDerivAt_lat t)).pow 2 using 1
+    simp only [firstFormE', Function.comp]
+    push_cast
+    ring
+  have hprod := hE.mul h2
+  have hfun : (fun s => (inner (E.dr (γ.lat s) (γ.lon s) (γ.lat' s, γ.lon' s)) (γ.rLat s) : ℝ)) =
+      fun s => E.meridianRadius (γ.lat s) ^ 2 * γ.lat' s := by
+    funext s; exact γ.inner_vel_rLat s
+  rw [hfun] at hinner
+  have heq := hinner.unique hprod
+  have e1 : (inner (E.dr (γ.lat t) (γ.lon t) (γ.lat' t, γ.lon' t)) (γ.rLat' t) : ℝ) =
+      inner (γ.vel t) (γ.rLat' t) := rfl
+  rw [e1, inner_vel_rLat'] at heq
+  linarith
+
+/-- Along an affinely parametrised geodesic the latitude satisfies
+`E φ'' + ½ E' φ'² - ½ G' λ'² = 0`. -/
+theorem geodesic_latitude_equation (hg : γ.IsGeodesic) {t lat'' : ℝ} (h2 : HasDerivAt γ.lat' lat'' t) :
+    E.meridianRadius (γ.lat t) ^ 2 * lat'' + E.firstFormE' (γ.lat t) / 2 * γ.lat' t ^ 2 -
+      E.firstFormG' (γ.lat t) / 2 * γ.lon' t ^ 2 = 0 := by
+  rw [← γ.inner_acc_rLat h2]
+  exact (hg t).1
+
+/-- Along an affinely parametrised geodesic the longitude satisfies
+`G λ'' + G' φ' λ' = 0`, the expanded form of `d/dt (G λ') = 0`. -/
+theorem geodesic_longitude_equation (hg : γ.IsGeodesic) {t lon'' : ℝ}
+    (h2 : HasDerivAt γ.lon' lon'' t) :
+    (E.primeVerticalRadius (γ.lat t) * cos (γ.lat t)) ^ 2 * lon'' +
+      E.firstFormG' (γ.lat t) * γ.lat' t * γ.lon' t = 0 := by
+  have hG : HasDerivAt (fun s => (E.primeVerticalRadius (γ.lat s) * cos (γ.lat s)) ^ 2)
+      (E.firstFormG' (γ.lat t) * γ.lat' t) t := by
+    convert ((E.hasDerivAt_meridianPoint_fst (γ.lat t)).comp t (γ.hasDerivAt_lat t)).pow 2 using 1
+    simp only [firstFormG', Function.comp]
+    push_cast
+    ring
+  have heq := (γ.hasDerivAt_G_mul_lon' t).unique (hG.mul h2)
+  rw [(hg t).2] at heq
+  linarith
+
+/-- The two Christoffel symbols of the latitude equation:
+`Γ^φ_{φφ} = E' / (2E)` and `Γ^φ_{λλ} = -G' / (2E)`. -/
+noncomputable def christoffelLatLatLat (φ : ℝ) : ℝ := E.firstFormE' φ / (2 * E.meridianRadius φ ^ 2)
+noncomputable def christoffelLatLonLon (φ : ℝ) : ℝ := -E.firstFormG' φ / (2 * E.meridianRadius φ ^ 2)
+
+/-- The latitude equation in Christoffel form:
+`φ'' + Γ^φ_{φφ} φ'² + Γ^φ_{λλ} λ'² = 0`. -/
+theorem geodesic_latitude_equation_christoffel (hg : γ.IsGeodesic) {t lat'' : ℝ}
+    (h2 : HasDerivAt γ.lat' lat'' t) :
+    lat'' + christoffelLatLatLat (E := E) (γ.lat t) * γ.lat' t ^ 2 +
+      christoffelLatLonLon (E := E) (γ.lat t) * γ.lon' t ^ 2 = 0 := by
+  have h := γ.geodesic_latitude_equation hg h2
+  have hM := (E.meridianRadius_pos (γ.lat t)).ne'
+  simp only [christoffelLatLatLat, christoffelLatLonLon]
+  field_simp
+  linear_combination 2 * h
+
 end EllipsoidCurve
 
 /-! ## Parallels -/
@@ -296,6 +440,29 @@ theorem parallelCurve_isGeodesic_iff {φ₀ : ℝ} (hc : 0 < cos φ₀) :
       · exact h
   · intro hs t
     exact ⟨by rw [hlat, hs]; ring, hlon t⟩
+
+/-- The latitude equation recovers the parallels: for the parallel at `φ₀`,
+where `φ' = φ'' = 0` and `λ' = 1`, it reduces to `-½ G'(φ₀) = 0`, which holds
+exactly at the equator, and it is exactly the geodesic condition there. -/
+theorem parallelCurve_latitude_equation_iff {φ₀ : ℝ} (hc : 0 < cos φ₀) :
+    ((E.parallelCurve φ₀).IsGeodesic ↔
+      E.meridianRadius φ₀ ^ 2 * 0 + E.firstFormE' φ₀ / 2 * 0 ^ 2 - E.firstFormG' φ₀ / 2 * 1 ^ 2 = 0) ∧
+    (E.meridianRadius φ₀ ^ 2 * 0 + E.firstFormE' φ₀ / 2 * 0 ^ 2 - E.firstFormG' φ₀ / 2 * 1 ^ 2 = 0 ↔
+      sin φ₀ = 0) := by
+  have hp : 0 < E.primeVerticalRadius φ₀ * cos φ₀ := mul_pos (E.primeVerticalRadius_pos φ₀) hc
+  have hM := E.meridianRadius_pos φ₀
+  have halg : E.meridianRadius φ₀ ^ 2 * 0 + E.firstFormE' φ₀ / 2 * 0 ^ 2 - E.firstFormG' φ₀ / 2 * 1 ^ 2 = 0 ↔
+      sin φ₀ = 0 := by
+    simp only [firstFormG']
+    constructor
+    · intro h
+      have h' : E.primeVerticalRadius φ₀ * cos φ₀ * E.meridianRadius φ₀ * sin φ₀ = 0 := by linarith
+      rcases mul_eq_zero.mp h' with h | h
+      · exact absurd h (mul_pos hp hM).ne'
+      · exact h
+    · intro h; rw [h]; ring
+  refine ⟨?_, halg⟩
+  rw [E.parallelCurve_isGeodesic_iff hc, halg]
 
 /-- In particular the equator is a geodesic. -/
 theorem equator_isGeodesic : (E.parallelCurve 0).IsGeodesic :=

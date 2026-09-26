@@ -1122,3 +1122,35 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.ReferenceEllipsoid.hasDerivAt_firstFormG' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.ReferenceEllipsoid.hasDerivAt_firstFormG
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.hasDerivAt_rLat' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.hasDerivAt_rLat
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.inner_vel_rLat' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.inner_vel_rLat
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.inner_vel_rLat'' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.inner_vel_rLat'
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.inner_acc_rLat' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.inner_acc_rLat
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.geodesic_latitude_equation' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.geodesic_latitude_equation
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.geodesic_longitude_equation' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.geodesic_longitude_equation
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.geodesic_latitude_equation_christoffel' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.geodesic_latitude_equation_christoffel
+
+/-- info: 'Geodesy.ReferenceEllipsoid.parallelCurve_latitude_equation_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.parallelCurve_latitude_equation_iff
