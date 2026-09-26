@@ -930,3 +930,23 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.image_geodesicDisk' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.image_geodesicDisk
+
+/-- info: 'Geodesy.Projection.mem_geodesicDisk_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.mem_geodesicDisk_iff
+
+/-- info: 'Geodesy.Projection.capArea_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.capArea_eq
+
+/-- info: 'Geodesy.Projection.volume_closedBall_E2' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.volume_closedBall_E2
+
+/-- info: 'Geodesy.Projection.volume_image_geodesicDisk' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.volume_image_geodesicDisk
+
+/-- info: 'Geodesy.Projection.azimuthalEquidistant_enlarges_buffer' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.azimuthalEquidistant_enlarges_buffer
