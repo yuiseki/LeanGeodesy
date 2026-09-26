@@ -1,4 +1,5 @@
 import LeanGeodesy.Curvature
+import Mathlib.Geometry.Euclidean.Angle.Unoriented.Basic
 
 /-!
 # The first fundamental form of the ellipsoid
@@ -26,6 +27,22 @@ negative, and on the open latitudes `|φ| < π/2` it vanishes only on the zero
 vector (`metric_self_eq_zero_iff`): a positive definite metric. At the poles
 `G = 0` and the coordinates degenerate, since every longitude names the
 same point.
+
+The form is what the ellipsoid's actual tangent vectors measure. The
+coordinate step `v = (dφ, dλ)` is the tangent vector
+`dr v = dφ ∂r/∂φ + dλ ∂r/∂λ` (`dr`), and inner products of these are the
+metric (`inner_dr`), so
+
+```
+‖dr v‖² = M² dφ² + (N cos φ)² dλ²          (norm_dr_sq, the line element ds²)
+```
+
+A curve `t ↦ (φ(t), λ(t))` on the ellipsoid has velocity `dr (φ', λ')`
+(`hasDerivAt_curve`, from the derivatives of `N cos φ` and `N (1 - e²) sin φ`
+in `Curvature`), so its squared speed is `M² φ'² + (N cos φ)² λ'²`
+(`speed_sq_curve`). Angles are the metric too: the cosine of the angle
+between `dr u` and `dr v` is `g(u, v) / √(I(u) I(v))` (`cos_angle_dr`), and
+they are perpendicular exactly when `g(u, v) = 0` (`metric_eq_zero_iff`).
 
 Longitude is an unwrapped real coordinate here: the form is local.
 -/
@@ -154,6 +171,70 @@ theorem metric_self_eq_zero_iff {φ : ℝ} (hc : 0 < cos φ) (v : ℝ × ℝ) :
 
 theorem firstForm_pos {φ : ℝ} (hc : 0 < cos φ) {v : ℝ × ℝ} (hv : v ≠ 0) : 0 < E.firstForm φ v :=
   lt_of_le_of_ne (E.firstForm_nonneg φ v) (fun h => hv ((E.metric_self_eq_zero_iff hc v).mp h.symm))
+
+/-! ## Actual tangent vectors -/
+
+/-- The tangent vector of the ellipsoid for the coordinate step `(dφ, dλ)`:
+`dφ ∂r/∂φ + dλ ∂r/∂λ`. -/
+noncomputable def dr (φ lam : ℝ) (v : ℝ × ℝ) : E3 :=
+  v.1 • E.meridianTangent φ lam + v.2 • E.parallelTangent φ lam
+
+/-- Inner products of tangent vectors are given by the metric. -/
+theorem inner_dr (φ lam : ℝ) (u v : ℝ × ℝ) :
+    inner (E.dr φ lam u) (E.dr φ lam v) = E.metric φ u v := by
+  have h0 := E.inner_meridianTangent_parallelTangent φ lam
+  have h0' : (inner (E.parallelTangent φ lam) (E.meridianTangent φ lam) : ℝ) = 0 := by
+    rw [real_inner_comm]; exact h0
+  rw [dr, dr, inner_add_left, inner_add_right, inner_add_right, real_inner_smul_left,
+    real_inner_smul_left, real_inner_smul_left, real_inner_smul_left, real_inner_smul_right,
+    real_inner_smul_right, real_inner_smul_right, real_inner_smul_right, h0, h0',
+    real_inner_self_eq_norm_sq, real_inner_self_eq_norm_sq, norm_meridianTangent_sq,
+    norm_parallelTangent_sq, metric]
+  ring
+
+/-- The line element: the squared length of the tangent vector for `(dφ, dλ)` is
+`M² dφ² + (N cos φ)² dλ²`. -/
+theorem norm_dr_sq (φ lam : ℝ) (v : ℝ × ℝ) : ‖E.dr φ lam v‖ ^ 2 = E.firstForm φ v := by
+  rw [← real_inner_self_eq_norm_sq, inner_dr, firstForm]
+
+theorem norm_dr (φ lam : ℝ) (v : ℝ × ℝ) : ‖E.dr φ lam v‖ = √(E.firstForm φ v) := by
+  rw [← norm_dr_sq, sqrt_sq (norm_nonneg _)]
+
+/-- A curve given by latitude and longitude has velocity `dr (φ', λ')`. -/
+theorem hasDerivAt_curve {φ lon : ℝ → ℝ} {φ' lon' t : ℝ} (hφ : HasDerivAt φ φ' t)
+    (hl : HasDerivAt lon lon' t) :
+    HasDerivAt (fun t => E.ellipsoidPoint (φ t) (lon t)) (E.dr (φ t) (lon t) (φ', lon')) t := by
+  have hp := (E.hasDerivAt_meridianPoint_fst (φ t)).comp t hφ
+  have hz := (E.hasDerivAt_meridianPoint_snd (φ t)).comp t hφ
+  unfold ellipsoidPoint dr meridianTangent parallelTangent
+  rw [vec3_smul, vec3_smul, vec3_add]
+  refine hasDerivAt_vec3 ?_ ?_ ?_
+  · convert hp.mul hl.cos using 1
+    simp only [Function.comp]
+    ring
+  · convert hp.mul hl.sin using 1
+    simp only [Function.comp]
+    ring
+  · convert hz using 1
+    simp only [Function.comp]
+    ring
+
+/-- The squared speed of a curve on the ellipsoid is `M² φ'² + (N cos φ)² λ'²`. -/
+theorem speed_sq_curve {φ lon : ℝ → ℝ} {φ' lon' t : ℝ} (hφ : HasDerivAt φ φ' t)
+    (hl : HasDerivAt lon lon' t) :
+    ‖deriv (fun t => E.ellipsoidPoint (φ t) (lon t)) t‖ ^ 2 = E.firstForm (φ t) (φ', lon') := by
+  rw [(E.hasDerivAt_curve hφ hl).deriv, norm_dr_sq]
+
+/-- Angles between tangent vectors are given by the metric. -/
+theorem cos_angle_dr (φ lam : ℝ) (u v : ℝ × ℝ) :
+    cos (InnerProductGeometry.angle (E.dr φ lam u) (E.dr φ lam v)) =
+      E.metric φ u v / (√(E.firstForm φ u) * √(E.firstForm φ v)) := by
+  rw [InnerProductGeometry.cos_angle, inner_dr, norm_dr, norm_dr]
+
+/-- Two tangent vectors are perpendicular exactly when the metric pairs them to zero. -/
+theorem metric_eq_zero_iff (φ lam : ℝ) (u v : ℝ × ℝ) :
+    E.metric φ u v = 0 ↔ (inner (E.dr φ lam u) (E.dr φ lam v) : ℝ) = 0 := by
+  rw [inner_dr]
 
 end ReferenceEllipsoid
 

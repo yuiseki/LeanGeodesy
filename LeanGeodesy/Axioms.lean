@@ -994,3 +994,27 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.ReferenceEllipsoid.firstForm_pos' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.ReferenceEllipsoid.firstForm_pos
+
+/-- info: 'Geodesy.ReferenceEllipsoid.inner_dr' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.inner_dr
+
+/-- info: 'Geodesy.ReferenceEllipsoid.norm_dr_sq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.norm_dr_sq
+
+/-- info: 'Geodesy.ReferenceEllipsoid.hasDerivAt_curve' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.hasDerivAt_curve
+
+/-- info: 'Geodesy.ReferenceEllipsoid.speed_sq_curve' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.speed_sq_curve
+
+/-- info: 'Geodesy.ReferenceEllipsoid.cos_angle_dr' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.cos_angle_dr
+
+/-- info: 'Geodesy.ReferenceEllipsoid.metric_eq_zero_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.metric_eq_zero_iff
