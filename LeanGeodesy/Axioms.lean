@@ -1222,3 +1222,51 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Tiles.tileEquivPath_succ' depends on axioms: [propext, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.tileEquivPath_succ
+
+/-- info: 'Geodesy.Tiles.mortonEquiv_eq_trans' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.mortonEquiv_eq_trans
+
+/-- info: 'Geodesy.Tiles.tile_path_morton_bijective' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.tile_path_morton_bijective
+
+/-- info: 'Geodesy.Tiles.mortonEquiv_succ_val' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.mortonEquiv_succ_val
+
+/-- info: 'Geodesy.Tiles.mortonEquiv_val_eq_path' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.mortonEquiv_val_eq_path
+
+/-- info: 'Geodesy.Tiles.mortonEquiv_val' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.mortonEquiv_val
+
+/-- info: 'Geodesy.Tiles.morton_div_four' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.morton_div_four
+
+/-- info: 'Geodesy.Tiles.morton_mod_four' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.morton_mod_four
+
+/-- info: 'Geodesy.Tiles.morton_eq_interleave' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.morton_eq_interleave
+
+/-- info: 'Geodesy.Tiles.parent_tileOfPoint' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.parent_tileOfPoint
+
+/-- info: 'Geodesy.Tiles.morton_tileOfPoint_succ_div_four' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.morton_tileOfPoint_succ_div_four
+
+/-- info: 'Geodesy.Tiles.tileOfPoint_surjective' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.tileOfPoint_surjective
+
+/-- info: 'Geodesy.Tiles.morton_jumps' does not depend on any axioms -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.morton_jumps
