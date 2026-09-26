@@ -38,7 +38,7 @@ Projection.Mercator
   ↓
 Projection.WebMercator        Geodesic
   ↓
-Projection.Distortion ── Projection.Cylindrical
+Projection.Distortion ── Projection.Cylindrical ── Projection.TransverseMercator
   ↓
 CRS (and CRS.Transformation, which uses ECEFInverse and Helmert)
 ```
@@ -342,6 +342,32 @@ spherical Mercator formulas, as Web Mercator uses them, have scales
 `a sec φ / M` and `a sec φ / N` and are not conformal
 (`ellipsoidalMercator_not_isConformal`).
 
+### Projection.TransverseMercator
+
+Turning the sphere so that a chosen meridian plays the role of the equator
+gives the transverse Mercator projection, the basis of UTM. With
+`B = cos φ sin λ`, the sine of the distance from the central meridian,
+`x = R · mercatorY (arcsin B)` and `y = R arctan (tan φ / cos λ)`
+(`tmX`, `tmY`).
+
+- On the central meridian `x = 0` and `y = R φ`: true to scale there
+  (`tmX_central`, `tmY_central`).
+- The partial derivatives are
+  `R / (1 - B²) · (-sin φ sin λ, cos λ)` and
+  `R cos φ / (1 - B²) · (cos λ, sin φ sin λ)`
+  (`hasDerivAt_tmX_lat`, `hasDerivAt_tmX_lon`, `hasDerivAt_tmY_lat`,
+  `hasDerivAt_tmY_lon`). They are perpendicular with both scales
+  `1 / √(1 - B²)` (`tm_h`, `tm_k`), so the projection is conformal
+  (`tm_isConformal`), with scale `1` on the central meridian growing away
+  from it (`tmScale_central`, `one_lt_tmScale`).
+- UTM multiplies the scale by `0.9996`. Within 3° of the central meridian
+  the scale then stays between 0.9996 and 1.00098 (`utmScale_bounds`), and
+  on the equator it is exact where `sin² λ = 1 - 0.9996²`, one line on each
+  side of the central meridian (`utmScale_equator_eq_one_iff`).
+
+This is the spherical transverse Mercator projection; the ellipsoidal one
+used by UTM in practice (the Gauss-Krüger series) is not covered.
+
 ### Geodesic
 
 On a spherical Earth the shortest way between two places runs along a great
@@ -446,7 +472,8 @@ other file refers to the labels.
 Geodesics on the ellipsoid, the agreement of the metric length above with
 the arc length of smooth curves (the integral of speed), the uniqueness of
 the ellipsoidal ECEF inverse, published transformation parameters, CRS
-registries and projections other than Mercator are not covered yet.
+registries, the ellipsoidal transverse Mercator projection and projections
+other than the Mercator family are not covered yet.
 
 ## Build
 
@@ -487,6 +514,7 @@ labels outside `CRS/EPSG.lean`.
 | `LeanGeodesy/Projection/CutoffLatitude.lean` | The cut-off latitude is between 85.05° and 85.06° |
 | `LeanGeodesy/Projection/Distortion.lean` | Scales, area scale, Tissot's indicatrix, conformality |
 | `LeanGeodesy/Projection/Cylindrical.lean` | Mercator, plate carrée and Lambert; uniqueness |
+| `LeanGeodesy/Projection/TransverseMercator.lean` | Spherical transverse Mercator, conformality, UTM scale |
 | `LeanGeodesy/Geodesic.lean` | Central angle, haversine, great-circle distance as a metric |
 | `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |
 | `LeanGeodesy/CRS/WGS84.lean` | The WGS 84 geographic CRS |
