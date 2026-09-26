@@ -1,0 +1,160 @@
+import LeanGeodesy.Curvature
+
+/-!
+# The first fundamental form of the ellipsoid
+
+With geodetic latitude `φ` and longitude `λ` as local coordinates, the
+ellipsoid is the surface `r(φ, λ) = ellipsoidPoint E φ λ`. Its first
+fundamental form measures tangent vectors given in coordinates: a step
+`(dφ, dλ)` has squared length
+
+```
+I(dφ, dλ) = E dφ² + 2 F dφ dλ + G dλ²
+```
+
+with `E = ⟨∂r/∂φ, ∂r/∂φ⟩`, `F = ⟨∂r/∂φ, ∂r/∂λ⟩`, `G = ⟨∂r/∂λ, ∂r/∂λ⟩`
+(`firstFormE`, `firstFormF`, `firstFormG`). The partial derivatives are the
+meridian and parallel tangents of `Curvature`, whose lengths `M` and `N cos φ`
+and orthogonality were proved there, so
+
+```
+E = M²,   F = 0,   G = (N cos φ)²          (firstFormE_eq, firstFormF_eq, firstFormG_eq)
+```
+
+The form's bilinear version `metric` is symmetric and bilinear, never
+negative, and on the open latitudes `|φ| < π/2` it vanishes only on the zero
+vector (`metric_self_eq_zero_iff`): a positive definite metric. At the poles
+`G = 0` and the coordinates degenerate, since every longitude names the
+same point.
+
+Longitude is an unwrapped real coordinate here: the form is local.
+-/
+
+namespace Geodesy
+
+open Real
+
+namespace ReferenceEllipsoid
+
+variable (E : ReferenceEllipsoid)
+
+/-! ## The coefficients -/
+
+/-- `E = ⟨∂r/∂φ, ∂r/∂φ⟩`. -/
+noncomputable def firstFormE (φ lam : ℝ) : ℝ :=
+  inner (deriv (fun φ => E.ellipsoidPoint φ lam) φ) (deriv (fun φ => E.ellipsoidPoint φ lam) φ)
+
+/-- `F = ⟨∂r/∂φ, ∂r/∂λ⟩`. -/
+noncomputable def firstFormF (φ lam : ℝ) : ℝ :=
+  inner (deriv (fun φ => E.ellipsoidPoint φ lam) φ) (deriv (fun lam => E.ellipsoidPoint φ lam) lam)
+
+/-- `G = ⟨∂r/∂λ, ∂r/∂λ⟩`. -/
+noncomputable def firstFormG (φ lam : ℝ) : ℝ :=
+  inner (deriv (fun lam => E.ellipsoidPoint φ lam) lam) (deriv (fun lam => E.ellipsoidPoint φ lam) lam)
+
+theorem deriv_lat (φ lam : ℝ) :
+    deriv (fun φ => E.ellipsoidPoint φ lam) φ = E.meridianTangent φ lam :=
+  (E.hasDerivAt_ellipsoidPoint_lat φ lam).deriv
+
+theorem deriv_lon (φ lam : ℝ) :
+    deriv (fun lam => E.ellipsoidPoint φ lam) lam = E.parallelTangent φ lam :=
+  (E.hasDerivAt_ellipsoidPoint_lon φ lam).deriv
+
+/-- `E = M²`. -/
+theorem firstFormE_eq (φ lam : ℝ) : E.firstFormE φ lam = E.meridianRadius φ ^ 2 := by
+  rw [firstFormE, deriv_lat, real_inner_self_eq_norm_sq, norm_meridianTangent_sq]
+
+/-- `F = 0`: meridians and parallels cross at right angles. -/
+theorem firstFormF_eq (φ lam : ℝ) : E.firstFormF φ lam = 0 := by
+  rw [firstFormF, deriv_lat, deriv_lon, inner_meridianTangent_parallelTangent]
+
+/-- `G = (N cos φ)²`. -/
+theorem firstFormG_eq (φ lam : ℝ) :
+    E.firstFormG φ lam = (E.primeVerticalRadius φ * cos φ) ^ 2 := by
+  rw [firstFormG, deriv_lon, real_inner_self_eq_norm_sq, norm_parallelTangent_sq]
+
+/-- On the open latitudes `E` and `G` are positive. -/
+theorem firstFormE_pos (φ lam : ℝ) : 0 < E.firstFormE φ lam := by
+  rw [firstFormE_eq]; exact pow_pos (E.meridianRadius_pos φ) 2
+
+theorem firstFormG_pos {φ : ℝ} (hc : 0 < cos φ) (lam : ℝ) : 0 < E.firstFormG φ lam := by
+  rw [firstFormG_eq]; exact pow_pos (mul_pos (E.primeVerticalRadius_pos φ) hc) 2
+
+/-- At the poles `G = 0`: the longitude coordinate degenerates. -/
+theorem firstFormG_pole (lam : ℝ) : E.firstFormG (π / 2) lam = 0 := by
+  rw [firstFormG_eq, cos_pi_div_two, mul_zero, zero_pow two_ne_zero]
+
+/-! ## The metric -/
+
+/-- The first fundamental form as a bilinear form on coordinate tangent vectors
+`u = (uφ, uλ)`, `v = (vφ, vλ)`: `M² uφ vφ + (N cos φ)² uλ vλ`. -/
+noncomputable def metric (φ : ℝ) (u v : ℝ × ℝ) : ℝ :=
+  E.meridianRadius φ ^ 2 * u.1 * v.1 + (E.primeVerticalRadius φ * cos φ) ^ 2 * u.2 * v.2
+
+/-- The first fundamental form: `I(v) = g(v, v) = M² dφ² + (N cos φ)² dλ²`. -/
+noncomputable def firstForm (φ : ℝ) (v : ℝ × ℝ) : ℝ := E.metric φ v v
+
+/-- The metric is `E uφ vφ + F (uφ vλ + uλ vφ) + G uλ vλ`. -/
+theorem metric_eq_EFG (φ lam : ℝ) (u v : ℝ × ℝ) :
+    E.metric φ u v = E.firstFormE φ lam * u.1 * v.1 +
+      E.firstFormF φ lam * (u.1 * v.2 + u.2 * v.1) + E.firstFormG φ lam * u.2 * v.2 := by
+  rw [firstFormE_eq, firstFormF_eq, firstFormG_eq, metric]
+  ring
+
+theorem metric_comm (φ : ℝ) (u v : ℝ × ℝ) : E.metric φ u v = E.metric φ v u := by
+  simp only [metric]; ring
+
+theorem metric_add_left (φ : ℝ) (u u' v : ℝ × ℝ) :
+    E.metric φ (u + u') v = E.metric φ u v + E.metric φ u' v := by
+  simp only [metric, Prod.fst_add, Prod.snd_add]; ring
+
+theorem metric_smul_left (φ c : ℝ) (u v : ℝ × ℝ) :
+    E.metric φ (c • u) v = c * E.metric φ u v := by
+  simp only [metric, Prod.smul_fst, Prod.smul_snd, smul_eq_mul]; ring
+
+theorem metric_add_right (φ : ℝ) (u v v' : ℝ × ℝ) :
+    E.metric φ u (v + v') = E.metric φ u v + E.metric φ u v' := by
+  rw [metric_comm, metric_add_left, metric_comm, E.metric_comm φ v' u]
+
+theorem metric_smul_right (φ c : ℝ) (u v : ℝ × ℝ) :
+    E.metric φ u (c • v) = c * E.metric φ u v := by
+  rw [metric_comm, metric_smul_left, metric_comm]
+
+/-- The form is never negative. -/
+theorem firstForm_nonneg (φ : ℝ) (v : ℝ × ℝ) : 0 ≤ E.firstForm φ v := by
+  simp only [firstForm, metric]
+  nlinarith [sq_nonneg (E.meridianRadius φ * v.1), sq_nonneg (E.primeVerticalRadius φ * cos φ * v.2)]
+
+/-- On the open latitudes it vanishes only on the zero vector: the metric is
+positive definite there. -/
+theorem metric_self_eq_zero_iff {φ : ℝ} (hc : 0 < cos φ) (v : ℝ × ℝ) :
+    E.metric φ v v = 0 ↔ v = 0 := by
+  have hM := E.meridianRadius_pos φ
+  have hN := mul_pos (E.primeVerticalRadius_pos φ) hc
+  constructor
+  · intro h
+    simp only [metric] at h
+    have h1 : (E.meridianRadius φ * v.1) ^ 2 = 0 := by
+      nlinarith [sq_nonneg (E.meridianRadius φ * v.1),
+        sq_nonneg (E.primeVerticalRadius φ * cos φ * v.2)]
+    have h2 : (E.primeVerticalRadius φ * cos φ * v.2) ^ 2 = 0 := by
+      nlinarith [sq_nonneg (E.meridianRadius φ * v.1),
+        sq_nonneg (E.primeVerticalRadius φ * cos φ * v.2)]
+    have e1 : v.1 = 0 := by
+      rcases mul_eq_zero.mp (pow_eq_zero_iff two_ne_zero |>.mp h1) with h | h
+      · exact absurd h hM.ne'
+      · exact h
+    have e2 : v.2 = 0 := by
+      rcases mul_eq_zero.mp (pow_eq_zero_iff two_ne_zero |>.mp h2) with h | h
+      · exact absurd h hN.ne'
+      · exact h
+    exact Prod.ext e1 e2
+  · rintro rfl
+    simp [metric]
+
+theorem firstForm_pos {φ : ℝ} (hc : 0 < cos φ) {v : ℝ × ℝ} (hv : v ≠ 0) : 0 < E.firstForm φ v :=
+  lt_of_le_of_ne (E.firstForm_nonneg φ v) (fun h => hv ((E.metric_self_eq_zero_iff hc v).mp h.symm))
+
+end ReferenceEllipsoid
+
+end Geodesy

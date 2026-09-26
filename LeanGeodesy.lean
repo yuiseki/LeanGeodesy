@@ -8,6 +8,7 @@ import LeanGeodesy.GeodeticCoordinate
 import LeanGeodesy.ECEFInverse
 import LeanGeodesy.Helmert
 import LeanGeodesy.Curvature
+import LeanGeodesy.FirstFundamentalForm
 import LeanGeodesy.MeridianArc
 import LeanGeodesy.QuarterMeridian
 import LeanGeodesy.Projection.Mercator

@@ -950,3 +950,47 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.azimuthalEquidistant_enlarges_buffer' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.azimuthalEquidistant_enlarges_buffer
+
+/-- info: 'Geodesy.ReferenceEllipsoid.firstFormE_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.firstFormE_eq
+
+/-- info: 'Geodesy.ReferenceEllipsoid.firstFormF_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.firstFormF_eq
+
+/-- info: 'Geodesy.ReferenceEllipsoid.firstFormG_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.firstFormG_eq
+
+/-- info: 'Geodesy.ReferenceEllipsoid.firstFormG_pole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.firstFormG_pole
+
+/-- info: 'Geodesy.ReferenceEllipsoid.metric_eq_EFG' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.metric_eq_EFG
+
+/-- info: 'Geodesy.ReferenceEllipsoid.metric_comm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.metric_comm
+
+/-- info: 'Geodesy.ReferenceEllipsoid.metric_add_left' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.metric_add_left
+
+/-- info: 'Geodesy.ReferenceEllipsoid.metric_smul_left' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.metric_smul_left
+
+/-- info: 'Geodesy.ReferenceEllipsoid.firstForm_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.firstForm_nonneg
+
+/-- info: 'Geodesy.ReferenceEllipsoid.metric_self_eq_zero_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.metric_self_eq_zero_iff
+
+/-- info: 'Geodesy.ReferenceEllipsoid.firstForm_pos' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.firstForm_pos
