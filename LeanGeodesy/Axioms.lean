@@ -510,3 +510,15 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.GeodeticCoordinate.ecefLongitude_toECEF' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.GeodeticCoordinate.ecefLongitude_toECEF
+
+/-- info: 'Geodesy.GeodeticCoordinate.toECEF_p' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.GeodeticCoordinate.toECEF_p
+
+/-- info: 'Geodesy.GeodeticCoordinate.latitudeResidual_toECEF' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.GeodeticCoordinate.latitudeResidual_toECEF
+
+/-- info: 'Geodesy.GeodeticCoordinate.height_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.GeodeticCoordinate.height_eq
