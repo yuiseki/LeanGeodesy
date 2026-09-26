@@ -25,6 +25,21 @@ proves that
   and angles and change only size, position and orientation;
 - composing two gives a Helmert transformation (`comp`, `comp_apply`), and
   each has an inverse that is one (`inv`, `inv_apply`, `apply_inv`).
+
+In practice the rotation angles are tiny, milliarcseconds, and published
+transformations use the linearised rotation `v ↦ v + r × v` with `r` the
+vector of the three angles (`smallRotation`). That is not a rotation: it
+stretches `v` by exactly `‖r × v‖` in quadrature,
+
+```
+‖v + r × v‖² = ‖v‖² + ‖r × v‖²          (norm_smallRotation_sq)
+```
+
+so it keeps lengths only along the axis `r` (`norm_smallRotation_eq_iff`),
+and it stretches by at most `‖r‖² ‖v‖ / 2` (`norm_smallRotation_le`). For
+angles up to a microradian (0.2 arcseconds) and points within 7000 km of
+the centre, that is at most 3.5 micrometres (`smallRotation_error_small`),
+which is why the linearisation is harmless.
 -/
 
 noncomputable section
@@ -126,6 +141,80 @@ theorem apply_inv (x : E3) : H.apply (H.inv.apply x) = x := by
   abel
 
 end Helmert
+
+/-! ## The linearised rotation -/
+
+/-- The cross product `r × v`. -/
+def cross (r v : E3) : E3 :=
+  vec3 (r 1 * v 2 - r 2 * v 1) (r 2 * v 0 - r 0 * v 2) (r 0 * v 1 - r 1 * v 0)
+
+/-- The linearised rotation by the small angles `r`: `v + r × v`. -/
+def smallRotation (r v : E3) : E3 := v + cross r v
+
+theorem inner_eq_components (u v : E3) : (inner u v : ℝ) = u 0 * v 0 + u 1 * v 1 + u 2 * v 2 := by
+  rw [← vec3_eta u, ← vec3_eta v]
+  simp only [vec3, PiLp.inner_apply, Fin.sum_univ_three]
+  simp
+
+/-- `r × v` is perpendicular to `v`. -/
+theorem inner_cross_right (r v : E3) : (inner v (cross r v) : ℝ) = 0 := by
+  rw [inner_eq_components, cross]
+  simp only [vec3_0, vec3_1, vec3_2]
+  ring
+
+/-- Lagrange's identity: `‖r × v‖² = ‖r‖² ‖v‖² - ⟪r, v⟫²`. -/
+theorem norm_cross_sq (r v : E3) :
+    ‖cross r v‖ ^ 2 = ‖r‖ ^ 2 * ‖v‖ ^ 2 - (inner r v : ℝ) ^ 2 := by
+  rw [norm_sq_eq, norm_sq_eq, norm_sq_eq, inner_eq_components, cross]
+  simp only [vec3_0, vec3_1, vec3_2]
+  ring
+
+/-- The linearised rotation stretches `v` by `r × v` in quadrature. -/
+theorem norm_smallRotation_sq (r v : E3) :
+    ‖smallRotation r v‖ ^ 2 = ‖v‖ ^ 2 + ‖cross r v‖ ^ 2 := by
+  rw [smallRotation, ← real_inner_self_eq_norm_sq, inner_add_left, inner_add_right,
+    inner_add_right, inner_cross_right, real_inner_comm v (cross r v), inner_cross_right,
+    real_inner_self_eq_norm_sq, real_inner_self_eq_norm_sq]
+  ring
+
+/-- It keeps the length of `v` only when `r × v = 0`, that is, along the axis. -/
+theorem norm_smallRotation_eq_iff (r v : E3) :
+    ‖smallRotation r v‖ = ‖v‖ ↔ cross r v = 0 := by
+  have h := norm_smallRotation_sq r v
+  constructor
+  · intro he
+    rw [he] at h
+    have : ‖cross r v‖ ^ 2 = 0 := by linarith
+    exact norm_eq_zero.mp (pow_eq_zero_iff two_ne_zero |>.mp this)
+  · intro hc
+    rw [hc, norm_zero] at h
+    have := norm_nonneg (smallRotation r v)
+    nlinarith [norm_nonneg v]
+
+/-- The stretch is second order in the angles: at most `‖r‖² ‖v‖ / 2`. -/
+theorem norm_smallRotation_le (r v : E3) :
+    ‖v‖ ≤ ‖smallRotation r v‖ ∧ ‖smallRotation r v‖ ≤ ‖v‖ + ‖r‖ ^ 2 * ‖v‖ / 2 := by
+  have h := norm_smallRotation_sq r v
+  have hc := norm_cross_sq r v
+  have hv := norm_nonneg v
+  have hr := norm_nonneg r
+  have hm := norm_nonneg (smallRotation r v)
+  constructor
+  · nlinarith [sq_nonneg ‖cross r v‖]
+  · -- `‖v‖² + ‖r‖²‖v‖² ≤ (‖v‖ + ‖r‖²‖v‖/2)²`.
+    have hle : ‖smallRotation r v‖ ^ 2 ≤ (‖v‖ + ‖r‖ ^ 2 * ‖v‖ / 2) ^ 2 := by
+      nlinarith [sq_nonneg (inner r v : ℝ), sq_nonneg (‖r‖ ^ 2 * ‖v‖ / 2), mul_nonneg hv hr]
+    exact le_of_pow_le_pow_left₀ two_ne_zero (by positivity) hle
+
+/-- For angles up to a microradian and points within 7000 km of the centre,
+the linearised rotation changes lengths by at most 3.5 micrometres. -/
+theorem smallRotation_error_small {r v : E3} (hr : ‖r‖ ≤ 1e-6) (hv : ‖v‖ ≤ 7e6) :
+    ‖smallRotation r v‖ - ‖v‖ ≤ 3.5e-6 := by
+  have h := (norm_smallRotation_le r v).2
+  have hr0 := norm_nonneg r
+  have hv0 := norm_nonneg v
+  have hr2 : ‖r‖ ^ 2 ≤ 1e-12 := by nlinarith
+  nlinarith [mul_le_mul hr2 hv (norm_nonneg v) (by norm_num)]
 
 end Geodesy
 

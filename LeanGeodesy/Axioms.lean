@@ -550,3 +550,23 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Helmert.apply_inv' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Helmert.apply_inv
+
+/-- info: 'Geodesy.norm_cross_sq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.norm_cross_sq
+
+/-- info: 'Geodesy.norm_smallRotation_sq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.norm_smallRotation_sq
+
+/-- info: 'Geodesy.norm_smallRotation_eq_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.norm_smallRotation_eq_iff
+
+/-- info: 'Geodesy.norm_smallRotation_le' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.norm_smallRotation_le
+
+/-- info: 'Geodesy.smallRotation_error_small' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.smallRotation_error_small
