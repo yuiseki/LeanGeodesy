@@ -602,3 +602,39 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.LocalDistortion.areaScale_of_isConformal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.LocalDistortion.areaScale_of_isConformal
+
+/-- info: 'Geodesy.Projection.cylindrical_h' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.cylindrical_h
+
+/-- info: 'Geodesy.Projection.cylindrical_k' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.cylindrical_k
+
+/-- info: 'Geodesy.Projection.cylindrical_areaScale' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.cylindrical_areaScale
+
+/-- info: 'Geodesy.Projection.cylindrical_isConformal_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.cylindrical_isConformal_iff
+
+/-- info: 'Geodesy.Projection.cylindrical_isEqualArea_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.cylindrical_isEqualArea_iff
+
+/-- info: 'Geodesy.Projection.mercator_isConformal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.mercator_isConformal
+
+/-- info: 'Geodesy.Projection.mercator_areaScale' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.mercator_areaScale
+
+/-- info: 'Geodesy.Projection.plateCarree_h' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.plateCarree_h
+
+/-- info: 'Geodesy.Projection.lambert_isEqualArea' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.lambert_isEqualArea
