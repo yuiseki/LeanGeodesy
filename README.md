@@ -30,7 +30,7 @@ WGS84
   ↓
 GeodeticLatitude  GeodeticLongitude
   ↓
-GeodeticCoordinate
+GeodeticCoordinate ── ECEFInverse ── Helmert
   ↓
 Curvature ── MeridianArc
   ↓
@@ -38,7 +38,7 @@ Projection.Mercator
   ↓
 Projection.WebMercator        Geodesic
   ↓
-CRS
+CRS (and CRS.Transformation, which uses ECEFInverse and Helmert)
 ```
 
 `Geodesic` uses only the layers up to `GeodeticCoordinate` (and the sphere
@@ -161,6 +161,46 @@ The theorems say what makes these coordinates geodetic:
   centre;
 - on a sphere of radius `R` the point is `(R + h) n` (`toECEF_of_sphere`),
   at distance `R + h` from the centre (`norm_toECEF_of_sphere`).
+
+### ECEFInverse
+
+Going from an ECEF position back to latitude, longitude and height.
+
+- The longitude is the argument of `x + y i` (`ecefLongitude_toECEF`).
+- With `p = √(x² + y²)` the distance from the axis (`toECEF_p`), the
+  latitude is a root of `p sin φ - z cos φ - e² N(φ) sin φ cos φ`
+  (`latitudeResidual_toECEF`), the equation iterative methods solve, and
+  given the latitude the height is
+  `h = p cos φ + z sin φ - a √(1 - e² sin² φ)` (`height_eq`), with no
+  division by `cos φ`.
+- Every point of space has geodetic coordinates (`toECEF_surjective`): off
+  the axis the latitude equation goes from `-p` at the south pole to `p` at
+  the north pole, so it has a root by the intermediate value theorem, and
+  the root with the height formula lands on the point; on the axis the point
+  is straight above or below the north pole.
+- On a sphere the inverse has the closed form latitude `arcsin (z / r)`,
+  height `r - R` (`sphereInverse`), and it undoes `toECEF`
+  (`sphereInverse_toECEF`).
+
+That the latitude is unique for points above the ellipsoid is not proved.
+
+### Helmert
+
+Two reference frames place the Earth's centre, axes and metre slightly
+differently, and ECEF positions in them are related by a Helmert
+transformation `x' = t + s R x`, with `R` a rotation (a linear isometry of
+determinant one).
+
+- It multiplies all distances by `s` (`dist_apply`); two compose to a third
+  (`comp_apply`) and each has an inverse (`inv_apply`, `apply_inv`).
+- The seven-parameter form linearises the rotation as `v + r × v`
+  (`smallRotation`). That is not a rotation: exactly
+  `‖v + r × v‖² = ‖v‖² + ‖r × v‖²` (`norm_smallRotation_sq`), so lengths
+  are kept only along the axis (`norm_smallRotation_eq_iff`), with
+  `‖r × v‖² = ‖r‖² ‖v‖² - ⟪r, v⟫²` (`norm_cross_sq`). The stretch is at most
+  `‖r‖² ‖v‖ / 2` (`norm_smallRotation_le`): for angles up to a microradian
+  and points within 7000 km of the centre, at most 3.5 micrometres
+  (`smallRotation_error_small`).
 
 ### Curvature
 
@@ -345,6 +385,15 @@ The examples:
   the existing `Projection.y_mem_iff` seen from the CRS. The poles are
   outside it (`northPole_not_mem_webMercatorCRS_domain`).
 
+A transformation between two geographic CRSs (`CRSTransformation`) is a
+Helmert transformation between their frames, applied to three-dimensional
+coordinates (`Coordinate3D`): to ECEF on the source ellipsoid, through the
+Helmert transformation, and back to latitude, longitude and height on the
+target ellipsoid, which exists by `toECEF_surjective`. The transformed
+coordinate names the moved point (`toPoint3D_transform`), transforming back
+returns to the same point (`toPoint3D_inverse_transform`), and distances are
+multiplied by the scale (`dist_transform`).
+
 A datum is modelled only by its ellipsoid. Its realisations, units, axis
 order and areas of use are outside the definition.
 
@@ -358,8 +407,8 @@ other file refers to the labels.
 ## Scope
 
 Geodesics on the ellipsoid, the agreement of the metric length above with
-the arc length of smooth curves (the integral of speed), the inverse ECEF
-conversion, datum transformations, transformations between CRSs, CRS
+the arc length of smooth curves (the integral of speed), the uniqueness of
+the ellipsoidal ECEF inverse, published transformation parameters, CRS
 registries and projections other than Mercator are not covered yet.
 
 ## Build
@@ -391,6 +440,8 @@ labels outside `CRS/EPSG.lean`.
 | `LeanGeodesy/GeodeticLongitude.lean` | Longitude as an angle modulo a full turn |
 | `LeanGeodesy/GeodeticLatitude.lean` | Geodetic and geocentric latitude, the meridian ellipse |
 | `LeanGeodesy/GeodeticCoordinate.lean` | Latitude, longitude, height and ECEF |
+| `LeanGeodesy/ECEFInverse.lean` | From ECEF back to latitude, longitude and height |
+| `LeanGeodesy/Helmert.lean` | Helmert transformations and the linearised rotation |
 | `LeanGeodesy/Curvature.lean` | Meridian radius of curvature and the tangents of the ellipsoid |
 | `LeanGeodesy/MeridianArc.lean` | Meridian arc length as an integral of `M`, and its bounds |
 | `LeanGeodesy/QuarterMeridian.lean` | The WGS 84 quarter meridian is 10001960 m to 10001975 m |
@@ -401,5 +452,6 @@ labels outside `CRS/EPSG.lean`.
 | `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |
 | `LeanGeodesy/CRS/WGS84.lean` | The WGS 84 geographic CRS |
 | `LeanGeodesy/CRS/WebMercator.lean` | The Web Mercator projected CRS over WGS 84 |
+| `LeanGeodesy/CRS/Transformation.lean` | Transformations between geographic CRSs through ECEF |
 | `LeanGeodesy/CRS/EPSG.lean` | `EPSG:4326` and `EPSG:3857` as labels, used by no proof |
 | `LeanGeodesy/Axioms.lean` | Axiom audit of the main theorems |
