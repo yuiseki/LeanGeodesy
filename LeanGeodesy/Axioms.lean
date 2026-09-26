@@ -662,3 +662,11 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.ellipsoidalMercator_not_isConformal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.ellipsoidalMercator_not_isConformal
+
+/-- info: 'Geodesy.Projection.tmY_central' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.tmY_central
+
+/-- info: 'Geodesy.Projection.tmB_sq_lt_one' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.tmB_sq_lt_one

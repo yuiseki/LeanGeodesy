@@ -15,6 +15,7 @@ import LeanGeodesy.Projection.WebMercator
 import LeanGeodesy.Projection.CutoffLatitude
 import LeanGeodesy.Projection.Distortion
 import LeanGeodesy.Projection.Cylindrical
+import LeanGeodesy.Projection.TransverseMercator
 import LeanGeodesy.Geodesic
 import LeanGeodesy.CRS.Basic
 import LeanGeodesy.CRS.WGS84
