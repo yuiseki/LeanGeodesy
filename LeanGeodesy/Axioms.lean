@@ -1110,3 +1110,15 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.ReferenceEllipsoid.equator_isGeodesic' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.ReferenceEllipsoid.equator_isGeodesic
+
+/-- info: 'Geodesy.ReferenceEllipsoid.hasDerivAt_meridianRadius' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.hasDerivAt_meridianRadius
+
+/-- info: 'Geodesy.ReferenceEllipsoid.hasDerivAt_firstFormE' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.hasDerivAt_firstFormE
+
+/-- info: 'Geodesy.ReferenceEllipsoid.hasDerivAt_firstFormG' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.hasDerivAt_firstFormG

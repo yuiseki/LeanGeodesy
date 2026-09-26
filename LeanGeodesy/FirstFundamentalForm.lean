@@ -51,6 +51,11 @@ sphere of radius `R`, `M = N = R` (`meridianRadius_ofSphere`,
 `R² dφ² + R² cos² φ dλ²` (`firstForm_ofSphere`) and the area element
 `R² cos φ` (`areaElement_ofSphere`).
 
+The coefficients depend on the latitude only. Their derivatives are
+`E' = 2 M M'` and `G' = -2 N cos φ · M sin φ` (`hasDerivAt_firstFormE`,
+`hasDerivAt_firstFormG`), from `M' = 3 e² sin φ cos φ M / (1 - e² sin² φ)`
+(`hasDerivAt_meridianRadius`) and `(N cos φ)' = -M sin φ`.
+
 Longitude is an unwrapped real coordinate here: the form is local.
 -/
 
@@ -242,6 +247,34 @@ theorem cos_angle_dr (φ lam : ℝ) (u v : ℝ × ℝ) :
 theorem metric_eq_zero_iff (φ lam : ℝ) (u v : ℝ × ℝ) :
     E.metric φ u v = 0 ↔ (inner (E.dr φ lam u) (E.dr φ lam v) : ℝ) = 0 := by
   rw [inner_dr]
+
+/-! ## Derivatives of the coefficients -/
+
+/-- `E' = 2 M M'`. -/
+noncomputable def firstFormE' (φ : ℝ) : ℝ :=
+  2 * E.meridianRadius φ * (3 * E.e2 * sin φ * cos φ * E.meridianRadius φ / E.W2 φ)
+
+/-- `G' = 2 (N cos φ) (N cos φ)' = -2 N cos φ · M sin φ`. -/
+noncomputable def firstFormG' (φ : ℝ) : ℝ :=
+  2 * (E.primeVerticalRadius φ * cos φ) * (-(E.meridianRadius φ * sin φ))
+
+theorem hasDerivAt_firstFormE (φ lam : ℝ) :
+    HasDerivAt (fun φ => E.firstFormE φ lam) (E.firstFormE' φ) φ := by
+  have hfun : (fun φ => E.firstFormE φ lam) = fun φ => E.meridianRadius φ ^ 2 := by
+    funext φ; exact E.firstFormE_eq φ lam
+  rw [hfun, firstFormE']
+  convert (E.hasDerivAt_meridianRadius φ).pow 2 using 1
+  push_cast
+  ring
+
+theorem hasDerivAt_firstFormG (φ lam : ℝ) :
+    HasDerivAt (fun φ => E.firstFormG φ lam) (E.firstFormG' φ) φ := by
+  have hfun : (fun φ => E.firstFormG φ lam) = fun φ => (E.primeVerticalRadius φ * cos φ) ^ 2 := by
+    funext φ; exact E.firstFormG_eq φ lam
+  rw [hfun, firstFormG']
+  convert (E.hasDerivAt_meridianPoint_fst φ).pow 2 using 1
+  push_cast
+  ring
 
 /-! ## The area element -/
 

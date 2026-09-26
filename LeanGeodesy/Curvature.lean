@@ -103,6 +103,23 @@ theorem hasDerivAt_meridianPoint_snd (φ : ℝ) :
   simp only [W2] at *
   ring
 
+/-- The derivative of the meridian radius: `M' = 3 e² sin φ cos φ M / (1 - e² sin² φ)`. -/
+theorem hasDerivAt_meridianRadius (φ : ℝ) :
+    HasDerivAt E.meridianRadius (3 * E.e2 * sin φ * cos φ * meridianRadius E φ / W2 E φ) φ := by
+  have hD := W2_pos E φ
+  have hs : 0 < √(W2 E φ) := sqrt_pos.mpr hD
+  have hW := hasDerivAt_W2 E φ
+  have hprod := hW.mul (hW.sqrt hD.ne')
+  have h := (hasDerivAt_const φ (E.a * (1 - E.e2))).div hprod (mul_pos hD hs).ne'
+  have hM : E.meridianRadius = fun φ => E.a * (1 - E.e2) / (W2 E φ * √(W2 E φ)) := rfl
+  rw [hM]
+  convert h using 1
+  have hsq : √(W2 E φ) ^ 2 = W2 E φ := sq_sqrt hD.le
+  field_simp
+  ring_nf
+  rw [show √(W2 E φ) ^ 3 = √(W2 E φ) ^ 2 * √(W2 E φ) by ring, hsq]
+  ring
+
 /-- The point of the ellipsoid at geodetic latitude `φ` and longitude `lam`. -/
 noncomputable def ellipsoidPoint (φ lam : ℝ) : E3 :=
   vec3 (E.primeVerticalRadius φ * cos φ * cos lam) (E.primeVerticalRadius φ * cos φ * sin lam)
