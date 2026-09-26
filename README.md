@@ -40,7 +40,8 @@ Projection.WebMercator        Geodesic
   ↓
 Projection.Distortion ── Projection.Cylindrical ── Projection.TransverseMercator
   │                       └─ Projection.EqualArea
-  └─ Projection.Azimuthal (with Geodesic)
+  └─ Projection.Azimuthal (with Geodesic) ── Projection.Buffer
+     Projection.Rhumb ── Projection.RhumbVsGreatCircle
   ↓
 CRS (and CRS.Transformation, which uses ECEFInverse and Helmert)
 ```
@@ -376,6 +377,47 @@ ellipsoid is above `1` because `(1 - e²) cos² φ < (1 - e² sin² φ)²` when
 `(45° N, 90° E)`: the map line is due east, while the great circle leaves
 with a northward component.
 
+### Distances and buffers as GIS tools compute them
+
+GIS libraries report several different "distances" and build buffers in a
+particular way. These files say what each one means on the sphere; library
+code and its numbers are not used in any proof.
+
+- Rhumb line (`Projection.Rhumb`). A path of constant compass bearing `α` is
+  a straight line on Mercator's map, and conversely
+  (`constantBearing_iff_mercatorLine`): its tangent has northward component
+  `R` and eastward component `R cos φ λ'` (`hasBearing_latitudeCurve_iff`),
+  so the bearing is constant exactly when
+  `λ(φ) = λ₀ + tan α (mercatorY φ - mercatorY φ₀)` (`rhumbLon`), which
+  Mercator draws on a straight line (`mercator_rhumb_on_line`). This covers
+  bearings strictly between west and east through north, latitudes between
+  the poles, and an unwrapped real longitude.
+- Rhumb-line distance (`Projection.RhumbVsGreatCircle`). With curve length
+  defined as the integral of speed (`curveLength`), a rhumb line of bearing
+  `α` has length `R (φ₁ - φ₀) / cos α` (`rhumb_curveLength`), the formula
+  libraries use, here derived.
+- Great-circle distance (`Geodesic`, the haversine formula `haversine`)
+  versus rhumb line, from `45° N 0°` to `45° N 90° E`: the rhumb line is the
+  parallel, heading due east, of length `√2 π R / 4`
+  (`parallel_hasBearing_east`, `parallel_curveLength`); the great circle has
+  central angle `π/3` (`centralAngle_A_B`), leaves with a northward
+  component (`greatCircle_initial_not_east`), passes north of the parallel
+  (`greatArc_midpoint_not_on_parallel`), and is shorter,
+  `π R / 3 < √2 π R / 4` (`greatCircleDistance_lt_rhumb_A_B`).
+- Planar Mercator distance. Distance measured on the Mercator map and
+  scaled by the cosine of the latitude, as web maps convert map units to
+  metres, equals the rhumb-line length for two points on one parallel
+  (`mercator_distance_scaled_A_B`), not the great-circle distance.
+- Azimuthal equidistant buffer (`Projection.Buffer`). Projecting with the
+  azimuthal equidistant projection centred on the point and drawing a planar
+  circle of radius `r` gives exactly the geodesic circle of radius `r`
+  (`image_geodesicCircle`), and the planar disk exactly the geodesic disk
+  (`image_geodesicDisk`), for `r < π R`. Distances and azimuths from the
+  centre are kept, but areas are not: the planar disk has area `π r²`
+  (`volume_image_geodesicDisk`), larger than the spherical cap
+  `2π R² (1 - cos (r / R))` it stands for (`capArea_eq`,
+  `azimuthalEquidistant_enlarges_buffer`).
+
 ### Projection.TransverseMercator
 
 Turning the sphere so that a chosen meridian plays the role of the equator
@@ -531,8 +573,9 @@ other file refers to the labels.
 Geodesics on the ellipsoid, the agreement of the metric length above with
 the arc length of smooth curves (the integral of speed), the uniqueness of
 the ellipsoidal ECEF inverse, published transformation parameters, CRS
-registries, the ellipsoidal transverse Mercator projection and projections
-other than the Mercator family are not covered yet.
+registries, the ellipsoidal transverse Mercator projection, ellipsoidal
+rhumb lines, azimuthal projections centred off the pole, and projections
+other than those above are not covered yet.
 
 ## Build
 
@@ -575,6 +618,9 @@ labels outside `CRS/EPSG.lean`.
 | `LeanGeodesy/Projection/Cylindrical.lean` | Mercator, plate carrée and Lambert; uniqueness |
 | `LeanGeodesy/Projection/EqualArea.lean` | Lambert's equal-area projection, cell areas, Web Mercator's area scale |
 | `LeanGeodesy/Projection/Azimuthal.lean` | Azimuthal equidistant projection; Mercator does not keep azimuths |
+| `LeanGeodesy/Projection/Rhumb.lean` | Rhumb lines: constant bearing is a straight Mercator line |
+| `LeanGeodesy/Projection/RhumbVsGreatCircle.lean` | Curve length; great circle versus rhumb line from 45° N 0° to 45° N 90° E |
+| `LeanGeodesy/Projection/Buffer.lean` | Azimuthal equidistant buffers: exact circles and disks, enlarged areas |
 | `LeanGeodesy/Projection/TransverseMercator.lean` | Spherical transverse Mercator, conformality, UTM scale |
 | `LeanGeodesy/Geodesic.lean` | Central angle, haversine, great-circle distance as a metric |
 | `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |
