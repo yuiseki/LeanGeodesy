@@ -70,7 +70,9 @@ G λ'' + G' φ' λ' = 0                                   (geodesic_longitude_eq
 the second being the expanded form of `d/dt (G λ') = 0`. Divided by `E`,
 the first is `φ'' + Γ^φ_{φφ} φ'² + Γ^φ_{λλ} λ'² = 0` with
 `Γ^φ_{φφ} = E' / 2E` and `Γ^φ_{λλ} = -G' / 2E`
-(`geodesic_latitude_equation_christoffel`). For the parallels it reduces to
+(`geodesic_latitude_equation_christoffel`). Conversely the two equations at
+a time are exactly the geodesic condition there (`isGeodesicAt_iff_equations`,
+`isGeodesic_iff_equations`). For the parallels it reduces to
 `-½ G'(φ₀) = 0`, recovering that only the equator is a geodesic
 (`parallelCurve_latitude_equation_iff`).
 
@@ -387,6 +389,43 @@ theorem geodesic_latitude_equation_christoffel (hg : γ.IsGeodesic) {t lat'' : �
   simp only [christoffelLatLatLat, christoffelLatLonLon]
   field_simp
   linear_combination 2 * h
+
+/-- `⟨r'', ∂r/∂λ⟩ = G λ'' + G' φ' λ'`, for a curve whose `λ'` has derivative `λ''`. -/
+theorem inner_acc_rLon {t lon'' : ℝ} (h3 : HasDerivAt γ.lon' lon'' t) :
+    (inner (γ.acc t) (γ.rLon t) : ℝ) =
+      (E.primeVerticalRadius (γ.lat t) * cos (γ.lat t)) ^ 2 * lon'' +
+        E.firstFormG' (γ.lat t) * γ.lat' t * γ.lon' t := by
+  have hG : HasDerivAt (fun s => (E.primeVerticalRadius (γ.lat s) * cos (γ.lat s)) ^ 2)
+      (E.firstFormG' (γ.lat t) * γ.lat' t) t := by
+    convert ((E.hasDerivAt_meridianPoint_fst (γ.lat t)).comp t (γ.hasDerivAt_lat t)).pow 2 using 1
+    simp only [firstFormG', Function.comp]
+    push_cast
+    ring
+  rw [(γ.hasDerivAt_G_mul_lon' t).unique (hG.mul h3)]
+  ring
+
+/-- At a time `t`, the curve is an affinely parametrised geodesic (no
+acceleration along the surface) exactly when both coordinate equations hold:
+`E φ'' + ½ E' φ'² - ½ G' λ'² = 0` and `G λ'' + G' φ' λ' = 0`. -/
+theorem isGeodesicAt_iff_equations {t lat'' lon'' : ℝ} (h2 : HasDerivAt γ.lat' lat'' t)
+    (h3 : HasDerivAt γ.lon' lon'' t) :
+    ((inner (γ.acc t) (γ.rLat t) : ℝ) = 0 ∧ (inner (γ.acc t) (γ.rLon t) : ℝ) = 0) ↔
+      (E.meridianRadius (γ.lat t) ^ 2 * lat'' + E.firstFormE' (γ.lat t) / 2 * γ.lat' t ^ 2 -
+          E.firstFormG' (γ.lat t) / 2 * γ.lon' t ^ 2 = 0 ∧
+        (E.primeVerticalRadius (γ.lat t) * cos (γ.lat t)) ^ 2 * lon'' +
+          E.firstFormG' (γ.lat t) * γ.lat' t * γ.lon' t = 0) := by
+  rw [γ.inner_acc_rLat h2, γ.inner_acc_rLon h3]
+
+/-- So a curve with second derivatives everywhere is an affinely parametrised
+geodesic exactly when the latitude and longitude equations hold at every time. -/
+theorem isGeodesic_iff_equations {lat'' lon'' : ℝ → ℝ}
+    (h2 : ∀ t, HasDerivAt γ.lat' (lat'' t) t) (h3 : ∀ t, HasDerivAt γ.lon' (lon'' t) t) :
+    γ.IsGeodesic ↔ ∀ t,
+      E.meridianRadius (γ.lat t) ^ 2 * lat'' t + E.firstFormE' (γ.lat t) / 2 * γ.lat' t ^ 2 -
+          E.firstFormG' (γ.lat t) / 2 * γ.lon' t ^ 2 = 0 ∧
+        (E.primeVerticalRadius (γ.lat t) * cos (γ.lat t)) ^ 2 * lon'' t +
+          E.firstFormG' (γ.lat t) * γ.lat' t * γ.lon' t = 0 :=
+  forall_congr' fun t => γ.isGeodesicAt_iff_equations (h2 t) (h3 t)
 
 end EllipsoidCurve
 

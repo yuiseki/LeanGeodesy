@@ -1158,3 +1158,15 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.areaScale_ofEllipsoid' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.areaScale_ofEllipsoid
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.inner_acc_rLon' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.inner_acc_rLon
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.isGeodesicAt_iff_equations' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.isGeodesicAt_iff_equations
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.isGeodesic_iff_equations' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.isGeodesic_iff_equations
