@@ -545,8 +545,21 @@ zoom `z`. From the pixel coordinates of `Projection.WebMercator`:
   at zoom `z` as parent (`parent_tileOfPoint`), so its Morton code divided by
   4 is the code one level up (`morton_tileOfPoint_succ_div_four`).
 
-The Hilbert curve, which orders the same quadtree so that consecutive tiles
-share an edge, is not covered.
+- Hilbert order (`Tiles.Hilbert`). The tile visited `i`-th at zoom `z + 1` is
+  the tile visited `(i mod 4^z)`-th at zoom `z`, transformed by a symmetry of
+  the grid chosen by the top digit `i / 4^z` (transpose, identity, identity,
+  anti-transpose) and placed in the matching quadrant (`quadPlace`,
+  `hilbertD`). Each curve starts at `(0, 0)` and ends at `(2^z - 1, 0)`
+  (`hilbertD_zero`, `hilbertD_last`), so the end of one quadrant's piece is
+  next to the start of the next, and consecutive tiles share an edge
+  (`hilbertD_adj`, `hilbert_adjacent`). The order is injective
+  (`hilbertD_injective`), so with `4^z` tiles `decode` is a bijection with
+  inverse `encode` (`hilbertEquiv`, `encode_decode`, `decode_encode`). It is
+  nested like the quadtree: the parent of the tile visited `i`-th at zoom
+  `z + 1` is the tile visited `(i / 4)`-th at zoom `z`
+  (`hilbertD_halve`, `parent_hilbert_decode`). The Morton order, in contrast,
+  is not adjacent at any zoom `z ≥ 1` (`morton_not_adjacent`). Only the finite
+  grid order is covered, not the continuous Hilbert curve.
 
 ### Projection.TransverseMercator
 
@@ -730,6 +743,7 @@ other file refers to the labels.
 | `LeanGeodesy/Tiles/Grid.lean` | The integer tile grid of Web Mercator |
 | `LeanGeodesy/Tiles/Quadtree.lean` | The tile quadtree; tiles as quadtree paths |
 | `LeanGeodesy/Tiles/Morton.lean` | Morton codes; tiles, paths and codes in bijection |
+| `LeanGeodesy/Tiles/Hilbert.lean` | The Hilbert order: a bijection whose consecutive tiles share an edge, nested like the quadtree |
 | `LeanGeodesy/Projection/TransverseMercator.lean` | Spherical transverse Mercator, conformality, UTM scale |
 | `LeanGeodesy/Geodesic.lean` | Central angle, haversine, great-circle distance as a metric |
 | `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |

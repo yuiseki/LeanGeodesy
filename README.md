@@ -79,7 +79,7 @@ Mercator + integration             → rhumb lines become straight lines
 azimuthal projection + spheres     → centre distance and azimuth kept, exact buffers
 integration and Lebesgue measure   → finite cell and buffer areas
 ECEF / Helmert / CRS               → coordinate transformations and conversions
-Web Mercator pixels + integers     → tile grid, quadtree, Morton codes
+Web Mercator pixels + integers     → tile grid, quadtree, Morton and Hilbert orders
 ```
 
 ## What is actually proved?
@@ -97,6 +97,7 @@ A selection; [docs/REFERENCE.md](docs/REFERENCE.md) lists everything.
 | Lambert's cylindrical projection keeps the area of every latitude-longitude cell | `lambertCylindrical_preserves_cellArea` |
 | EPSG:4326 geographic 2D and EPSG:3857 convert back and forth as a bijection | `webMercatorEquiv` |
 | Web Mercator tiles at zoom `z`, quadtree paths of length `z` and Morton codes below `4^z` are in bijection | `tile_path_morton_bijective`, `mortonEquiv_eq_trans` |
+| The Hilbert order visits every tile once and consecutive tiles share an edge; the Morton order does not | `hilbertEquiv`, `hilbert_adjacent`, `morton_not_adjacent` |
 
 ## What map projections keep and distort
 
@@ -119,7 +120,7 @@ On the sphere unless stated. "Local" means the scale factors at a point.
 | How do a great circle and a rhumb line differ? | `greatCircleDistance_lt_rhumb_A_B` |
 | What does an azimuthal equidistant buffer mean? | `image_geodesicCircle`, `image_geodesicDisk` |
 | What does conformal mean mathematically? | `isConformal_iff_firstForm` |
-| Why do tile indices form a quadtree, and what is a Morton code? | `parent_tileOfPoint`, `morton_eq_interleave` |
+| Why do tile indices form a quadtree, and what do Morton and Hilbert orders guarantee? | `parent_tileOfPoint`, `morton_eq_interleave`, `hilbert_adjacent` |
 | How is a datum transformation different from a projection? | `toPoint3D_transform` (through ECEF and Helmert) versus `webMercatorEquiv` (within one datum) |
 
 ## Scope
