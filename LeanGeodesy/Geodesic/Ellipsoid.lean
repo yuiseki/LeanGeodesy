@@ -4,14 +4,22 @@ import Mathlib.Analysis.InnerProductSpace.Calculus
 /-!
 # Geodesics on the ellipsoid and Clairaut's relation
 
-A geodesic is a curve that does not turn within the surface: its
-acceleration has no component along the surface. With latitude and
-longitude as coordinates the surface directions are spanned by `∂r/∂φ` and
-`∂r/∂λ`, so a curve is a geodesic when
+A geodesic is a curve that does not turn within the surface. With latitude
+and longitude as coordinates the surface directions are spanned by `∂r/∂φ`
+and `∂r/∂λ`, and `IsGeodesic` asks that the acceleration in space have no
+component along them:
 
 ```
 ⟨r'', ∂r/∂φ⟩ = 0   and   ⟨r'', ∂r/∂λ⟩ = 0            (IsGeodesic)
 ```
+
+This is the condition for an affinely parametrised geodesic: the
+acceleration is purely normal, so the curve neither turns within the surface
+nor speeds up or slows down (`geodesic_speed_const`). A geodesic traced at
+varying speed, the same path under another parametrisation, has an
+acceleration component along its own velocity and does not satisfy
+`IsGeodesic`; the unparametrised notion would only ask the tangential
+acceleration to be parallel to the velocity.
 
 The first fundamental form turns the second condition into an equation in
 coordinates. By `inner_dr`, `⟨r', ∂r/∂λ⟩ = G λ'` with `G = (N cos φ)²`, and
@@ -87,7 +95,9 @@ theorem hasDerivAt_position (t : ℝ) : HasDerivAt γ.position (γ.vel t) t :=
 noncomputable def rLat (t : ℝ) : E3 := E.meridianTangent (γ.lat t) (γ.lon t)
 noncomputable def rLon (t : ℝ) : E3 := E.parallelTangent (γ.lat t) (γ.lon t)
 
-/-- A geodesic: no acceleration along the surface. -/
+/-- An affinely parametrised (constant-speed) geodesic: the acceleration in space
+has no component along the surface, so it is normal to the surface. A
+reparametrisation at non-constant speed of such a curve is not `IsGeodesic`. -/
 def IsGeodesic : Prop :=
   ∀ t, (inner (γ.acc t) (γ.rLat t) : ℝ) = 0 ∧ (inner (γ.acc t) (γ.rLon t) : ℝ) = 0
 

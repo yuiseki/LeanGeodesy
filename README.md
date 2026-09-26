@@ -269,10 +269,14 @@ are not covered yet.
 
 ### Geodesic.Ellipsoid
 
-A geodesic is a curve whose acceleration has no component along the
-surface: `⟨r'', ∂r/∂φ⟩ = 0` and `⟨r'', ∂r/∂λ⟩ = 0` (`IsGeodesic`), for a curve
-given by latitude and longitude with its velocity `dr (φ', λ')` and
-acceleration (`EllipsoidCurve`).
+`IsGeodesic` is the condition for an affinely parametrised geodesic: the
+acceleration in space has no component along the surface,
+`⟨r'', ∂r/∂φ⟩ = 0` and `⟨r'', ∂r/∂λ⟩ = 0`, so it is purely normal, for a
+curve given by latitude and longitude with its velocity `dr (φ', λ')` and
+acceleration (`EllipsoidCurve`). Such curves have constant speed. The same
+path traced at varying speed is a geodesic as a set but does not satisfy
+`IsGeodesic`, since its acceleration then has a component along the
+velocity.
 
 - The longitude component of the geodesic equation comes from the first
   fundamental form. The velocity pairs with `∂r/∂λ` to `G λ'` with
