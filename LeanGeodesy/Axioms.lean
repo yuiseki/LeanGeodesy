@@ -1182,3 +1182,31 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.meridianArc_eq_curveLength' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.meridianArc_eq_curveLength
+
+/-- info: 'Geodesy.Projection.tileX_spec' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.tileX_spec
+
+/-- info: 'Geodesy.Projection.tileX_lt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.tileX_lt
+
+/-- info: 'Geodesy.Projection.tileY_lt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.tileY_lt
+
+/-- info: 'Geodesy.Projection.tileX_halfExtent' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.tileX_halfExtent
+
+/-- info: 'Geodesy.Projection.tileX_succ_div_two' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.tileX_succ_div_two
+
+/-- info: 'Geodesy.Projection.tileY_succ_div_two' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.tileY_succ_div_two
+
+/-- info: 'Geodesy.Projection.tileX_succ_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.tileX_succ_eq
