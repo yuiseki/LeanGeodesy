@@ -16,6 +16,7 @@ import LeanGeodesy.Projection.CutoffLatitude
 import LeanGeodesy.Projection.Distortion
 import LeanGeodesy.Projection.Cylindrical
 import LeanGeodesy.Projection.EqualArea
+import LeanGeodesy.Projection.Azimuthal
 import LeanGeodesy.Projection.TransverseMercator
 import LeanGeodesy.Geodesic
 import LeanGeodesy.CRS.Basic

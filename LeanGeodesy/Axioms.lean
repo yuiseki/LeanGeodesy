@@ -802,3 +802,39 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.wgs84_webMercator_not_isEqualArea' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.wgs84_webMercator_not_isEqualArea
+
+/-- info: 'Geodesy.Projection.angle_northPole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.angle_northPole
+
+/-- info: 'Geodesy.Projection.arcNormal_northPole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.arcNormal_northPole
+
+/-- info: 'Geodesy.Projection.hasDerivAt_greatArc_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.hasDerivAt_greatArc_zero
+
+/-- info: 'Geodesy.Projection.azimuthalEquidistant_preserves_azimuth' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.azimuthalEquidistant_preserves_azimuth
+
+/-- info: 'Geodesy.Projection.azimuthalEquidistant_preserves_distanceFromCentre' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.azimuthalEquidistant_preserves_distanceFromCentre
+
+/-- info: 'Geodesy.Projection.azimuthalEquidistant_h' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.azimuthalEquidistant_h
+
+/-- info: 'Geodesy.Projection.one_lt_azimuthalEquidistant_k' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.one_lt_azimuthalEquidistant_k
+
+/-- info: 'Geodesy.Projection.azimuthalEquidistant_not_isConformal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.azimuthalEquidistant_not_isConformal
+
+/-- info: 'Geodesy.Projection.azimuthalEquidistant_not_isEqualArea' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.azimuthalEquidistant_not_isEqualArea
