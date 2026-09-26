@@ -690,3 +690,27 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.hasDerivAt_tmY_lon' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.hasDerivAt_tmY_lon
+
+/-- info: 'Geodesy.Projection.tm_orthogonal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.tm_orthogonal
+
+/-- info: 'Geodesy.Projection.tm_h' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.tm_h
+
+/-- info: 'Geodesy.Projection.tm_k' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.tm_k
+
+/-- info: 'Geodesy.Projection.tm_isConformal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.tm_isConformal
+
+/-- info: 'Geodesy.Projection.tmScale_central' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.tmScale_central
+
+/-- info: 'Geodesy.Projection.one_lt_tmScale' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.one_lt_tmScale

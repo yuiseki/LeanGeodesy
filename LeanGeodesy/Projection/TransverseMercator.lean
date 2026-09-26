@@ -30,6 +30,12 @@ The partial derivatives are (`hasDerivAt_tmX_lat`, `hasDerivAt_tmX_lon`,
 ∂(x, y)/∂φ = R / (1 - B²) · (-sin φ sin λ, cos λ)
 ∂(x, y)/∂λ = R cos φ / (1 - B²) · (cos λ, sin φ sin λ)
 ```
+
+They are perpendicular, and both scales equal `1 / √(1 - B²)`
+(`tm_h`, `tm_k`), so the projection is conformal (`tm_isConformal`). Its
+scale factor depends only on the distance from the central meridian: it is
+`1` on the central meridian (`tmScale_central`) and grows away from it
+(`one_lt_tmScale`), exactly as Mercator's grows away from the equator.
 -/
 
 namespace Geodesy.Projection
@@ -144,5 +150,89 @@ theorem hasDerivAt_tmY_lon (hφ : 0 < cos φ) (hl : 0 < cos lam) :
   rw [tan_eq_sin_div_cos]
   field_simp
   ring
+
+/-! ## Conformality and scale -/
+
+/-- The scale factor of the transverse Mercator projection: `1 / √(1 - B²)`. -/
+noncomputable def tmScale (φ lam : ℝ) : ℝ := 1 / √(1 - tmB φ lam ^ 2)
+
+/-- The partial derivatives of the transverse Mercator projection as a local
+distortion on the sphere of radius `R`. -/
+noncomputable def tmDistortion (hR : 0 < R) (hφ : 0 < cos φ) (_hl : 0 < cos lam) : LocalDistortion :=
+  ⟨R, R * cos φ, hR, mul_pos hR hφ,
+    vec2 (R * (-sin φ * sin lam) / (1 - tmB φ lam ^ 2)) (R * cos lam / (1 - tmB φ lam ^ 2)),
+    vec2 (R * (cos φ * cos lam) / (1 - tmB φ lam ^ 2))
+      (R * (sin φ * cos φ * sin lam) / (1 - tmB φ lam ^ 2))⟩
+
+section Conformal
+
+variable {R} (hR : 0 < R) (hφ : 0 < cos φ) (hl : 0 < cos lam)
+include hR hφ hl
+
+theorem tm_orthogonal :
+    (inner (tmDistortion R hR hφ hl).dLat (tmDistortion R hR hφ hl).dLon : ℝ) = 0 := by
+  simp only [tmDistortion, inner_vec2]
+  ring
+
+theorem tm_h : (tmDistortion R hR hφ hl).h = tmScale φ lam := by
+  have hB := tmB_sq_lt_one φ hl
+  have hD : 0 < 1 - tmB φ lam ^ 2 := by linarith
+  have hsq : ‖(tmDistortion R hR hφ hl).dLat‖ ^ 2 = R ^ 2 / (1 - tmB φ lam ^ 2) := by
+    simp only [tmDistortion, norm_vec2_sq]
+    have e : sin φ ^ 2 * sin lam ^ 2 + cos lam ^ 2 = 1 - tmB φ lam ^ 2 := by
+      rw [one_sub_tmB_sq]
+      have h1 := sin_sq_add_cos_sq φ
+      have h2 := sin_sq_add_cos_sq lam
+      linear_combination sin φ ^ 2 * h2 - cos lam ^ 2 * h1
+    field_simp
+    rw [← e]
+    ring
+  have hn : ‖(tmDistortion R hR hφ hl).dLat‖ = R / √(1 - tmB φ lam ^ 2) := by
+    rw [← sqrt_sq (norm_nonneg _), hsq, sqrt_div' _ hD.le, sqrt_sq hR.le]
+  rw [LocalDistortion.h, hn, tmScale]
+  simp only [tmDistortion]
+  field_simp
+  ring
+
+theorem tm_k : (tmDistortion R hR hφ hl).k = tmScale φ lam := by
+  have hB := tmB_sq_lt_one φ hl
+  have hD : 0 < 1 - tmB φ lam ^ 2 := by linarith
+  have hsq : ‖(tmDistortion R hR hφ hl).dLon‖ ^ 2 =
+      (R * cos φ) ^ 2 / (1 - tmB φ lam ^ 2) := by
+    simp only [tmDistortion, norm_vec2_sq]
+    have e : cos lam ^ 2 + sin φ ^ 2 * sin lam ^ 2 = 1 - tmB φ lam ^ 2 := by
+      rw [one_sub_tmB_sq]
+      have h1 := sin_sq_add_cos_sq φ
+      have h2 := sin_sq_add_cos_sq lam
+      linear_combination sin φ ^ 2 * h2 - cos lam ^ 2 * h1
+    field_simp
+    rw [← e]
+    ring
+  have hRc : 0 < R * cos φ := mul_pos hR hφ
+  have hn : ‖(tmDistortion R hR hφ hl).dLon‖ = R * cos φ / √(1 - tmB φ lam ^ 2) := by
+    rw [← sqrt_sq (norm_nonneg _), hsq, sqrt_div' _ hD.le, sqrt_sq hRc.le]
+  rw [LocalDistortion.k, hn, tmScale]
+  simp only [tmDistortion]
+  field_simp
+  ring
+
+/-- The transverse Mercator projection of the sphere is conformal. -/
+theorem tm_isConformal : (tmDistortion R hR hφ hl).IsConformal :=
+  ⟨tm_orthogonal hR hφ hl, by rw [tm_h, tm_k]⟩
+
+end Conformal
+
+/-- The scale factor is `1` on the central meridian. -/
+theorem tmScale_central (φ : ℝ) : tmScale φ 0 = 1 := by simp [tmScale, tmB]
+
+/-- Away from the central meridian (and off the poles) the scale factor exceeds `1`. -/
+theorem one_lt_tmScale (hl : 0 < cos lam) (hB : tmB φ lam ≠ 0) : 1 < tmScale φ lam := by
+  have hB2 := tmB_sq_lt_one φ hl
+  have hpos : 0 < tmB φ lam ^ 2 := by positivity
+  have hD : 0 < 1 - tmB φ lam ^ 2 := by linarith
+  have hs : √(1 - tmB φ lam ^ 2) < 1 := by
+    rw [sqrt_lt' one_pos]; linarith
+  rw [tmScale, lt_div_iff₀ (sqrt_pos.mpr hD), one_mul]
+  exact hs
 
 end Geodesy.Projection
