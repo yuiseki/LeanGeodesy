@@ -33,6 +33,7 @@ GeodeticLatitude  GeodeticLongitude
 GeodeticCoordinate ── ECEFInverse ── Helmert
   ↓
 Curvature ── MeridianArc
+  ├─ FirstFundamentalForm
   ↓
 Projection.Mercator
   ↓
@@ -222,6 +223,49 @@ point `(N cos φ, N (1 - e²) sin φ)` in `φ` gives `(-M sin φ, M cos φ)`
 the tangent to the meridian has length `M`, the tangent to the parallel has
 length `N cos φ`, and the two are perpendicular. Their ratio is
 `N / M = (1 - e² sin² φ) / (1 - e²)` (`N_div_M`).
+
+### FirstFundamentalForm
+
+Distances, speeds, angles and areas on the ellipsoid are not separate
+formulas: they all come from one metric, the first fundamental form. With
+latitude `φ` and longitude `λ` as coordinates, its coefficients are the
+inner products of the partial derivatives of the surface point, and since
+those derivatives are the meridian and parallel tangents of `Curvature`,
+
+```
+E = M²,   F = 0,   G = (N cos φ)²        (firstFormE_eq, firstFormF_eq, firstFormG_eq)
+```
+
+`M` and `N cos φ` are the local rulers north-south and east-west. The metric
+`g(u, v) = M² uφ vφ + (N cos φ)² uλ vλ` (`metric`) is symmetric, bilinear and
+non-negative, and positive definite on the open latitudes
+(`metric_self_eq_zero_iff`); at the poles `G = 0` (`firstFormG_pole`) and the
+coordinates degenerate.
+
+- Distance. The coordinate step `(dφ, dλ)` is the tangent vector
+  `dφ ∂r/∂φ + dλ ∂r/∂λ` (`dr`), whose inner products are the metric
+  (`inner_dr`), so the line element is
+  `ds² = M² dφ² + N² cos² φ dλ²` (`norm_dr_sq`), and a curve
+  `t ↦ (φ(t), λ(t))` has squared speed `M² φ'² + (N cos φ)² λ'²`
+  (`speed_sq_curve`).
+- Angle. The cosine of the angle between tangent vectors is
+  `g(u, v) / √(I(u) I(v))` (`cos_angle_dr`); they are perpendicular exactly
+  when `g(u, v) = 0` (`metric_eq_zero_iff`).
+- Area. `√(E G - F²) = M N cos φ` (`areaElement_eq`), so
+  `dA = M N cos φ dφ dλ`.
+- Sphere. `M = N = R`, `ds² = R² dφ² + R² cos² φ dλ²` and
+  `dA = R² cos φ dφ dλ` (`firstForm_ofSphere`, `areaElement_ofSphere`).
+
+The earlier results are instances. The rhumb line's speed `R / cos α` is
+the form of its coordinate velocity (`rhumb_speed_sq_eq_firstForm`), the
+cell areas of `Projection.EqualArea` integrate the area element
+(`sphereCellArea_integrand_eq_areaElement`), and a projection is conformal
+exactly when it multiplies the first fundamental form by a scalar `h²`
+(`isConformal_iff_firstForm`), with the reference lengths of every local
+distortion on the ellipsoid being `√E = M` and `√G = N cos φ`. This metric
+is the common ground for projection distortion and, later, for geodesics on
+the ellipsoid; the second fundamental form, curvature and the geodesic
+equation are not covered yet.
 
 ### MeridianArc
 
@@ -609,6 +653,7 @@ labels outside `CRS/EPSG.lean`.
 | `LeanGeodesy/ECEFInverse.lean` | From ECEF back to latitude, longitude and height |
 | `LeanGeodesy/Helmert.lean` | Helmert transformations and the linearised rotation |
 | `LeanGeodesy/Curvature.lean` | Meridian radius of curvature and the tangents of the ellipsoid |
+| `LeanGeodesy/FirstFundamentalForm.lean` | E, F, G, the metric, `ds²`, speeds, angles, the area element |
 | `LeanGeodesy/MeridianArc.lean` | Meridian arc length as an integral of `M`, and its bounds |
 | `LeanGeodesy/QuarterMeridian.lean` | The WGS 84 quarter meridian is 10001960 m to 10001975 m |
 | `LeanGeodesy/Projection/Mercator.lean` | The Mercator function, its inverse, and conformality on the sphere |
@@ -621,6 +666,7 @@ labels outside `CRS/EPSG.lean`.
 | `LeanGeodesy/Projection/Rhumb.lean` | Rhumb lines: constant bearing is a straight Mercator line |
 | `LeanGeodesy/Projection/RhumbVsGreatCircle.lean` | Curve length; great circle versus rhumb line from 45° N 0° to 45° N 90° E |
 | `LeanGeodesy/Projection/Buffer.lean` | Azimuthal equidistant buffers: exact circles and disks, enlarged areas |
+| `LeanGeodesy/Projection/FirstForm.lean` | The first fundamental form behind rhumb lines, cell areas and conformality |
 | `LeanGeodesy/Projection/TransverseMercator.lean` | Spherical transverse Mercator, conformality, UTM scale |
 | `LeanGeodesy/Geodesic.lean` | Central angle, haversine, great-circle distance as a metric |
 | `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |
