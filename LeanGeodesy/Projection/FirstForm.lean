@@ -20,7 +20,9 @@ Short connections between `FirstFundamentalForm` and the projection files.
   It is conformal exactly when the map multiplies the first fundamental form
   by `h²` (`isConformal_iff_firstForm`): conformality is preserving the
   metric up to a scalar. The Web Mercator distortion of `Cylindrical` is of
-  this form (`ellipsoidalMercatorDistortion_eq_ofEllipsoid`).
+  this form (`ellipsoidalMercatorDistortion_eq_ofEllipsoid`). Its area scale
+  is the map Jacobian's area over the first fundamental form's area element,
+  `|det (dLat, dLon)| / √(E G - F²)` (`areaScale_ofEllipsoid`).
 -/
 
 namespace Geodesy.Projection
@@ -98,6 +100,15 @@ theorem isConformal_iff_firstForm (E : ReferenceEllipsoid) {φ : ℝ} (hc : 0 < 
     rw [hv]
     simp only [firstForm, metric]
     ring
+
+/-- The local area distortion of a projection measured on the ellipsoid is the
+area of the map Jacobian over the first fundamental form's area element. -/
+theorem areaScale_ofEllipsoid (E : ReferenceEllipsoid) {φ : ℝ} (hc : 0 < cos φ) (dLat dLon : E2)
+    (lam : ℝ) :
+    (LocalDistortion.ofEllipsoid E hc dLat dLon).areaScale =
+      |LocalDistortion.det2 dLat dLon| / E.areaElement φ lam := by
+  rw [E.areaElement_eq hc.le, LocalDistortion.areaScale]
+  simp only [LocalDistortion.ofEllipsoid, mul_assoc]
 
 /-- The Web Mercator distortion on the ellipsoid is measured against the first
 fundamental form. -/

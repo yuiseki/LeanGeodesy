@@ -1154,3 +1154,7 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.ReferenceEllipsoid.parallelCurve_latitude_equation_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.ReferenceEllipsoid.parallelCurve_latitude_equation_iff
+
+/-- info: 'Geodesy.Projection.areaScale_ofEllipsoid' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.areaScale_ofEllipsoid
