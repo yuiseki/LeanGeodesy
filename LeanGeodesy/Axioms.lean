@@ -650,3 +650,15 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.eq_zero_of_isConformal_of_isEqualArea' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.eq_zero_of_isConformal_of_isEqualArea
+
+/-- info: 'Geodesy.Projection.ellipsoidalMercator_h' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.ellipsoidalMercator_h
+
+/-- info: 'Geodesy.Projection.ellipsoidalMercator_k' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.ellipsoidalMercator_k
+
+/-- info: 'Geodesy.Projection.ellipsoidalMercator_not_isConformal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.ellipsoidalMercator_not_isConformal

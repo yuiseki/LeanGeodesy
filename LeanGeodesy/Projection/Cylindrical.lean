@@ -1,4 +1,5 @@
 import LeanGeodesy.Projection.Distortion
+import LeanGeodesy.Projection.WebMercator
 import Mathlib.Analysis.Calculus.MeanValue
 
 /-!
@@ -41,6 +42,12 @@ latitude is Lambert's (`eq_sin_of_isEqualArea`): the condition on `g'`
 fixes `g`. No cylindrical projection is both at any latitude but the
 equator (`eq_zero_of_isConformal_of_isEqualArea`), since `sec φ = cos φ`
 only there.
+
+On an ellipsoid the ground steps have lengths `M` and `N cos φ` instead.
+Web Mercator, which uses the spherical formulas there, has scales
+`a sec φ / M` and `a sec φ / N` (`ellipsoidalMercator_h`,
+`ellipsoidalMercator_k`), and so is not conformal on a flattened ellipsoid
+(`ellipsoidalMercator_not_isConformal`).
 -/
 
 namespace Geodesy.Projection
@@ -70,6 +77,39 @@ derivative `g'` at a latitude `φ` with `cos φ > 0`, on the sphere of radius `R
 noncomputable def cylindricalDistortion {R : ℝ} (hR : 0 < R) (g' : ℝ) {φ : ℝ} (hc : 0 < cos φ) :
     LocalDistortion :=
   ⟨R, R * cos φ, hR, mul_pos hR hc, vec2 0 (R * g'), vec2 R 0⟩
+
+/-! ## The spherical formulas on an ellipsoid -/
+
+/-- The distortion of a Mercator map of radius `R`, fed with geodetic latitudes,
+measured on the ellipsoid `E`, as Web Mercator is. -/
+noncomputable def ellipsoidalMercatorDistortion (E : ReferenceEllipsoid) (R : ℝ) {φ : ℝ}
+    (hc : 0 < cos φ) : LocalDistortion :=
+  ⟨E.meridianRadius φ, E.primeVerticalRadius φ * cos φ, E.meridianRadius_pos φ,
+    mul_pos (E.primeVerticalRadius_pos φ) hc, vec2 0 (R / cos φ), vec2 R 0⟩
+
+section Ellipsoidal
+
+variable (E : ReferenceEllipsoid) {R : ℝ} (hR : 0 < R) {φ : ℝ} (hc : 0 < cos φ)
+include hR hc
+
+theorem ellipsoidalMercator_h :
+    (ellipsoidalMercatorDistortion E R hc).h = meridianScale E R φ := by
+  simp only [LocalDistortion.h, ellipsoidalMercatorDistortion, norm_vec2_zero_left,
+    abs_of_pos (div_pos hR hc), meridianScale]
+
+theorem ellipsoidalMercator_k :
+    (ellipsoidalMercatorDistortion E R hc).k = parallelScale E R φ := by
+  simp only [LocalDistortion.k, ellipsoidalMercatorDistortion, norm_vec2_zero_right,
+    abs_of_pos hR, parallelScale]
+
+/-- On a flattened ellipsoid the spherical Mercator formulas are not conformal. -/
+theorem ellipsoidalMercator_not_isConformal (hf : 0 < E.f) :
+    ¬ (ellipsoidalMercatorDistortion E R hc).IsConformal := by
+  rintro ⟨_, hhk⟩
+  rw [ellipsoidalMercator_h E hR hc, ellipsoidalMercator_k E hR hc] at hhk
+  exact (meridianScale_gt_parallelScale E hf R hR hc).ne' hhk
+
+end Ellipsoidal
 
 variable {R : ℝ} (hR : 0 < R) (g' : ℝ) {φ : ℝ} (hc : 0 < cos φ)
 include hR hc
@@ -191,6 +231,7 @@ theorem eq_zero_of_isConformal_of_isEqualArea (hφ : φ ∈ Set.Ioo (-(π / 2)) 
     nlinarith [cos_le_one φ]
   have hpi := pi_pos
   exact (cos_eq_one_iff_of_lt_of_lt (by linarith [hφ.1]) (by linarith [hφ.2])).mp hc1
+
 
 omit hR hc in
 /-- The northing functions have the derivatives used above. -/
