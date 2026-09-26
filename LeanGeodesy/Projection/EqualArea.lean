@@ -11,8 +11,9 @@ with northing `R sin φ` (`lambertCylindrical`, an instance of the existing
 Mercator does not keep them at all.
 
 A cell of the sphere between latitudes `φ₁, φ₂` and longitudes `λ₁, λ₂` has
-area `∫∫ R · R cos φ dφ dλ`, the integral of the area element `M · N cos φ`
-used by `LocalDistortion` (`sphereCellArea`), which is
+area `∫∫ R · R cos φ dφ dλ`, the integral of the sphere's area element,
+which is the first fundamental form's `M N cos φ` with `M = N = R`
+(`sphereCellArea`, and `sphereCellArea_integrand_eq_areaElement`), which is
 `R² (λ₂ - λ₁) (sin φ₂ - sin φ₁)` (`sphereCellArea_eq`). A cylindrical
 projection draws the cell as a rectangle of area
 `R² (λ₂ - λ₁) (g φ₂ - g φ₁)` (`cylindricalCellArea`).
@@ -39,7 +40,7 @@ open Real
 noncomputable def lambertCylindrical (R φ lam : ℝ) : E2 := cylindrical R sin φ lam
 
 /-- The area of the cell `[φ₁, φ₂] × [λ₁, λ₂]` of the sphere of radius `R`: the
-integral of the area element `M · N cos φ = R · R cos φ`. -/
+integral of the sphere's area element `R · R cos φ`. -/
 noncomputable def sphereCellArea (R φ₁ φ₂ lam₁ lam₂ : ℝ) : ℝ :=
   ∫ _ in lam₁..lam₂, ∫ φ in φ₁..φ₂, R * (R * cos φ)
 

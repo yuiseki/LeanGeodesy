@@ -1,19 +1,132 @@
 # LeanGeodesy
 
-Machine-checked foundations of geodetic coordinates and map projections, in
-Lean 4 with Mathlib.
+Machine-checked mathematics behind geodesy and GIS, in Lean 4 with Mathlib.
 
-A GPS receiver reports a latitude, a longitude and a height, and a web map
-draws them with Web Mercator. This library proves, from the definitions up,
-what those numbers mean: which ellipsoid they refer to, why latitude and
-longitude are different kinds of quantity, how they name a point in space,
-what a projection keeps and distorts when it draws that point flat, and
-what a coordinate reference system is. It is written to understand the
-principles behind GIS, not to compute with them, so every statement is a
-theorem about real numbers and nothing is evaluated in floating point.
+Latitude, longitude, ellipsoidal height, map projections, distances, bearings
+and coordinate reference systems are defined from first principles, and what
+GIS software relies on is proved about them as theorems over the real numbers.
+Nothing is evaluated in floating point. The library has no `sorry`, no `admit`
+and no `axiom` of its own (see [Axiom audit](#axiom-audit)).
 
-The whole library is proved with no `sorry`, no `admit` and no `axiom` of its
-own (see [Axiom audit](#axiom-audit)).
+## Why LeanGeodesy?
+
+### For GIS practitioners
+
+The library answers questions like these with theorems you can read from the
+definitions up:
+
+- Why does Web Mercator distort area, and by how much?
+- Why are rhumb lines straight on a Mercator map?
+- Why does a great-circle route differ from a constant-bearing route?
+- What does an azimuthal equidistant projection actually preserve, and why
+  is a buffer drawn with it exact?
+- What is the mathematical difference between a datum transformation and a
+  map projection?
+- What do latitude, longitude, ellipsoidal height, ECEF and a CRS actually
+  mean?
+
+Formulas used every day, such as the haversine distance, the rhumb-line
+distance, Web Mercator's tile resolution or the UTM scale factor, appear as
+theorems with their assumptions stated, not as recipes.
+
+### For Lean and mathematics users
+
+Geodesy is a compact piece of classical differential geometry with concrete
+numbers attached. The library:
+
+- embeds a reference ellipsoid in ℝ³ with geodetic latitude and longitude as
+  coordinates;
+- derives the first fundamental form from the partial derivatives of that
+  embedding: `E = M²`, `F = 0`, `G = (N cos φ)²`;
+- obtains length, speed, angle and the area element from that one metric;
+- combines it with the derivative of a projection to describe local
+  distortion, Tissot's indicatrix and conformality;
+- combines the embedding with the geodesic condition (no acceleration along
+  the surface) to derive the affine geodesic equations in both coordinates;
+- adds rotational symmetry to derive Clairaut's relation.
+
+The geodesic equations and Clairaut's relation are not derived from the first
+fundamental form alone. The proofs are extrinsic: they use the embedding in
+ℝ³ and coordinate computation, not an intrinsic Koszul formula or Levi-Civita
+connection. Other parts of the library use spherical geometry in ℝ³,
+integration, measure theory and affine geometry, as the next section shows.
+
+## One mathematical spine
+
+```
+ReferenceEllipsoid (a, f)
+  → M(φ), N(φ)                       radii of curvature
+  → ∂r/∂φ, ∂r/∂λ                     tangents of the embedding in ℝ³
+  → FirstFundamentalForm             E = M², F = 0, G = (N cos φ)²
+       ├→ length / speed             ds² = M² dφ² + (N cos φ)² dλ²
+       ├→ angle                      cos θ = g(u, v) / √(I(u) I(v))
+       ├→ area element               dA = M N cos φ dφ dλ
+       └→ projection distortion
+              + projection derivative
+              → h, k, Tissot, conformality, area scale
+
+FirstFundamentalForm + E′, G′
+  + embedded acceleration / geodesic condition
+  → affine geodesic equations (latitude and longitude)
+       + rotational symmetry
+       → Clairaut relation
+```
+
+Separate lines of argument, not reduced to the first fundamental form:
+
+```
+spherical geometry in ℝ³           → great circles, central angle, shortest paths
+Mercator + integration             → rhumb lines become straight lines
+azimuthal projection + spheres     → centre distance and azimuth kept, exact buffers
+integration and Lebesgue measure   → finite cell and buffer areas
+ECEF / Helmert / CRS               → coordinate transformations and conversions
+```
+
+## What is actually proved?
+
+A selection; the reference sections below list everything.
+
+| Result | Theorem |
+| --- | --- |
+| `E = M²`, `F = 0`, `G = (N cos φ)²` | `firstFormE_eq`, `firstFormF_eq`, `firstFormG_eq` |
+| `‖dr v‖² = M² dφ² + (N cos φ)² dλ²` and `√(E G - F²) = M N cos φ` | `norm_dr_sq`, `areaElement_eq` |
+| A projection is conformal exactly when it multiplies the first fundamental form by `h²` | `isConformal_iff_firstForm` |
+| Affine geodesics on the ellipsoid are exactly the solutions of the latitude and longitude equations | `isGeodesic_iff_equations` |
+| Clairaut: `N cos φ sin A` is constant along a geodesic | `clairaut` |
+| The great-circle arc is the shortest curve on a sphere | `angularLength_greatArc_le`, `mem_greatArc_of_angularLength_eq` |
+| Constant bearing on the sphere is a straight line on Mercator | `constantBearing_iff_mercatorLine` |
+| Lambert's cylindrical projection keeps the area of every latitude-longitude cell | `lambertCylindrical_preserves_cellArea` |
+| The pole-centred azimuthal equidistant projection keeps distance and azimuth from the centre | `azimuthalEquidistant_preserves_distanceFromCentre`, `azimuthalEquidistant_preserves_azimuth` |
+| EPSG:4326 geographic 2D and EPSG:3857 convert back and forth as a bijection | `webMercatorEquiv` |
+
+## What map projections keep and distort
+
+On the sphere unless stated. "Local" means the scale factors at a point.
+
+| Projection | Local angles | Area | Distance | Azimuth from a centre |
+| --- | --- | --- | --- | --- |
+| Mercator, sphere | kept everywhere between the poles (`mercator_isConformal`) | enlarged by `sec² φ` locally (`mercator_areaScale`); every cell north of the equator enlarged (`mercator_enlarges_cellArea`) | scale `sec φ`: 1 on the equator (`scaleFactor_zero`), 2 at 60° (`scaleFactor_60`) | not kept: counterexample from 45° N 0° to 45° N 90° E (`mercator_not_preserves_azimuth`) |
+| Web Mercator, WGS 84 ellipsoid | not kept: meridian stretched `N / M` times the parallel, 1.00674 at the equator (`ellipsoidalMercator_not_isConformal`, `wgs84_equator_scale_ratio`) | enlarged at every latitude between the poles (`webMercator_areaScale_gt_one`, `wgs84_webMercator_not_isEqualArea`) | not examined as a distance map | not kept: same counterexample (`webMercator_not_preserves_azimuth`) |
+| Lambert cylindrical equal-area | not kept off the equator (`lambertCylindrical_not_isConformal`) | kept locally everywhere and globally for every latitude-longitude cell (`lambert_isEqualArea`, `lambertCylindrical_preserves_cellArea`) | scale `cos φ` along meridians, `sec φ` along parallels | not examined |
+| Azimuthal equidistant, pole-centred | not kept off the pole (`azimuthalEquidistant_not_isConformal`) | not kept locally (`azimuthalEquidistant_not_isEqualArea`); every buffer of radius `0 < r < π R` enlarged (`azimuthalEquidistant_enlarges_buffer`) | kept from the centre (`azimuthalEquidistant_preserves_distanceFromCentre`) and along meridians (`azimuthalEquidistant_h`); parallels stretched (`one_lt_azimuthalEquidistant_k`) | kept from the pole only (`azimuthalEquidistant_preserves_azimuth`) |
+| Transverse Mercator, sphere | kept for `|λ| < π/2` (`tm_isConformal`) | enlarged off the central meridian (`one_lt_tmScale`) | true scale only on the central meridian (`tmScale_central`, `one_lt_tmScale`); UTM keeps the scale within `[0.9996, 1.00098)` within 3° (`utmScale_bounds`) | not examined |
+
+## From GIS questions to theorems
+
+| Question | Theorem |
+| --- | --- |
+| Why does Web Mercator distort area? | `webMercator_areaScale_gt_one` |
+| Why is a rhumb line straight on Mercator? | `constantBearing_iff_mercatorLine` |
+| How do a great circle and a rhumb line differ? | `greatCircle_initial_not_east`, `greatCircleDistance_lt_rhumb_A_B` |
+| What does an azimuthal equidistant buffer mean? | `image_geodesicCircle`, `image_geodesicDisk` |
+| Is Lambert's projection really equal-area? | `lambert_isEqualArea`, `lambertCylindrical_preserves_cellArea` |
+| What does conformal mean mathematically? | `isConformal_iff_firstForm` |
+| What is local area distortion? | `areaScale_ofEllipsoid`: Jacobian area over the area element |
+| How is a datum transformation different from a projection? | `CRSTransformation`, `toPoint3D_transform` (through ECEF and Helmert) versus `webMercatorEquiv` (a conversion within one datum) |
+| Does every point of space have a latitude, longitude and height? | `toECEF_surjective` |
+| How long is the meridian from the equator to the pole? | `meridianArc_eq_curveLength`, `wgs84_quarterMeridian_bounds` |
+
+The sections below are the full reference, layer by layer.
 
 ## Layers
 
@@ -263,11 +376,15 @@ the form of its coordinate velocity (`rhumb_speed_sq_eq_firstForm`), the
 cell areas of `Projection.EqualArea` integrate the area element
 (`sphereCellArea_integrand_eq_areaElement`), and a projection is conformal
 exactly when it multiplies the first fundamental form by a scalar `h²`
-(`isConformal_iff_firstForm`), with the reference lengths of every local
-distortion on the ellipsoid being `√E = M` and `√G = N cos φ`. This metric
+(`isConformal_iff_firstForm`), for distortions built with
+`LocalDistortion.ofEllipsoid`, whose reference lengths are `√E = M` and
+`√G = N cos φ` and whose area scale is the Jacobian area over the area
+element (`areaScale_ofEllipsoid`). The meridian arc is the curve length of the
+meridian, moving at `√I(1, 0) = M` (`meridianArc_eq_curveLength`). This metric
 is the common ground for projection distortion and for geodesics on the
-ellipsoid (`Geodesic.Ellipsoid`); the second fundamental form and curvature
-are not covered yet.
+ellipsoid (`Geodesic.Ellipsoid`). The radii of curvature `M` and `N` are in
+`Curvature`; the second fundamental form, the shape operator, principal
+curvatures and Gaussian curvature are not covered yet.
 
 ### Geodesic.Ellipsoid
 
@@ -371,7 +488,7 @@ On a sphere of radius `R` the tangents to the meridian and the parallel
 have lengths `R` and `R cos φ`; on the map their images have lengths
 `R sec φ` and `R`. Both are stretched by `sec φ`, and since both pairs are
 perpendicular, every direction is stretched by exactly `sec φ`
-(`conformal`). That is what conformal means. Scale still grows with
+(`Geodesy.Projection.conformal` in `Projection/Mercator.lean`). That is what conformal means. Scale still grows with
 latitude: distances double at 60° (`scaleFactor_60`) and areas quadruple,
 which is why Greenland looks as large as Africa.
 
@@ -673,8 +790,11 @@ problems, geodesic distance), the agreement of the metric length above with
 the arc length of smooth curves (the integral of speed), the uniqueness of
 the ellipsoidal ECEF inverse, published transformation parameters, CRS
 registries, the ellipsoidal transverse Mercator projection, ellipsoidal
-rhumb lines, azimuthal projections centred off the pole, and projections
-other than those above are not covered yet.
+rhumb lines, azimuthal projections centred off the pole, projections other
+than those above, and the second fundamental form, shape operator, principal
+curvatures and Gaussian curvature are not covered yet. The geodesic results
+use the embedding in ℝ³; an intrinsic Levi-Civita connection is not
+formalised.
 
 ## Build
 
@@ -707,9 +827,9 @@ labels outside `CRS/EPSG.lean`.
 | `LeanGeodesy/GeodeticCoordinate.lean` | Latitude, longitude, height and ECEF |
 | `LeanGeodesy/ECEFInverse.lean` | From ECEF back to latitude, longitude and height |
 | `LeanGeodesy/Helmert.lean` | Helmert transformations and the linearised rotation |
-| `LeanGeodesy/Curvature.lean` | Meridian radius of curvature and the tangents of the ellipsoid |
+| `LeanGeodesy/Curvature.lean` | Radii of curvature `M`, `N` and their derivatives, and the tangents of the ellipsoid |
 | `LeanGeodesy/FirstFundamentalForm.lean` | E, F, G, the metric, `ds²`, speeds, angles, the area element |
-| `LeanGeodesy/Geodesic/Ellipsoid.lean` | Geodesics on the ellipsoid, the geodesic equation's longitude component, Clairaut's relation |
+| `LeanGeodesy/Geodesic/Ellipsoid.lean` | Affine geodesic equations in latitude and longitude, Christoffel form, and Clairaut's relation |
 | `LeanGeodesy/MeridianArc.lean` | Meridian arc length as an integral of `M`, and its bounds |
 | `LeanGeodesy/QuarterMeridian.lean` | The WGS 84 quarter meridian is 10001960 m to 10001975 m |
 | `LeanGeodesy/Projection/Mercator.lean` | The Mercator function, its inverse, and conformality on the sphere |
