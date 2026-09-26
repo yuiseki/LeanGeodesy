@@ -914,3 +914,19 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.mercator_distance_scaled_A_B' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.mercator_distance_scaled_A_B
+
+/-- info: 'Geodesy.Projection.norm_azimuthalEquidistant_eq_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.norm_azimuthalEquidistant_eq_iff
+
+/-- info: 'Geodesy.Projection.aeqd_preimage' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.aeqd_preimage
+
+/-- info: 'Geodesy.Projection.image_geodesicCircle' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.image_geodesicCircle
+
+/-- info: 'Geodesy.Projection.image_geodesicDisk' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.image_geodesicDisk
