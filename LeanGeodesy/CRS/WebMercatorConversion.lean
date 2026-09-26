@@ -21,7 +21,9 @@ restrictions are in the types:
   domain (`mem_webMercatorValid_iff`);
 - `WebMercatorImageCoordinate`, the Web Mercator coordinates in the image.
 
-`toWebMercator` goes from the first to the second (`toWebMercator_pt`).
+`toWebMercator` goes from the first to the second (`toWebMercator_pt`), and
+`fromWebMercator` back, with latitude `gd (y / a)` and longitude `x / a`
+(`fromWebMercator_lat`, `fromWebMercator_lon`).
 -/
 
 namespace Geodesy
@@ -53,5 +55,20 @@ northing of the latitude. -/
 theorem toWebMercator_pt (p : WebMercatorValidCoordinate) :
     (toWebMercator p).1.pt = vec2 (webMercatorX p.1.lon) (webMercatorY p.1.lat.1) :=
   rfl
+
+/-- Web Mercator to WGS 84 geographic 2D: `webMercatorCRS.unproject`, defined only
+on the image and landing in the domain. -/
+noncomputable def fromWebMercator (q : WebMercatorImageCoordinate) : WebMercatorValidCoordinate :=
+  ⟨webMercatorCRS.unproject q.1, webMercatorCRS.inverse_mapsTo q.2⟩
+
+/-- The latitude read back is `gd (y / a)`. -/
+theorem fromWebMercator_lat (q : WebMercatorImageCoordinate) :
+    (fromWebMercator q).1.lat.1 = gd (q.1.pt 1 / webMercatorRadius) :=
+  webMercatorCRS_inverse_lat q.1.pt
+
+/-- The longitude read back is `x / a`, modulo a full turn. -/
+theorem fromWebMercator_lon (q : WebMercatorImageCoordinate) :
+    (fromWebMercator q).1.lon = ((q.1.pt 0 / webMercatorRadius : ℝ) : Real.Angle) :=
+  webMercatorCRS_inverse_lon q.1.pt
 
 end Geodesy

@@ -726,3 +726,11 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.toWebMercator_pt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.toWebMercator_pt
+
+/-- info: 'Geodesy.fromWebMercator_lat' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.fromWebMercator_lat
+
+/-- info: 'Geodesy.fromWebMercator_lon' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.fromWebMercator_lon
