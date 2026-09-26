@@ -714,3 +714,11 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.one_lt_tmScale' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.one_lt_tmScale
+
+/-- info: 'Geodesy.Projection.utmScale_bounds' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.utmScale_bounds
+
+/-- info: 'Geodesy.Projection.utmScale_equator_eq_one_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.utmScale_equator_eq_one_iff

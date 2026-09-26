@@ -1,4 +1,6 @@
 import LeanGeodesy.Projection.Cylindrical
+import LeanGeodesy.Angle
+import Mathlib.Data.Real.Pi.Bounds
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.InverseDeriv
 
 /-!
@@ -36,6 +38,13 @@ They are perpendicular, and both scales equal `1 / √(1 - B²)`
 scale factor depends only on the distance from the central meridian: it is
 `1` on the central meridian (`tmScale_central`) and grows away from it
 (`one_lt_tmScale`), exactly as Mercator's grows away from the equator.
+
+UTM uses the transverse Mercator projection in zones 6° wide and multiplies
+it by `k₀ = 0.9996` (`utmScale`), so that the scale is a little too small on
+the central meridian and exactly right on two lines on either side of it
+(`utmScale_equator_eq_one_iff`). On the sphere this keeps the scale within
+`[0.9996, 1.00098)` across a whole zone (`utmScale_bounds`): distances on
+the grid are within 0.1 % of distances on the sphere.
 -/
 
 namespace Geodesy.Projection
@@ -234,5 +243,65 @@ theorem one_lt_tmScale (hl : 0 < cos lam) (hB : tmB φ lam ≠ 0) : 1 < tmScale 
     rw [sqrt_lt' one_pos]; linarith
   rw [tmScale, lt_div_iff₀ (sqrt_pos.mpr hD), one_mul]
   exact hs
+
+/-! ## UTM -/
+
+/-- The UTM scale factor: the transverse Mercator scale times `0.9996`. -/
+noncomputable def utmScale (φ lam : ℝ) : ℝ := 0.9996 * tmScale φ lam
+
+theorem one_le_tmScale (φ : ℝ) (hl : 0 < cos lam) : 1 ≤ tmScale φ lam := by
+  have hB2 := tmB_sq_lt_one φ hl
+  have hD : 0 < 1 - tmB φ lam ^ 2 := by linarith
+  have hs : √(1 - tmB φ lam ^ 2) ≤ 1 := sqrt_le_one.mpr (by nlinarith [sq_nonneg (tmB φ lam)])
+  rw [tmScale, le_div_iff₀ (sqrt_pos.mpr hD), one_mul]
+  exact hs
+
+/-- Within 3° of the central meridian the UTM scale is between 0.9996 and
+1.00098. -/
+theorem utmScale_bounds (φ : ℝ) (hl : |lam| ≤ degToRad 3) :
+    0.9996 ≤ utmScale φ lam ∧ utmScale φ lam < 1.00098 := by
+  have hx : degToRad 3 < 0.05236 := by rw [degToRad]; nlinarith [pi_lt_d6]
+  have hlam2 : lam ^ 2 ≤ 0.05236 ^ 2 := by
+    rw [← sq_abs]; exact pow_le_pow_left₀ (abs_nonneg _) (by linarith) 2
+  have hcos : 0.998629 ≤ cos lam := by
+    have := one_sub_sq_div_two_le_cos (x := lam)
+    nlinarith
+  have hl0 : 0 < cos lam := by linarith
+  have hB2 : tmB φ lam ^ 2 ≤ 1 - cos lam ^ 2 := by
+    unfold tmB
+    have h1 := sin_sq_add_cos_sq lam
+    have h2 : cos φ ^ 2 ≤ 1 := by nlinarith [sin_sq_add_cos_sq φ, sq_nonneg (sin φ)]
+    nlinarith [sq_nonneg (sin lam)]
+  have hD : 0.998629 ^ 2 ≤ 1 - tmB φ lam ^ 2 := by nlinarith
+  have hs : 0.998629 ≤ √(1 - tmB φ lam ^ 2) := by
+    rw [show (0.998629 : ℝ) = √(0.998629 ^ 2) by rw [sqrt_sq (by norm_num)]]
+    exact sqrt_le_sqrt hD
+  have hspos : 0 < √(1 - tmB φ lam ^ 2) := by linarith
+  constructor
+  · have := one_le_tmScale φ hl0
+    unfold utmScale
+    linarith
+  · unfold utmScale tmScale
+    rw [mul_one_div, div_lt_iff₀ hspos]
+    nlinarith
+
+/-- On the equator the UTM scale is exact where `sin² λ = 1 - 0.9996²`: on two
+lines, one on each side of the central meridian. -/
+theorem utmScale_equator_eq_one_iff (hl : 0 < cos lam) :
+    utmScale 0 lam = 1 ↔ sin lam ^ 2 = 1 - 0.9996 ^ 2 := by
+  have hB2 := tmB_sq_lt_one 0 hl
+  have hD : 0 < 1 - tmB 0 lam ^ 2 := by linarith
+  have hB : tmB 0 lam = sin lam := by simp [tmB]
+  rw [hB] at hD
+  have hs := sqrt_pos.mpr hD
+  unfold utmScale tmScale
+  rw [hB, mul_one_div, div_eq_one_iff_eq hs.ne']
+  constructor
+  · intro h
+    have := congrArg (· ^ 2) h
+    simp only [sq_sqrt hD.le] at this
+    linarith
+  · intro h
+    rw [show 1 - sin lam ^ 2 = 0.9996 ^ 2 by linarith, sqrt_sq (by norm_num)]
 
 end Geodesy.Projection
