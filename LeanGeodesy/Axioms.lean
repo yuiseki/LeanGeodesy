@@ -770,3 +770,35 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.toWebMercator_x_ne_left' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.toWebMercator_x_ne_left
+
+/-- info: 'Geodesy.Projection.sphereCellArea_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.sphereCellArea_eq
+
+/-- info: 'Geodesy.Projection.lambertCylindrical_preserves_cellArea' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.lambertCylindrical_preserves_cellArea
+
+/-- info: 'Geodesy.Projection.mercatorY_sub_sin_strictMonoOn' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.mercatorY_sub_sin_strictMonoOn
+
+/-- info: 'Geodesy.Projection.mercator_enlarges_cellArea' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.mercator_enlarges_cellArea
+
+/-- info: 'Geodesy.Projection.lambertCylindrical_not_isConformal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.lambertCylindrical_not_isConformal
+
+/-- info: 'Geodesy.Projection.webMercator_areaScale_gt_one' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.webMercator_areaScale_gt_one
+
+/-- info: 'Geodesy.Projection.webMercator_not_isEqualArea' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.webMercator_not_isEqualArea
+
+/-- info: 'Geodesy.Projection.wgs84_webMercator_not_isEqualArea' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.wgs84_webMercator_not_isEqualArea
