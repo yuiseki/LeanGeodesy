@@ -1,3 +1,5 @@
 /.lake
 __pycache__/
 /docbuild/.lake
+/atlas/.lake
+/atlas/graph.json*

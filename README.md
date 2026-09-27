@@ -158,6 +158,23 @@ The site is written to `docbuild/.lake/build/doc/`; serve it over HTTP (for
 example `python3 -m http.server` in that directory) rather than opening the
 files directly.
 
+[Lean Atlas](https://github.com/NyxFoundation/lean-atlas) in the nested
+project `atlas/` draws the dependency graph with type and value edges told
+apart, and its Lean Compass narrows a main theorem's dependencies to the ones
+a reader must check. The main theorems are marked in
+`atlas/LeanGeodesyAtlas/MainTheorems.lean`, so the library does not depend on
+lean-atlas:
+
+```
+cd atlas
+lake exe atlas-graph .lake/packages/lean-atlas/web/public/data/graph.json
+lake exe atlas serve --no-generate --atlas-root ../.lake/packages/lean-atlas
+```
+
+The viewer runs at `http://localhost:5326`. `LeanGeodesy.lean` and
+`LeanGeodesy/` in `atlas/` are links to the library, because lean-atlas finds
+modules and sources relative to the working directory.
+
 ## Axiom audit
 
 `LeanGeodesy/Axioms.lean` pins the main theorems to Lean's three standard

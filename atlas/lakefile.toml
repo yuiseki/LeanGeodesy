@@ -1,0 +1,23 @@
+name = "atlas"
+reservoir = false
+version = "0.1.0"
+packagesDir = "../.lake/packages"
+
+[[require]]
+name = "lean-geodesy"
+path = "../"
+
+[[require]]
+name = "lean-atlas"
+scope = "NyxFoundation"
+git = "https://github.com/NyxFoundation/lean-atlas"
+rev = "3a81e19"
+
+[[lean_lib]]
+name = "LeanGeodesyAtlas"
+globs = ["LeanGeodesyAtlas.MainTheorems"]
+
+[[lean_exe]]
+name = "atlas-graph"
+root = "LeanGeodesyAtlas.Graph"
+supportInterpreter = true
