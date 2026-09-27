@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LeanGeodesy</title>
+<style>
+  :root { --bg: #fdfcf9; --fg: #1f2328; --muted: #57606a; --card: #ffffff; --line: #d0d7de; --accent: #0b6e4f; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #111418; --fg: #e6edf3; --muted: #9da7b1; --card: #181c22; --line: #30363d; --accent: #4cc38a; }
+  }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+         font: 17px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 16px; }
+  h1 { font-size: 2.2rem; margin: 0 0 8px; }
+  p { color: var(--muted); }
+  a.card { display: block; margin: 16px 0; padding: 20px 22px; border: 1px solid var(--line);
+           border-radius: 10px; background: var(--card); color: var(--fg); text-decoration: none; }
+  a.card:hover { border-color: var(--accent); }
+  a.card h2 { margin: 0 0 4px; font-size: 1.2rem; color: var(--accent); }
+  a.card span { color: var(--muted); }
+  footer { margin-top: 40px; font-size: 0.9rem; color: var(--muted); }
+  footer a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>LeanGeodesy</h1>
+  <p>The mathematics GIS software takes for granted, proved in Lean 4: the shape of the Earth,
+     map projections and their distortion, shortest routes, web map tiles and coordinate reference systems.</p>
+  <a class="card" href="manual/">
+    <h2>The book</h2>
+    <span>Read the library in order, in three parts: the Earth as an ellipsoid, tiles, and coordinate
+    reference systems. Every declaration is shown from the built library.</span>
+  </a>
+  <a class="card" href="atlas/">
+    <h2>The dependency atlas</h2>
+    <span>Explore the dependency graph of every theorem and definition with Lean Atlas, and see which
+    definitions a reader must check behind each main theorem.</span>
+  </a>
+  <footer>Source on <a href="https://github.com/yuiseki/LeanGeodesy">GitHub</a>.</footer>
+</main>
+</body>
+</html>

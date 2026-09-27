@@ -192,6 +192,11 @@ The site is written to `manual/_out/html-multi/`. The generator runs in the
 interpreter; building it as an executable would compile Mathlib to native
 code.
 
+The book and the atlas are published at
+<https://yuiseki.github.io/LeanGeodesy/> by `.github/workflows/pages.yml` on
+every push to `main`. `atlas/build-pages.sh` builds the viewer as a static
+site: without a server, it reads the sources as files.
+
 ## Axiom audit
 
 `LeanGeodesy/Axioms.lean` pins the main theorems to Lean's three standard
