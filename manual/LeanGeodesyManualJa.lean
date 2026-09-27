@@ -1,16 +1,21 @@
 import VersoManual
-import LeanGeodesyManualJa.ProjectionSpine
+import LeanGeodesyManualJa.Part1
 
 open Verso.Genre Manual
 
 #doc (Manual) "LeanGeodesy（日本語版）" =>
 %%%
 shortTitle := "LeanGeodesy 日本語版"
+tag := "ja-top"
 %%%
 
-LeanGeodesy は、GIS ソフトウェアが前提にしている数学を Lean 4 で証明するライブラリです。この日本語版は英語版の翻訳ではなく、同じ Lean の宣言を参照しながら、数学的な構造を日本語で理解するための独立した読み物です。
+LeanGeodesy は、GIS ソフトウェアが前提にしている数学を Lean 4 で証明するライブラリです。この本は、そのライブラリを API の一覧としてではなく、いくつかの大きな問いへの答えとして読むためのものです。英語版の翻訳ではなく、同じ Lean の宣言を参照しながら、日本語で独立に書いています。
 
-いまは試作として、第一基本形式から局所歪みを経て Mercator 図法の等角性に至る一本の筋だけを扱います。本文に出てくる定理の名前と型（signature）は、ビルドしたライブラリから取り込んだもので、手で書き写してはいません。
+各節は、GIS で実際に出会う疑問から始まります。直感的な説明のあとで必要な数学を導入し、最後に、その主張が LeanGeodesy のどの定理として証明されているかを示します。定理の名前と型（signature）は、ビルドしたライブラリから取り込んだもので、手で書き写してはいません。証明の細部より、定理どうしがどうつながっているかを追うことに重きを置いています。
+
+各章の要所には、依存関係を Lean Atlas で見るためのリンクがあります。Atlas で主定理を選ぶと、いま読んだ概念が形式的にどんな依存関係になっているのかを確かめられます。
+
+いまは第I部「地球を測り、平面に写す」まであります。タイル番号の数学（第II部）と座標参照系（第III部）は、今後追加する予定です。
 
 用語は次の表記で統一します。Lean の識別子は翻訳しません。
 
@@ -23,4 +28,4 @@ LeanGeodesy は、GIS ソフトウェアが前提にしている数学を Lean 4
 - conformal：等角
 - geodesic：測地線
 
-{include 1 LeanGeodesyManualJa.ProjectionSpine}
+{include 1 LeanGeodesyManualJa.Part1}

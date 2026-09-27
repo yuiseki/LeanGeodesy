@@ -189,8 +189,10 @@ lake env lean --run LeanGeodesyManualMain.lean --output _out
 ```
 
 The site is written to `manual/_out/html-multi/`. A Japanese companion,
-`LeanGeodesyManualJa`, explains the path from the first fundamental form to
-Mercator's conformality in its own prose; it shows each declaration's
+`LeanGeodesyManualJa`, is written separately in Japanese around questions a
+GIS engineer meets; its Part I goes from the reference ellipsoid through the
+first fundamental form to projection distortion, geodesics and Clairaut's
+relation; it shows each declaration's
 signature through a small `leanDecl` block command that leaves the English
 docstring out:
 

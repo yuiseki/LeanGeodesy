@@ -3,9 +3,12 @@ import LeanAtlas
 
 /-!
 Main theorems for Lean Compass, marked here so that the library itself does
-not depend on lean-atlas. They are the ends of the projection spine:
-reference ellipsoid, curvature, first fundamental form, local distortion,
-then Mercator, equal-area and azimuthal projections.
+not depend on lean-atlas. They are the results the books build up to: the
+first fundamental form, conformality as a property of that form, what
+Mercator, Lambert and the azimuthal equidistant projection keep, great
+circles as shortest paths, and the geodesic equations with Clairaut's
+relation. lean-atlas drops every name containing `_eq_`, so theorems such as
+`meridianArc_eq_curveLength` cannot be marked.
 -/
 
 attribute [formalMeta "Mercator is conformal"
@@ -27,3 +30,31 @@ attribute [formalMeta "Azimuthal equidistant keeps distances"
 attribute [formalMeta "Azimuthal equidistant is not conformal"
   "Its scale along parallels exceeds its scale along meridians" mainTheorem]
   Geodesy.Projection.azimuthalEquidistant_not_isConformal
+
+attribute [formalMeta "First fundamental form: E = M²"
+  "The first fundamental form of the ellipsoid has E = M²" mainTheorem]
+  Geodesy.ReferenceEllipsoid.firstFormE_eq
+
+attribute [formalMeta "Conformal iff it scales the first fundamental form"
+  "A projection is conformal exactly when it multiplies the first fundamental form by h²" mainTheorem]
+  Geodesy.Projection.isConformal_iff_firstForm
+
+attribute [formalMeta "Conformal cylindrical projections are Mercator"
+  "A cylindrical projection conformal at every latitude is Mercator's" mainTheorem]
+  Geodesy.Projection.eq_mercatorY_of_isConformal
+
+attribute [formalMeta "No cylindrical projection is conformal and equal-area"
+  "Away from the equator no cylindrical projection keeps both angles and areas" mainTheorem]
+  Geodesy.Projection.eq_zero_of_isConformal_of_isEqualArea
+
+attribute [formalMeta "Great circles are shortest"
+  "No curve on the sphere is shorter than the great-circle arc" mainTheorem]
+  Geodesy.Geodesic.angularLength_greatArc_le
+
+attribute [formalMeta "Geodesic equations"
+  "Affine geodesics on the ellipsoid are exactly the solutions of the geodesic equations" mainTheorem]
+  Geodesy.ReferenceEllipsoid.EllipsoidCurve.isGeodesic_iff_equations
+
+attribute [formalMeta "Clairaut's relation"
+  "Along a geodesic, N cos φ sin A is constant" mainTheorem]
+  Geodesy.ReferenceEllipsoid.EllipsoidCurve.clairaut
