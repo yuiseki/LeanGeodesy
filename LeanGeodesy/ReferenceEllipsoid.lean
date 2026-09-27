@@ -67,7 +67,6 @@ theorem one_sub_e2_eq : 1 - E.e2 = E.b ^ 2 / E.a ^ 2 := by
   rw [one_sub_e2]
   unfold b
   field_simp [E.a_pos.ne']
-  ring
 
 theorem e2_nonneg : 0 ≤ E.e2 := mul_nonneg E.f_nonneg (by linarith [E.f_lt_one])
 

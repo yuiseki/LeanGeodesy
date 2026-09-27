@@ -88,8 +88,7 @@ theorem mortonEquiv_val_eq_path : (z : ℕ) → (t : Tile z) →
   | z + 1, t => by
     rw [mortonEquiv_succ_val, mortonEquiv_val_eq_path z (parent t), tileEquivPath_succ,
       Fin.sum_univ_castSucc, Finset.mul_sum]
-    simp only [Fin.snoc_castSucc, Fin.snoc_last, Fin.coe_castSucc, Fin.val_last, Nat.sub_self,
-      pow_zero, mul_one]
+    simp only [Fin.snoc_castSucc, Fin.snoc_last, Fin.coe_castSucc, Fin.val_last]
     congr 1
     · refine Finset.sum_congr rfl fun i _ => ?_
       have hi := i.2

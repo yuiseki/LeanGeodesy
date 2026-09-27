@@ -112,7 +112,7 @@ theorem hasBearing_latitudeCurve_iff {α : ℝ} (hα : α ∈ Set.Ioo (-(π / 2)
     have : c = R / cos α := by field_simp; linarith
     rw [this] at he
     field_simp at he
-    have h3 : R * (lon' * (cos α * cos φ) - sin α) = 0 := by linear_combination he
+    have h3 : R * (lon' * (cos α * cos φ) - sin α) = 0 := by linear_combination R * he
     rcases mul_eq_zero.mp h3 with h | h
     · exact absurd h hR.ne'
     · linarith
@@ -120,7 +120,6 @@ theorem hasBearing_latitudeCurve_iff {α : ℝ} (hα : α ∈ Set.Ioo (-(π / 2)
     refine ⟨R / cos α, div_pos hR hca, ?_, by field_simp⟩
     rw [h, tan_eq_sin_div_cos]
     field_simp
-    ring
 
 end Components
 

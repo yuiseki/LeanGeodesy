@@ -1,6 +1,6 @@
 import LeanGeodesy.MeridianArc
-import Mathlib.Analysis.SpecialFunctions.Integrals
-import Mathlib.Data.Real.Pi.Bounds
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
+import Mathlib.Analysis.Real.Pi.Bounds
 
 /-!
 # The quarter meridian of WGS 84

@@ -1,7 +1,7 @@
 import LeanGeodesy.GeodeticCoordinate
 import LeanGeodesy.Projection.Mercator
 import Mathlib.Geometry.Euclidean.Angle.Unoriented.Basic
-import Mathlib.Data.Real.Pi.Bounds
+import Mathlib.Analysis.Real.Pi.Bounds
 import Mathlib.Data.ENNReal.Real
 
 /-!
@@ -170,7 +170,6 @@ theorem inner_arcNormal_self : (inner ℝ (arcNormal u w) (arcNormal u w) : ℝ)
     rw [norm_sub_inner_smul hw hu, angle_comm]
   rw [arcNormal, real_inner_smul_left, real_inner_smul_right, real_inner_self_eq_norm_sq, hn]
   field_simp
-  ring
 
 /-- Points of the arc are the cosine of the angle apart. -/
 theorem inner_greatArc (s t : ℝ) :

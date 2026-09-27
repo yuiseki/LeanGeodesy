@@ -104,7 +104,6 @@ theorem hasDerivAt_mercatorY {φ : ℝ} (hc : 0 < cos φ) :
   rw [sqrt_one_add_tan_sq hc] at h
   convert h using 1
   field_simp
-  ring
 
 /-- The textbook form: `y = ln (tan (π/4 + φ/2))`. -/
 theorem mercatorY_eq_log_tan {φ : ℝ} (h : φ ∈ Set.Ioo (-(π / 2)) (π / 2)) :
@@ -132,7 +131,7 @@ theorem mercatorY_eq_log_tan {φ : ℝ} (h : φ ∈ Set.Ioo (-(π / 2)) (π / 2)
   rw [hcos2]
   have hd : √2 * cos u - √2 * sin u ≠ 0 := by nlinarith
   field_simp
-  linear_combination (-(√2 * (cos u - sin u))) * hp
+  linear_combination -hp
 
 /-! ## Vectors in the plane -/
 

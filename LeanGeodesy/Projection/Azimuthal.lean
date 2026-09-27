@@ -172,7 +172,6 @@ theorem azimuthalEquidistant_k (hφ : φ < π / 2) :
       (R * (π / 2 - φ)) ^ 2 * (sin lam ^ 2 + cos lam ^ 2) by ring,
     sin_sq_add_cos_sq, mul_one, sqrt_sq hd]
   field_simp
-  ring
 
 /-- ...which exceeds `1` everywhere off the pole. -/
 theorem one_lt_azimuthalEquidistant_k (hφ : φ < π / 2) :

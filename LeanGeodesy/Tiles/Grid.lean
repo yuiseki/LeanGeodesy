@@ -1,4 +1,5 @@
 import LeanGeodesy.Projection.WebMercator
+import Mathlib.Algebra.Order.Floor.Semifield
 
 /-!
 # The integer tile grid of Web Mercator

@@ -218,7 +218,6 @@ theorem sinAzimuth_eq {t : ℝ} (hc : 0 < cos (γ.lat t)) :
   rcases eq_or_ne ‖γ.vel t‖ 0 with h0 | h0
   · simp [h0]
   · field_simp
-    ring
 
 /-- Clairaut's relation in azimuth form: along a geodesic between the poles,
 `N cos φ sin A` is constant. -/
@@ -291,13 +290,13 @@ theorem hasDerivAt_rLat (t : ℝ) : HasDerivAt γ.rLat (γ.rLat' t) t := by
   rw [hfun, rLat']
   refine hasDerivAt_vec3 ?_ ?_ ?_
   · convert ((hM.mul hs).neg).mul hl.cos using 1
-    simp only [Function.comp]
+    simp only [Function.comp_apply, Pi.mul_apply, Pi.neg_apply]
     ring
   · convert ((hM.mul hs).neg).mul hl.sin using 1
-    simp only [Function.comp]
+    simp only [Function.comp_apply, Pi.mul_apply, Pi.neg_apply]
     ring
   · convert hM.mul hc using 1
-    simp only [Function.comp]
+    simp only [Function.comp_apply]
     ring
 
 /-- `⟨r', ∂r/∂φ⟩ = E φ'`, from the first fundamental form. -/

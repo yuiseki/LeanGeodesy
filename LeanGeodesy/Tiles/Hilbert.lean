@@ -116,8 +116,9 @@ theorem hilbertD_last : (z : ℕ) → hilbertD z (4 ^ z - 1) = (2 ^ z - 1, 0)
       omega
     rw [hilbertD_succ, hq, hr, hilbertD_last z]
     have : 1 ≤ 2 ^ z := Nat.one_le_two_pow
-    simp only [quadPlace]
-    ext <;> simp; omega
+    rw [quadPlace_three]
+    exact Prod.ext (show 2 * 2 ^ z - 1 - 0 = 2 ^ (z + 1) - 1 by omega)
+      (show 2 ^ z - 1 - (2 ^ z - 1) = 0 by omega)
 
 /-! ## Consecutive tiles share an edge -/
 
@@ -248,7 +249,7 @@ def hilbertE : ℕ → ℕ × ℕ → ℕ
   | z + 1, P => (quadUnplace (2 ^ z) P).1 * 4 ^ z + hilbertE z (quadUnplace (2 ^ z) P).2
 
 theorem hilbertE_lt : (z : ℕ) → (P : ℕ × ℕ) → P.1 < 2 ^ z ∧ P.2 < 2 ^ z → hilbertE z P < 4 ^ z
-  | 0, _, _ => by simp [hilbertE]
+  | 0, _, _ => four_pow_pos 0
   | z + 1, P, hP => by
     have h2 := two_pow_succ' z
     have h4 := four_pow_succ' z

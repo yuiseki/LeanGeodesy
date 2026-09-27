@@ -1,6 +1,6 @@
 import LeanGeodesy.Projection.Cylindrical
 import LeanGeodesy.Angle
-import Mathlib.Data.Real.Pi.Bounds
+import Mathlib.Analysis.Real.Pi.Bounds
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.InverseDeriv
 
 /-!
@@ -94,6 +94,7 @@ theorem hasDerivAt_mercatorY_arcsin {B : ℝ} (hB : B ^ 2 < 1) :
   rw [cos_arcsin] at h
   convert h using 1
   field_simp
+  exact sq_sqrt h1.le
 
 theorem hasDerivAt_tmB_lat (φ lam : ℝ) :
     HasDerivAt (fun φ => tmB φ lam) (-sin φ * sin lam) φ := by
@@ -143,7 +144,6 @@ theorem hasDerivAt_tmY_lat (hφ : 0 < cos φ) (hl : 0 < cos lam) :
   rw [one_sub_tmB_sq] at hD ⊢
   rw [tan_eq_sin_div_cos]
   field_simp
-  ring
 
 theorem hasDerivAt_tmY_lon (hφ : 0 < cos φ) (hl : 0 < cos lam) :
     HasDerivAt (fun lam => tmY R φ lam)
@@ -195,13 +195,11 @@ theorem tm_h : (tmDistortion R hR hφ hl).h = tmScale φ lam := by
       linear_combination sin φ ^ 2 * h2 - cos lam ^ 2 * h1
     field_simp
     rw [← e]
-    ring
   have hn : ‖(tmDistortion R hR hφ hl).dLat‖ = R / √(1 - tmB φ lam ^ 2) := by
     rw [← sqrt_sq (norm_nonneg _), hsq, sqrt_div' _ hD.le, sqrt_sq hR.le]
   rw [LocalDistortion.h, hn, tmScale]
   simp only [tmDistortion]
   field_simp
-  ring
 
 theorem tm_k : (tmDistortion R hR hφ hl).k = tmScale φ lam := by
   have hB := tmB_sq_lt_one φ hl
@@ -216,14 +214,12 @@ theorem tm_k : (tmDistortion R hR hφ hl).k = tmScale φ lam := by
       linear_combination sin φ ^ 2 * h2 - cos lam ^ 2 * h1
     field_simp
     rw [← e]
-    ring
   have hRc : 0 < R * cos φ := mul_pos hR hφ
   have hn : ‖(tmDistortion R hR hφ hl).dLon‖ = R * cos φ / √(1 - tmB φ lam ^ 2) := by
     rw [← sqrt_sq (norm_nonneg _), hsq, sqrt_div' _ hD.le, sqrt_sq hRc.le]
   rw [LocalDistortion.k, hn, tmScale]
   simp only [tmDistortion]
   field_simp
-  ring
 
 /-- The transverse Mercator projection of the sphere is conformal. -/
 theorem tm_isConformal : (tmDistortion R hR hφ hl).IsConformal :=

@@ -87,7 +87,6 @@ theorem primeVerticalRadius_pi_div_two : E.primeVerticalRadius (π / 2) = E.a ^ 
   rw [primeVerticalRadius, sin_pi_div_two, one_pow, mul_one, one_sub_e2_eq,
     sqrt_div' _ (sq_nonneg _), sqrt_sq E.b_pos.le, sqrt_sq E.a_pos.le]
   field_simp [E.a_pos.ne', E.b_pos.ne']
-  ring
 
 /-- The point of the meridian ellipse at geodetic latitude `φ`: its distance
 from the axis and its height above the equatorial plane. -/
@@ -120,7 +119,6 @@ theorem meridianNormal_eq (φ : ℝ) :
   constructor
   · ring
   · field_simp
-    ring
 
 /-- The geocentric latitude `ψ` of the point, seen from the centre, has
 `tan ψ = z / p = (1 - e²) tan φ`. -/
@@ -130,7 +128,6 @@ theorem geocentric_tan {φ : ℝ} (hc : cos φ ≠ 0) :
   simp only [meridianPoint]
   rw [tan_eq_sin_div_cos]
   field_simp
-  ring
 
 /-- On a sphere, geodetic and geocentric latitude agree. -/
 theorem geocentric_tan_of_sphere (hf : E.f = 0) {φ : ℝ} (hc : cos φ ≠ 0) :

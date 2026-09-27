@@ -60,8 +60,8 @@ theorem meridianRadius_zero : E.meridianRadius 0 = E.b ^ 2 / E.a := by
   have ha := E.a_pos.ne'
   simp only [meridianRadius, W2, sin_zero]
   rw [E.b_sq]
+  norm_num
   field_simp
-  ring
 
 /-- At the poles `M = a² / b`, its largest value. -/
 theorem meridianRadius_pi_div_two : E.meridianRadius (π / 2) = E.a ^ 2 / E.b := by
@@ -71,7 +71,6 @@ theorem meridianRadius_pi_div_two : E.meridianRadius (π / 2) = E.a ^ 2 / E.b :=
   simp only [meridianRadius, W2, sin_pi_div_two, one_pow, mul_one]
   rw [E.one_sub_e2_eq, sqrt_div' _ (sq_nonneg _), sqrt_sq hb.le, sqrt_sq ha.le]
   field_simp
-  ring
 
 /-- `M` always lies between its equatorial and polar values. -/
 theorem meridianRadius_mem (φ : ℝ) :
@@ -91,11 +90,10 @@ theorem meridianRadius_mem (φ : ℝ) :
   have hse : √(1 - E.e2) ≤ √(E.W2 φ) := sqrt_le_sqrt hWe
   have hse0 : 0 < √(1 - E.e2) := sqrt_pos.mpr he
   have hbsq : E.b ^ 2 / E.a = E.a * (1 - E.e2) := by
-    rw [E.b_sq]; field_simp; ring
+    rw [E.b_sq]; field_simp
   have hasq : E.a ^ 2 / E.b = E.a * (1 - E.e2) / ((1 - E.e2) * √(1 - E.e2)) := by
     rw [E.one_sub_e2_eq, sqrt_div' _ (sq_nonneg _), sqrt_sq hb.le, sqrt_sq ha.le]
     field_simp
-    ring
   rw [hbsq, hasq, meridianRadius]
   constructor
   · rw [le_div_iff₀ (by positivity)]

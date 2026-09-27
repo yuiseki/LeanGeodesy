@@ -98,7 +98,6 @@ theorem gradient_eq :
   · ring
   · ring
   · field_simp
-    ring
 
 /-- The position at height `h` is `h` along the normal from the surface
 point. -/

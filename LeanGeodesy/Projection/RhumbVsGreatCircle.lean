@@ -60,7 +60,7 @@ theorem norm_rhumb_tangent (hR : 0 < R) (lam₀ φ₀ : ℝ) {α : ℝ}
       tan_eq_sin_div_cos]
     have hp := sin_sq_add_cos_sq α
     field_simp
-    linear_combination R ^ 2 * cos α ^ 2 * cos φ ^ 2 * hp
+    linear_combination R ^ 2 * cos φ * hp
   rw [← sqrt_sq (norm_nonneg _), hsq, sqrt_sq (div_pos hR hca).le]
 
 /-- ...so between latitudes `φ₀ ≤ φ₁` it has length `R (φ₁ - φ₀) / cos α`, the
@@ -93,7 +93,6 @@ theorem parallel_hasBearing_east (hR : 0 < R) (lam : ℝ) :
   · rw [sin_pi_div_two, mul_one]
     rw [eastComponent, real_inner_self_eq_norm_sq, norm_parallelTangent_sq]
     field_simp
-    ring
   · rw [cos_pi_div_two, mul_zero, northComponent, real_inner_comm,
       inner_meridianTangent_parallelTangent, zero_div]
 

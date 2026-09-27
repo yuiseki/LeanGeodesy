@@ -1,7 +1,7 @@
 import LeanGeodesy.Curvature
 import LeanGeodesy.WGS84
 import LeanGeodesy.Projection.Mercator
-import Mathlib.Data.Real.Pi.Bounds
+import Mathlib.Analysis.Real.Pi.Bounds
 
 /-!
 # Web Mercator (EPSG:3857)
@@ -150,11 +150,11 @@ theorem y_mem_iff {φ : ℝ} (h : φ ∈ Set.Ioo (-(π / 2)) (π / 2)) :
   · rintro ⟨h₁, h₂⟩
     constructor
     · by_contra hlt
-      have := mono h hm' (lt_of_not_le hlt)
+      have := mono h hm' (lt_of_not_ge hlt)
       rw [hlo] at this
       nlinarith
     · by_contra hlt
-      have := mono hm h (lt_of_not_le hlt)
+      have := mono hm h (lt_of_not_ge hlt)
       rw [hup] at this
       nlinarith
   · rintro ⟨h₁, h₂⟩
@@ -256,7 +256,6 @@ theorem scale_ratio (R : ℝ) (hR : 0 < R) {φ : ℝ} (hc : 0 < cos φ) :
   rw [← E.N_div_M]
   simp only [meridianScale, parallelScale]
   field_simp
-  ring
 
 /-- On a sphere the two scales agree: Mercator is conformal there. -/
 theorem meridianScale_eq_parallelScale_of_sphere (hf : E.f = 0) (R φ : ℝ) :

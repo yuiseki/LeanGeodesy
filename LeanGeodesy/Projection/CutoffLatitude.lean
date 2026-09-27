@@ -1,7 +1,7 @@
 import LeanGeodesy.Projection.WebMercator
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 import Mathlib.Analysis.SpecialFunctions.Exponential
-import Mathlib.Data.Complex.ExponentialBounds
+import Mathlib.Analysis.Complex.ExponentialBounds
 
 /-!
 # Web Mercator stops at 85.05°
@@ -127,10 +127,10 @@ theorem maxLatitude_deg_bounds : 85.05 < radToDeg maxLatitude ∧ radToDeg maxLa
     rw [← degToRad_strictMono.lt_iff_lt, degToRad_radToDeg]
   obtain ⟨hclo, hchi⟩ := inv_cosh_pi_bounds
   constructor
-  · rw [hiff, ← strictAntiOn_cos.lt_iff_lt hmI (mem 85.05 (by norm_num) (by norm_num)),
+  · rw [hiff, ← strictAntiOn_cos.lt_iff_gt hmI (mem 85.05 (by norm_num) (by norm_num)),
       cos_maxLatitude, cos_degToRad_eq_sin, show (90 : ℝ) - 85.05 = 4.95 by norm_num]
     linarith [sin_degToRad_495_gt]
-  · rw [hiff', ← strictAntiOn_cos.lt_iff_lt (mem 85.06 (by norm_num) (by norm_num)) hmI,
+  · rw [hiff', ← strictAntiOn_cos.lt_iff_gt (mem 85.06 (by norm_num) (by norm_num)) hmI,
       cos_maxLatitude, cos_degToRad_eq_sin, show (90 : ℝ) - 85.06 = 4.94 by norm_num]
     linarith [sin_degToRad_494_lt]
 

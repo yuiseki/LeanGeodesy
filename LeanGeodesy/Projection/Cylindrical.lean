@@ -154,7 +154,6 @@ theorem mercator_isConformal : (cylindricalDistortion hR (1 / cos φ) hc).IsConf
 theorem mercator_areaScale : (cylindricalDistortion hR (1 / cos φ) hc).areaScale = 1 / cos φ ^ 2 := by
   rw [cylindrical_areaScale, abs_of_pos (one_div_pos.mpr hc)]
   field_simp
-  ring
 
 /-- Plate carrée (`g = id`, `g' = 1`) keeps distances along meridians. -/
 theorem plateCarree_h : (cylindricalDistortion hR 1 hc).h = 1 := by

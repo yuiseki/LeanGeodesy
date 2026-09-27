@@ -93,8 +93,8 @@ theorem equator_mem {a b : ℝ} (ha : a ≠ 0) (lon : ℝ) :
   rw [mem_ellipsoid]
   simp only [vec3_0, vec3_1, vec3_2]
   have := sin_sq_add_cos_sq lon
-  field_simp
-  nlinarith
+  rw [mul_pow, mul_pow, ← mul_add, add_comm (cos lon ^ 2), this, mul_one,
+    zero_pow two_ne_zero, zero_div, add_zero, div_self (pow_ne_zero 2 ha)]
 
 /-- The poles are at distance `b` from the centre. -/
 theorem northPole_mem {a b : ℝ} (hb : b ≠ 0) : vec3 0 0 b ∈ ellipsoid a b := by

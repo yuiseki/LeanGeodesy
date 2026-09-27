@@ -51,7 +51,7 @@ theorem a_mul_sqrt_W2 (φ : ℝ) : E.a * √(E.W2 φ) = E.primeVerticalRadius φ
   have hs : 0 < √(E.W2 φ) := sqrt_pos.mpr hW
   rw [primeVerticalRadius, show 1 - E.e2 * sin φ ^ 2 = E.W2 φ from rfl]
   field_simp
-  rw [mul_assoc, ← sq, sq_sqrt hW.le]
+  rw [sq_sqrt hW.le]
 
 end ReferenceEllipsoid
 
@@ -180,7 +180,6 @@ theorem toECEF_surjective (E : ReferenceEllipsoid) :
     have hb : E.primeVerticalRadius (π / 2) * (1 - E.e2) = E.b := by
       rw [E.primeVerticalRadius_pi_div_two, E.one_sub_e2_eq]
       field_simp [E.a_pos.ne', E.b_pos.ne']
-      ring
     simp only [GeodeticCoordinate.toECEF, GeodeticLatitude.northPole, cos_pi_div_two,
       sin_pi_div_two, mul_zero, zero_mul, mul_one, hb]
     refine vec3_congr hx.symm hy.symm ?_
@@ -201,7 +200,7 @@ theorem sphereInverse_toECEF (E : ReferenceEllipsoid) (hf : E.f = 0) (c : Geodet
   have hr := GeodeticCoordinate.norm_toECEF_of_sphere E c hf hh.le
   have hz : (GeodeticCoordinate.toECEF E c) 2 = (E.a + c.height) * sin c.lat.1 := by
     rw [GeodeticCoordinate.toECEF_of_sphere E c hf]
-    simp [GeodeticCoordinate.normal, vec3_smul]
+    simp [GeodeticCoordinate.normal]
   have hpos : 0 < E.a + c.height := by linarith
   have hlon := GeodeticCoordinate.ecefLongitude_toECEF E c hc (by rw [hN]; exact hpos)
   obtain ⟨⟨φ, hφ⟩, lon, h⟩ := c

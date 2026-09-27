@@ -70,6 +70,8 @@ theorem hasDerivAt_primeVerticalRadius (φ : ℝ) :
   rw [hN]
   convert h using 1
   have hsq : √(W2 E φ) ^ 2 = W2 E φ := sq_sqrt hD.le
+  generalize √(W2 E φ) = s at hs hsq ⊢
+  rw [← hsq]
   field_simp
   ring
 
@@ -83,10 +85,11 @@ theorem hasDerivAt_meridianPoint_fst (φ : ℝ) :
   have hp := sin_sq_add_cos_sq φ
   simp only [meridianRadius, ReferenceEllipsoid.primeVerticalRadius]
   rw [show 1 - E.e2 * sin φ ^ 2 = W2 E φ from rfl]
+  have hsq : √(W2 E φ) ^ 2 = 1 - E.e2 * sin φ ^ 2 := sq_sqrt hD.le
+  generalize √(W2 E φ) = s at hs hsq ⊢
+  rw [show W2 E φ = s ^ 2 by rw [hsq]; rfl]
   field_simp
-  simp only [W2] at *
-  linear_combination (-(E.a * E.e2 * sin φ * (1 - E.e2 * sin φ ^ 2) *
-    √(1 - E.e2 * sin φ ^ 2) ^ 2)) * hp
+  linear_combination (E.a * sin φ) * hsq - (E.a * E.e2 * sin φ) * hp
 
 /-- The height above the equator, `N (1 - e²) sin φ`, changes at rate
 `M cos φ`. -/
@@ -99,9 +102,11 @@ theorem hasDerivAt_meridianPoint_snd (φ : ℝ) :
   have hp := sin_sq_add_cos_sq φ
   simp only [meridianRadius, ReferenceEllipsoid.primeVerticalRadius]
   rw [show 1 - E.e2 * sin φ ^ 2 = W2 E φ from rfl]
+  have hsq : √(W2 E φ) ^ 2 = 1 - E.e2 * sin φ ^ 2 := sq_sqrt hD.le
+  generalize √(W2 E φ) = s at hs hsq ⊢
+  rw [show W2 E φ = s ^ 2 by rw [hsq]; rfl]
   field_simp
-  simp only [W2] at *
-  ring
+  linear_combination (-(E.a * (1 - E.e2) * cos φ)) * hsq
 
 /-- The derivative of the meridian radius: `M' = 3 e² sin φ cos φ M / (1 - e² sin² φ)`. -/
 theorem hasDerivAt_meridianRadius (φ : ℝ) :
@@ -115,9 +120,10 @@ theorem hasDerivAt_meridianRadius (φ : ℝ) :
   rw [hM]
   convert h using 1
   have hsq : √(W2 E φ) ^ 2 = W2 E φ := sq_sqrt hD.le
+  simp only [Pi.mul_apply]
+  generalize √(W2 E φ) = s at hs hsq ⊢
+  rw [← hsq]
   field_simp
-  ring_nf
-  rw [show √(W2 E φ) ^ 3 = √(W2 E φ) ^ 2 * √(W2 E φ) by ring, hsq]
   ring
 
 /-- The point of the ellipsoid at geodetic latitude `φ` and longitude `lam`. -/
@@ -184,7 +190,6 @@ theorem N_div_M (φ : ℝ) :
   simp only [meridianRadius, ReferenceEllipsoid.primeVerticalRadius]
   rw [show 1 - E.e2 * sin φ ^ 2 = W2 E φ from rfl]
   field_simp
-  ring
 
 end ReferenceEllipsoid
 

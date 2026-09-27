@@ -1,5 +1,5 @@
 import LeanGeodesy.Projection.Cylindrical
-import Mathlib.Analysis.SpecialFunctions.Integrals
+import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
 
 /-!
 # An equal-area projection, and Web Mercator's areas
@@ -126,8 +126,7 @@ theorem webMercator_areaScale_gt_one (E : ReferenceEllipsoid) (hf : 0 < E.f) (he
   rw [show E.a / cos φ / (E.a * (1 - E.e2) / (E.W2 φ * √(E.W2 φ))) *
       (E.a / (E.a / √(E.W2 φ) * cos φ)) =
       E.W2 φ * √(E.W2 φ) * √(E.W2 φ) / ((1 - E.e2) * cos φ ^ 2) by
-    field_simp [E.one_sub_e2_pos.ne']
-    ring]
+    field_simp [E.one_sub_e2_pos.ne']]
   rw [mul_assoc, ← sq, hww, one_lt_div (mul_pos E.one_sub_e2_pos (by positivity))]
   nlinarith
 

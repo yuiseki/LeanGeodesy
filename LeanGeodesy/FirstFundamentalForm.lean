@@ -228,7 +228,6 @@ theorem hasDerivAt_curve {φ lon : ℝ → ℝ} {φ' lon' t : ℝ} (hφ : HasDer
     simp only [Function.comp]
     ring
   · convert hz using 1
-    simp only [Function.comp]
     ring
 
 /-- The squared speed of a curve on the ellipsoid is `M² φ'² + (N cos φ)² λ'²`. -/
