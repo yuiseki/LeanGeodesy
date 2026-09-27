@@ -656,8 +656,9 @@ same vector as the ellipsoid normal `GeodeticCoordinate.normal`) and proves
   which is where the nautical mile comes from (`arcMinute_bounds`).
 
 The triangle inequality rests on the triangle inequality for angles between
-unit vectors (`angle_le_angle_add_angle`), which Mathlib `v4.16.0` lists only
-as `proof_wanted` and which is proved here.
+unit vectors (`angle_le_angle_add_angle`), proved here. It was written when
+Mathlib (`v4.16.0`) listed it only as `proof_wanted`; Mathlib has since proved
+it as `InnerProductGeometry.angle_le_angle_add_angle`.
 
 ### CRS
 

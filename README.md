@@ -143,7 +143,7 @@ lake exe cache get
 lake build
 ```
 
-Lean `v4.16.0`, Mathlib `v4.16.0`.
+Lean `v4.34.0`, Mathlib `v4.34.0`.
 
 API documentation is generated with [doc-gen4](https://github.com/leanprover/doc-gen4)
 from the nested project in `docbuild/`, which keeps doc-gen4 out of the

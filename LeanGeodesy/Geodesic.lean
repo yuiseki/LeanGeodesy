@@ -40,8 +40,9 @@ ellipsoid normal of `GeodeticCoordinate`) and proves
   the nautical mile (`arcMinute_bounds`).
 
 The triangle inequality comes from the triangle inequality for angles
-between unit vectors (`angle_le_angle_add_angle`), which Mathlib states
-only as `proof_wanted` and is proved here. The proof splits two vectors
+between unit vectors (`angle_le_angle_add_angle`), proved here. It was
+written when Mathlib stated it only as `proof_wanted`; Mathlib has since
+proved it as `InnerProductGeometry.angle_le_angle_add_angle`. The proof splits two vectors
 into their parts along and across a third. The parts across have lengths
 `sin α` and `sin β`, so by Cauchy-Schwarz the inner product is at least
 `cos α cos β - sin α sin β = cos (α + β)`, and `arccos` is decreasing.
