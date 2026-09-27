@@ -24,7 +24,7 @@ tag := "great-circle-distance"
 
 {leanDecl Geodesy.Geodesic.haversine}
 
-大円が本当に最短であることは、第6章であらためて証明を追います。ここでは、この距離を「守りたいもの」として使います。
+大円が本当に最短であることは、1.6 章であらためて証明を追います。ここでは、この距離を「守りたいもの」として使います。
 
 # 中心からの距離と方位を守る図法
 %%%
@@ -45,7 +45,7 @@ $`R(\pi/2 - \varphi)` は、北極からその地点までの大円距離その�
 
 [依存関係を Lean Atlas で見る](https://yuiseki.github.io/LeanGeodesy/atlas/)（主定理「Azimuthal equidistant keeps distances」）
 
-第2章の局所歪みで測ると、子午線方向の縮尺は $`h = 1` で、緯線方向の縮尺は $`k = (\pi/2 - \varphi)/\cos \varphi` です。極以外では $`k > 1` なので、この図法は等角でも正積でもありません。守っているのは、あくまで中心から見た距離と方位だけです。
+1.2 章の局所歪みで測ると、子午線方向の縮尺は $`h = 1` で、緯線方向の縮尺は $`k = (\pi/2 - \varphi)/\cos \varphi` です。極以外では $`k > 1` なので、この図法は等角でも正積でもありません。守っているのは、あくまで中心から見た距離と方位だけです。
 
 {leanDecl Geodesy.Projection.one_lt_azimuthalEquidistant_k}
 

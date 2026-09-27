@@ -41,7 +41,7 @@ tag := "cell-area"
 
 面積の縮尺が 1 というのは、各地点のごく近くでの話です。実務で知りたいのは、行政区画やメッシュのような有限の広がりを持つ領域の面積です。局所的に面積を守れば、全体の面積も守れるのでしょうか。
 
-緯度 $`\varphi_1`〜$`\varphi_2`、経度 $`\lambda_1`〜$`\lambda_2` のセルを考えます。地表での面積は、第1章の面積要素 $`R^2 \cos \varphi` を積分したもので、
+緯度 $`\varphi_1`〜$`\varphi_2`、経度 $`\lambda_1`〜$`\lambda_2` のセルを考えます。地表での面積は、1.1 章の面積要素 $`R^2 \cos \varphi` を積分したもので、
 
 $$`\int_{\lambda_1}^{\lambda_2} \int_{\varphi_1}^{\varphi_2} R^2 \cos \varphi \, d\varphi \, d\lambda = R^2 (\lambda_2 - \lambda_1)(\sin \varphi_2 - \sin \varphi_1)`
 

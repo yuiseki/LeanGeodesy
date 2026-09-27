@@ -99,7 +99,7 @@ tag := "length-angle-area"
 
 第一基本形式が優れているのは、長さだけでなく角度と面積も同じ係数から出てくることです。
 
-長さについては、楕円体の上を動く点 $`(\varphi(t), \lambda(t))` の速さの二乗が $`M^2 \varphi'^2 + (N \cos \varphi)^2 \lambda'^2` になります。これを時間で積分すれば、曲線の長さが得られます。この事実は第6章で、最短経路を考えるときの出発点になります。
+長さについては、楕円体の上を動く点 $`(\varphi(t), \lambda(t))` の速さの二乗が $`M^2 \varphi'^2 + (N \cos \varphi)^2 \lambda'^2` になります。これを時間で積分すれば、曲線の長さが得られます。この事実は 1.6 章で、最短経路を考えるときの出発点になります。
 
 {leanDecl Geodesy.ReferenceEllipsoid.speed_sq_curve}
 

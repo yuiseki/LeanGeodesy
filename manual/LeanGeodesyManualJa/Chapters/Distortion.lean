@@ -46,7 +46,7 @@ $`h` は子午線方向の縮尺、$`k` は緯線方向の縮尺です。LeanGeo
 
 {leanDecl Geodesy.Projection.LocalDistortion}
 
-楕円体の上で測るときの基準の長さは、第一基本形式の $`\sqrt{E} = M` と $`\sqrt{G} = N \cos \varphi` そのものです。第1章のものさしが、そのまま歪みの物差しになっています。
+楕円体の上で測るときの基準の長さは、第一基本形式の $`\sqrt{E} = M` と $`\sqrt{G} = N \cos \varphi` そのものです。1.1 章のものさしが、そのまま歪みの物差しになっています。
 
 {leanDecl Geodesy.Projection.LocalDistortion.ofEllipsoid}
 
@@ -119,7 +119,7 @@ tag := "web-mercator"
 
 Web Mercator（EPSG:3857）は「Mercator だから等角」と説明されることが多いのですが、厳密にはそうではありません。
 
-Web Mercator は、WGS 84 の楕円体の緯度経度を、球の Mercator の式にそのまま入れます。楕円体の上で測ると、子午線方向の基準の長さは $`R` ではなく $`M`、緯線方向は $`N \cos \varphi` です。そのため二つの縮尺の比は第1章の $`N / M` になり、扁平な楕円体ではどの緯度でも 1 より大きくなります。地表の小さな円は、地図上でわずかに南北に伸びた楕円に描かれます。
+Web Mercator は、WGS 84 の楕円体の緯度経度を、球の Mercator の式にそのまま入れます。楕円体の上で測ると、子午線方向の基準の長さは $`R` ではなく $`M`、緯線方向は $`N \cos \varphi` です。そのため二つの縮尺の比は 1.1 章の $`N / M` になり、扁平な楕円体ではどの緯度でも 1 より大きくなります。地表の小さな円は、地図上でわずかに南北に伸びた楕円に描かれます。
 
 {leanDecl Geodesy.Projection.ellipsoidalMercator_not_isConformal}
 

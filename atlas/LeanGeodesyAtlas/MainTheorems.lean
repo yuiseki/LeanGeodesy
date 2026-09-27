@@ -58,3 +58,11 @@ attribute [formalMeta "Geodesic equations"
 attribute [formalMeta "Clairaut's relation"
   "Along a geodesic, N cos φ sin A is constant" mainTheorem]
   Geodesy.ReferenceEllipsoid.EllipsoidCurve.clairaut
+
+attribute [formalMeta "Hilbert order is adjacent"
+  "In the Hilbert order, consecutive tiles always share an edge" mainTheorem]
+  Geodesy.Tiles.hilbertOrder_isAdjacentOrder
+
+attribute [formalMeta "Morton order is not adjacent"
+  "In the Morton order, consecutive tiles need not share an edge" mainTheorem]
+  Geodesy.Tiles.mortonOrder_not_isAdjacentOrder

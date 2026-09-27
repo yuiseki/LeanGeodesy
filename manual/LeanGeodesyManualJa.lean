@@ -1,5 +1,6 @@
 import VersoManual
 import LeanGeodesyManualJa.Part1
+import LeanGeodesyManualJa.Part2
 
 open Verso.Genre Manual
 
@@ -15,7 +16,7 @@ LeanGeodesy は、GIS ソフトウェアが前提にしている数学を Lean 4
 
 各章の要所には、依存関係を Lean Atlas で見るためのリンクがあります。Atlas で主定理を選ぶと、いま読んだ概念が形式的にどんな依存関係になっているのかを確かめられます。
 
-いまは第I部「地球を測り、平面に写す」まであります。タイル番号の数学（第II部）と座標参照系（第III部）は、今後追加する予定です。
+いまは第I部「地球を測り、平面に写す」と第II部「Web 地図のタイル番号にある数学」まであります。座標参照系（第III部）は、今後追加する予定です。
 
 用語は次の表記で統一します。Lean の識別子は翻訳しません。
 
@@ -29,3 +30,4 @@ LeanGeodesy は、GIS ソフトウェアが前提にしている数学を Lean 4
 - geodesic：測地線
 
 {include 1 LeanGeodesyManualJa.Part1}
+{include 1 LeanGeodesyManualJa.Part2}
