@@ -175,6 +175,20 @@ The viewer runs at `http://localhost:5326`. `LeanGeodesy.lean` and
 `LeanGeodesy/` in `atlas/` are links to the library, because lean-atlas finds
 modules and sources relative to the working directory.
 
+A [Verso](https://github.com/leanprover/verso) manual in the nested project
+`manual/` explains the same projection spine in prose and mathematics, with
+each declaration's signature and docstring taken from the built library:
+
+```
+cd manual
+lake build
+lake env lean --run LeanGeodesyManualMain.lean --output _out
+```
+
+The site is written to `manual/_out/html-multi/`. The generator runs in the
+interpreter; building it as an executable would compile Mathlib to native
+code.
+
 ## Axiom audit
 
 `LeanGeodesy/Axioms.lean` pins the main theorems to Lean's three standard

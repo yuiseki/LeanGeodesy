@@ -32,7 +32,9 @@ structure LocalDistortion where
   meridianLength : ℝ
   /-- Length of the ground step east per unit longitude: `N cos φ`. -/
   parallelLength : ℝ
+  /-- The step north has positive length. -/
   meridianLength_pos : 0 < meridianLength
+  /-- The step east has positive length: the point is not a pole. -/
   parallelLength_pos : 0 < parallelLength
   /-- The image of the step north. -/
   dLat : E2

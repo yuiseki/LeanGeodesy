@@ -24,8 +24,11 @@ structure ReferenceEllipsoid where
   a : ℝ
   /-- Flattening `(a - b) / a`. -/
   f : ℝ
+  /-- The semi-major axis is positive. -/
   a_pos : 0 < a
+  /-- The ellipsoid is not stretched along its axis: `b ≤ a`. -/
   f_nonneg : 0 ≤ f
+  /-- The ellipsoid is not flat: `0 < b`. -/
   f_lt_one : f < 1
 
 namespace ReferenceEllipsoid
@@ -56,6 +59,7 @@ theorem f_eq : E.f = (E.a - E.b) / E.a := by
   field_simp [E.a_pos.ne']
   ring
 
+/-- The first eccentricity squared in terms of the axes: `e² = (a² - b²) / a²`. -/
 theorem e2_eq : E.e2 = (E.a ^ 2 - E.b ^ 2) / E.a ^ 2 := by
   unfold e2 b
   field_simp [E.a_pos.ne']
