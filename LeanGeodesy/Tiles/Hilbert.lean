@@ -172,7 +172,7 @@ theorem quadPlace_inj {n q q' : ℕ} {p p' : ℕ × ℕ} (hp : p.1 < n ∧ p.2 <
 
 /-- Distinct indices give distinct tiles. -/
 theorem hilbertD_inj : (z i j : ℕ) → i < 4 ^ z → j < 4 ^ z → hilbertD z i = hilbertD z j → i = j
-  | 0, i, j, hi, hj, _ => by simp at hi hj; omega
+  | 0, i, j, hi, hj, _ => (Nat.lt_one_iff.mp hi).trans (Nat.lt_one_iff.mp hj).symm
   | z + 1, i, j, hi, hj, h => by
     have hN := four_pow_pos z
     rw [hilbertD_succ, hilbertD_succ] at h

@@ -147,10 +147,10 @@ theorem hasDerivAt_rLon (t : ℝ) : HasDerivAt γ.rLon (γ.rLon' t) t := by
     funext s; simp [rLon, parallelTangent]
   rw [hfun, rLon']
   refine hasDerivAt_vec3 ?_ ?_ (hasDerivAt_const _ _)
-  · convert (hp.mul hl.sin).neg using 1
+  · convert (hp.mul hl.sin).neg using 1 <;> try rfl
     simp only [Function.comp]
     ring
-  · convert hp.mul hl.cos using 1
+  · convert hp.mul hl.cos using 1 <;> try rfl
     simp only [Function.comp]
     ring
 
@@ -170,7 +170,7 @@ theorem hasDerivAt_G_mul_lon' (t : ℝ) :
       fun s => (inner ℝ (γ.vel s) (γ.rLon s) : ℝ) := by
     funext s; rw [inner_vel_rLon]
   rw [hfun]
-  convert h using 1
+  convert h using 1 <;> try rfl
   rw [show (inner ℝ (E.dr (γ.lat t) (γ.lon t) (γ.lat' t, γ.lon' t)) (γ.rLon' t) : ℝ) =
     inner ℝ (γ.vel t) (γ.rLon' t) from rfl, inner_velocity_deriv_parallelTangent, zero_add]
 
@@ -196,7 +196,7 @@ theorem geodesic_speed_const (hg : γ.IsGeodesic) (s t : ℝ) : ‖γ.vel s‖ =
   have hd : ∀ x, HasDerivAt (fun s => (inner ℝ (γ.vel s) (γ.vel s) : ℝ)) 0 x := fun x => by
     have h := HasDerivAt.inner ℝ (γ.hasDerivAt_vel x) (γ.hasDerivAt_vel x)
     have e : (inner ℝ (γ.acc x) (γ.vel x) : ℝ) = 0 := by rw [inner_acc_vel, (hg x).1, (hg x).2]; ring
-    convert h using 1
+    convert h using 1 <;> try rfl
     have e' : (inner ℝ (γ.acc x) (E.dr (γ.lat x) (γ.lon x) (γ.lat' x, γ.lon' x)) : ℝ) = 0 := e
     rw [real_inner_comm, e']
     ring
@@ -289,13 +289,13 @@ theorem hasDerivAt_rLat (t : ℝ) : HasDerivAt γ.rLat (γ.rLat' t) t := by
     funext s; simp [rLat, meridianTangent]
   rw [hfun, rLat']
   refine hasDerivAt_vec3 ?_ ?_ ?_
-  · convert ((hM.mul hs).neg).mul hl.cos using 1
+  · convert ((hM.mul hs).neg).mul hl.cos using 1 <;> try rfl
     simp only [Function.comp_apply, Pi.mul_apply, Pi.neg_apply]
     ring
-  · convert ((hM.mul hs).neg).mul hl.sin using 1
+  · convert ((hM.mul hs).neg).mul hl.sin using 1 <;> try rfl
     simp only [Function.comp_apply, Pi.mul_apply, Pi.neg_apply]
     ring
-  · convert hM.mul hc using 1
+  · convert hM.mul hc using 1 <;> try rfl
     simp only [Function.comp_apply]
     ring
 
@@ -333,7 +333,7 @@ theorem inner_acc_rLat {t lat'' : ℝ} (h2 : HasDerivAt γ.lat' lat'' t) :
   have hinner := HasDerivAt.inner ℝ (γ.hasDerivAt_vel t) (γ.hasDerivAt_rLat t)
   have hE : HasDerivAt (fun s => E.meridianRadius (γ.lat s) ^ 2)
       (E.firstFormE' (γ.lat t) * γ.lat' t) t := by
-    convert ((E.hasDerivAt_meridianRadius (γ.lat t)).comp t (γ.hasDerivAt_lat t)).pow 2 using 1
+    convert ((E.hasDerivAt_meridianRadius (γ.lat t)).comp t (γ.hasDerivAt_lat t)).pow 2 using 1 <;> try rfl
     simp only [firstFormE', Function.comp]
     push_cast
     ring
@@ -364,7 +364,7 @@ theorem geodesic_longitude_equation (hg : γ.IsGeodesic) {t lon'' : ℝ}
       E.firstFormG' (γ.lat t) * γ.lat' t * γ.lon' t = 0 := by
   have hG : HasDerivAt (fun s => (E.primeVerticalRadius (γ.lat s) * cos (γ.lat s)) ^ 2)
       (E.firstFormG' (γ.lat t) * γ.lat' t) t := by
-    convert ((E.hasDerivAt_meridianPoint_fst (γ.lat t)).comp t (γ.hasDerivAt_lat t)).pow 2 using 1
+    convert ((E.hasDerivAt_meridianPoint_fst (γ.lat t)).comp t (γ.hasDerivAt_lat t)).pow 2 using 1 <;> try rfl
     simp only [firstFormG', Function.comp]
     push_cast
     ring
@@ -396,7 +396,7 @@ theorem inner_acc_rLon {t lon'' : ℝ} (h3 : HasDerivAt γ.lon' lon'' t) :
         E.firstFormG' (γ.lat t) * γ.lat' t * γ.lon' t := by
   have hG : HasDerivAt (fun s => (E.primeVerticalRadius (γ.lat s) * cos (γ.lat s)) ^ 2)
       (E.firstFormG' (γ.lat t) * γ.lat' t) t := by
-    convert ((E.hasDerivAt_meridianPoint_fst (γ.lat t)).comp t (γ.hasDerivAt_lat t)).pow 2 using 1
+    convert ((E.hasDerivAt_meridianPoint_fst (γ.lat t)).comp t (γ.hasDerivAt_lat t)).pow 2 using 1 <;> try rfl
     simp only [firstFormG', Function.comp]
     push_cast
     ring
@@ -448,8 +448,9 @@ noncomputable def parallelCurve (φ₀ : ℝ) : EllipsoidCurve E where
     show HasDerivAt (fun s => E.dr φ₀ (id s) (0, 1)) _ t
     rw [hfun]
     refine hasDerivAt_vec3 ?_ ?_ (hasDerivAt_const _ _)
-    · simpa using ((hasDerivAt_sin t).const_mul (E.primeVerticalRadius φ₀ * cos φ₀)).neg
-    · convert (hasDerivAt_cos t).const_mul (E.primeVerticalRadius φ₀ * cos φ₀) using 1; ring
+    · exact ((hasDerivAt_sin t).const_mul (E.primeVerticalRadius φ₀ * cos φ₀)).neg
+    · convert (hasDerivAt_cos t).const_mul (E.primeVerticalRadius φ₀ * cos φ₀) using 1 <;> try rfl
+      ring
 
 /-- A parallel strictly between the poles is a geodesic exactly when it is the
 equator: otherwise its acceleration, pointing at the axis, has a component

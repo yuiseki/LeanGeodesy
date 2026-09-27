@@ -102,7 +102,8 @@ theorem hasDerivAt_mercatorY {φ : ℝ} (hc : 0 < cos φ) :
     HasDerivAt mercatorY (1 / cos φ) φ := by
   have h := (hasDerivAt_arsinh (tan φ)).comp φ (hasDerivAt_tan hc.ne')
   rw [sqrt_one_add_tan_sq hc] at h
-  convert h using 1
+  rw [show mercatorY = arsinh ∘ tan from rfl]
+  convert h using 1 <;> try rfl
   field_simp
 
 /-- The textbook form: `y = ln (tan (π/4 + φ/2))`. -/
@@ -200,15 +201,18 @@ theorem hasDerivAt_spherePoint_lat (φ lam : ℝ) :
     HasDerivAt (fun φ => spherePoint R φ lam) (meridianTangent R φ lam) φ := by
   unfold spherePoint meridianTangent
   refine hasDerivAt_vec3 ?_ ?_ ?_
-  · convert (((hasDerivAt_cos φ).const_mul R).mul_const (cos lam)) using 1; ring
-  · convert (((hasDerivAt_cos φ).const_mul R).mul_const (sin lam)) using 1; ring
+  · convert (((hasDerivAt_cos φ).const_mul R).mul_const (cos lam)) using 1 <;> try rfl
+    ring
+  · convert (((hasDerivAt_cos φ).const_mul R).mul_const (sin lam)) using 1 <;> try rfl
+    ring
   · exact (hasDerivAt_sin φ).const_mul R
 
 theorem hasDerivAt_spherePoint_lon (φ lam : ℝ) :
     HasDerivAt (fun lam => spherePoint R φ lam) (parallelTangent R φ lam) lam := by
   unfold spherePoint parallelTangent
   refine hasDerivAt_vec3 ?_ ?_ ?_
-  · convert ((hasDerivAt_cos lam).const_mul (R * cos φ)) using 1; ring
+  · convert ((hasDerivAt_cos lam).const_mul (R * cos φ)) using 1 <;> try rfl
+    ring
   · exact (hasDerivAt_sin lam).const_mul (R * cos φ)
   · exact hasDerivAt_const _ _
 
@@ -240,7 +244,7 @@ theorem hasDerivAt_mercator_lat {φ : ℝ} (hc : 0 < cos φ) (lam : ℝ) :
     HasDerivAt (fun φ => mercator R φ lam) (vec2 0 (R / cos φ)) φ := by
   unfold mercator
   refine hasDerivAt_vec2 (hasDerivAt_const _ _) ?_
-  convert (hasDerivAt_mercatorY hc).const_mul R using 1
+  convert (hasDerivAt_mercatorY hc).const_mul R using 1 <;> try rfl
   ring
 
 theorem hasDerivAt_mercator_lon (φ lam : ℝ) :

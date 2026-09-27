@@ -187,7 +187,7 @@ theorem meridianArc_band_lt (hf : 0 < E.f) {φ₁ φ₂ δ : ℝ} (hδ : 0 < δ)
     fun x hx => E.meridianRadius_strictMonoOn hf ⟨by linarith [hx.1], by linarith [hx.2]⟩
       ⟨by linarith [hx.1], by linarith [hx.2]⟩ (by linarith)
   exact intervalIntegral.integral_lt_integral_of_continuousOn_of_le_of_exists_lt (by linarith)
-    hc.continuousOn (hc.comp (continuous_add_right _)).continuousOn
+    hc.continuousOn (hc.comp (continuous_add_const _)).continuousOn
     (fun x hx => (hlt x ⟨hx.1.le, hx.2⟩).le) ⟨φ₁, ⟨le_rfl, by linarith⟩, hlt φ₁ ⟨le_rfl, by linarith⟩⟩
 
 end ReferenceEllipsoid

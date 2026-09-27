@@ -174,7 +174,8 @@ theorem eqOn_of_hasDerivAt_eq {f g d : ℝ → ℝ}
     ∀ φ ∈ Set.Ioo (-(π / 2)) (π / 2), f φ = g φ := by
   have hpi := pi_pos
   have hd : ∀ φ ∈ Set.Ioo (-(π / 2)) (π / 2), HasDerivAt (fun t => f t - g t) 0 φ := fun φ hφ => by
-    simpa using (hf φ hφ).sub (hg φ hφ)
+    convert (hf φ hφ).sub (hg φ hφ) using 1 <;> try rfl
+    rw [sub_self]
   intro φ hφ
   have hmem0 : (0 : ℝ) ∈ Set.Ioo (-(π / 2)) (π / 2) := ⟨by linarith, by linarith⟩
   have hconst := Convex.is_const_of_fderivWithin_eq_zero (convex_Ioo _ _)

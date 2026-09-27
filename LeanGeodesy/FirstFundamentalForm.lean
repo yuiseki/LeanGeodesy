@@ -221,13 +221,13 @@ theorem hasDerivAt_curve {φ lon : ℝ → ℝ} {φ' lon' t : ℝ} (hφ : HasDer
   unfold ellipsoidPoint dr meridianTangent parallelTangent
   rw [vec3_smul, vec3_smul, vec3_add]
   refine hasDerivAt_vec3 ?_ ?_ ?_
-  · convert hp.mul hl.cos using 1
+  · convert hp.mul hl.cos using 1 <;> try rfl
     simp only [Function.comp]
     ring
-  · convert hp.mul hl.sin using 1
+  · convert hp.mul hl.sin using 1 <;> try rfl
     simp only [Function.comp]
     ring
-  · convert hz using 1
+  · convert hz using 1 <;> try rfl
     ring
 
 /-- The squared speed of a curve on the ellipsoid is `M² φ'² + (N cos φ)² λ'²`. -/
@@ -262,7 +262,7 @@ theorem hasDerivAt_firstFormE (φ lam : ℝ) :
   have hfun : (fun φ => E.firstFormE φ lam) = fun φ => E.meridianRadius φ ^ 2 := by
     funext φ; exact E.firstFormE_eq φ lam
   rw [hfun, firstFormE']
-  convert (E.hasDerivAt_meridianRadius φ).pow 2 using 1
+  convert (E.hasDerivAt_meridianRadius φ).pow 2 using 1 <;> try rfl
   push_cast
   ring
 
@@ -271,7 +271,7 @@ theorem hasDerivAt_firstFormG (φ lam : ℝ) :
   have hfun : (fun φ => E.firstFormG φ lam) = fun φ => (E.primeVerticalRadius φ * cos φ) ^ 2 := by
     funext φ; exact E.firstFormG_eq φ lam
   rw [hfun, firstFormG']
-  convert (E.hasDerivAt_meridianPoint_fst φ).pow 2 using 1
+  convert (E.hasDerivAt_meridianPoint_fst φ).pow 2 using 1 <;> try rfl
   push_cast
   ring
 

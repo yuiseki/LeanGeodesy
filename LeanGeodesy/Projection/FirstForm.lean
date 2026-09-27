@@ -132,7 +132,6 @@ theorem meridianArc_eq_curveLength (E : ReferenceEllipsoid) (φ lam : ℝ) :
     E.meridianArc φ = curveLength (fun φ => E.ellipsoidPoint φ lam) 0 φ := by
   rw [curveLength, meridianArc]
   refine intervalIntegral.integral_congr fun ψ _ => ?_
-  simp only
   rw [norm_deriv_meridian, sqrt_firstForm_lat]
 
 /-- The Web Mercator distortion on the ellipsoid is measured against the first
