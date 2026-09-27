@@ -26,6 +26,7 @@ jobs:
           lake build
           lake env lean --run LeanGeodesyManualMain.lean --output _out
           lake env lean --run LeanGeodesyManualJaMain.lean --output _out-ja
+          lake env lean --run LeanGeodesyBookYaruoMain.lean --output _out-yaruo
       - name: Generate the Lean Atlas graph
         working-directory: atlas
         run: |
@@ -43,6 +44,7 @@ jobs:
         run: |
           cp -r manual/_out/html-multi site/manual
           cp -r manual/_out-ja/html-multi site/manual-ja
+          cp -r manual/_out-yaruo/html-multi site/book-yaruo
           cp pages/index.html site/index.html
       - uses: actions/upload-pages-artifact@v3
         with:

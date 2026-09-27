@@ -1,10 +1,10 @@
 import VersoManual
 import LeanGeodesy
 import LeanGeodesyManualJa.LeanDecl
-import LeanGeodesyManualJa.Dialogue
+import LeanGeodesyBookYaruo.Dialogue
 
 open Verso.Genre Manual
-open LeanGeodesyManualJa
+open LeanGeodesyManualJa LeanGeodesyBookYaruo
 
 #doc (Manual) "第1部 地球の上で長さを測る" =>
 %%%

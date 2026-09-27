@@ -3,14 +3,14 @@ import VersoManual
 /-!
 Speech blocks for the dialogue: `:::yaruo` and `:::yaranaio` wrap one line of
 dialogue, rendered with the speaker's name beside it. The styling is in
-`LeanGeodesyManualJaMain.lean`.
+`LeanGeodesyBookYaruoMain.lean`.
 -/
 
 open Lean Elab
 open Verso ArgParse Doc Elab Genre.Manual
 open Verso.Output (Html)
 
-namespace LeanGeodesyManualJa
+namespace LeanGeodesyBookYaruo
 
 -- One line of dialogue by `who` (`yaruo` or `yaranaio`).
 block_extension Block.speech (who : String) where
@@ -44,4 +44,4 @@ def yaranaio : DirectiveExpanderOf Unit
     let args ← stxs.mapM elabBlock
     ``(Verso.Doc.Block.other (Block.speech "yaranaio") #[ $[ $args ],* ])
 
-end LeanGeodesyManualJa
+end LeanGeodesyBookYaruo

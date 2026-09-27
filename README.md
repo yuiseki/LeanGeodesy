@@ -189,24 +189,27 @@ lake env lean --run LeanGeodesyManualMain.lean --output _out
 ```
 
 The site is written to `manual/_out/html-multi/`. A Japanese companion,
-`LeanGeodesyManualJa`, is a dialogue ("やる夫が Lean で学ぶ測地学"): a GIS
-user and a mathematician work from everyday questions to the reference
-ellipsoid, the first fundamental form, projection distortion and why
-Mercator's formula follows from conformality; later chapters, still in prose,
-cover area, azimuthal projections, geodesics, Clairaut's relation and tiles.
-The dialogue uses two small block directives, `:::yaruo` and `:::yaranaio`; it shows each declaration's
-signature through a small `leanDecl` block command that leaves the English
-docstring out:
+`LeanGeodesyManualJa`, is written separately in Japanese around questions a
+GIS engineer meets; Part I goes from the reference ellipsoid through the first
+fundamental form to projection distortion, geodesics and Clairaut's relation,
+and Part II from the tile grid to the quadtree, Morton and Hilbert orders and
+subtrees as integer intervals. A second Japanese book, `LeanGeodesyBookYaruo`
+("やる夫が Lean で学ぶ測地学"), tells the same story as a dialogue between a
+GIS user and a mathematician, using two small block directives, `:::yaruo` and
+`:::yaranaio`. Both show declarations through a `leanDecl` block command that
+leaves the English docstring out:
 
 ```
 lake env lean --run LeanGeodesyManualJaMain.lean --output _out-ja
+lake env lean --run LeanGeodesyBookYaruoMain.lean --output _out-yaruo
 ```
 
 The generator runs in the
 interpreter; building it as an executable would compile Mathlib to native
 code.
 
-The book, its Japanese companion (`/manual-ja/`) and the atlas are published at
+The book, its Japanese companions (`/manual-ja/`, `/book-yaruo/`) and the
+atlas are published at
 <https://yuiseki.github.io/LeanGeodesy/> by `.github/workflows/pages.yml` on
 every push to `main`. `atlas/build-pages.sh` builds the viewer as a static
 site: without a server, it reads the sources as files.

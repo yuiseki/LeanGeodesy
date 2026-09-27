@@ -15,7 +15,7 @@ rev = "v4.34.0"
 
 [[lean_lib]]
 name = "LeanGeodesyManual"
-globs = ["LeanGeodesyManual", "LeanGeodesyManual.+", "LeanGeodesyManualJa", "LeanGeodesyManualJa.+"]
+globs = ["LeanGeodesyManual", "LeanGeodesyManual.+", "LeanGeodesyManualJa", "LeanGeodesyManualJa.+", "LeanGeodesyBookYaruo", "LeanGeodesyBookYaruo.+"]
 
 # The generator is run with the interpreter (see the README) rather than
 # built as an executable, which would compile Mathlib to native code.

@@ -1,62 +1,33 @@
 import VersoManual
-import LeanGeodesyManualJa.Story.Length
-import LeanGeodesyManualJa.Story.Flatten
-import LeanGeodesyManualJa.Story.Mercator
-import LeanGeodesyManualJa.Continued
+import LeanGeodesyManualJa.Part1
 import LeanGeodesyManualJa.Part2
-import LeanGeodesyManualJa.Dialogue
 
 open Verso.Genre Manual
-open LeanGeodesyManualJa
 
-#doc (Manual) "やる夫が Lean で学ぶ測地学" =>
+#doc (Manual) "LeanGeodesy（日本語版）" =>
 %%%
-shortTitle := "やる夫の測地学"
+shortTitle := "LeanGeodesy 日本語版"
 tag := "ja-top"
 %%%
 
-GIS を毎日のように使っているやる夫と、測地学と数学と Lean に詳しいやらない夫の二人が、GIS の裏にある数学を一つずつ確かめていく本です。
+LeanGeodesy は、GIS ソフトウェアが前提にしている数学を Lean 4 で証明するライブラリです。この本は、そのライブラリを API の一覧としてではなく、いくつかの大きな問いへの答えとして読むためのものです。英語版の翻訳ではなく、同じ Lean の宣言を参照しながら、日本語で独立に書いています。
 
-:::yaruo
-EPSG:4326 も Web Mercator もタイルも、毎日使ってるお。数式を見ると身構えるけど、仕組みは知りたいお。
-:::
+各節は、GIS で実際に出会う疑問から始まります。直感的な説明のあとで必要な数学を導入し、最後に、その主張が LeanGeodesy のどの定理として証明されているかを示します。定理の名前と型（signature）は、ビルドしたライブラリから取り込んだもので、手で書き写してはいません。証明の細部より、定理どうしがどうつながっているかを追うことに重きを置いています。
 
-:::yaranaio
-いい心がけだ。定義を読み上げるところからは始めない。お前が普段思っている疑問から始めて、必要になったところで数学を持ち出す。
-:::
+各章の要所には、依存関係を Lean Atlas で見るためのリンクがあります。Atlas で主定理を選ぶと、いま読んだ概念が形式的にどんな依存関係になっているのかを確かめられます。
 
-:::yaruo
-Lean って何に使うんだお。
-:::
-
-:::yaranaio
-説明が本当に正しいかを確かめるためだ。俺が話した内容が、前提からちゃんと導けることを、Lean が一つずつ検査している。本文には、その定理の名前と型を、実際にビルドしたライブラリから取り込んで載せる。手で書き写したものじゃない。
-:::
-
-この本に出てくる Lean の定理は、すべて LeanGeodesy で証明済みです。要所には、依存関係を Lean Atlas で見るためのリンクもあります。Atlas で主定理を選ぶと、いま読んだ概念が形式的にどんな依存関係になっているのかを確かめられます。
-
-いまは会話形式の第1部〜第3部まであります。
-
-- 第1部 地球の上で長さを測る：緯度経度の差を、そのまま距離にしてはいけないのか？
-- 第2部 地球を無理やり平らにする：地図にすれば、距離は簡単になるのか？
-- 第3部 Mercator はなぜあの式なのか：あの式は、昔の人が思いついただけなのか？
-
-その先の、面積を守る図法、最短経路、タイル番号の数学は、まだ会話形式に書き直す前の散文版として後ろに置いています。
+いまは第I部「地球を測り、平面に写す」と第II部「Web 地図のタイル番号にある数学」まであります。座標参照系（第III部）は、今後追加する予定です。
 
 用語は次の表記で統一します。Lean の識別子は翻訳しません。
 
 - reference ellipsoid：参照楕円体
-- geodetic latitude：測地緯度
 - meridian radius of curvature：子午線曲率半径
 - prime vertical radius of curvature：卯酉線曲率半径
 - first fundamental form：第一基本形式
-- map projection：地図投影
 - local distortion：局所歪み
+- map projection：地図投影
 - conformal：等角
 - geodesic：測地線
 
-{include 1 LeanGeodesyManualJa.Story.Length}
-{include 1 LeanGeodesyManualJa.Story.Flatten}
-{include 1 LeanGeodesyManualJa.Story.Mercator}
-{include 1 LeanGeodesyManualJa.Continued}
+{include 1 LeanGeodesyManualJa.Part1}
 {include 1 LeanGeodesyManualJa.Part2}

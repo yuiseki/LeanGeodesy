@@ -1,10 +1,10 @@
 import VersoManual
 import LeanGeodesy
 import LeanGeodesyManualJa.LeanDecl
-import LeanGeodesyManualJa.Dialogue
+import LeanGeodesyBookYaruo.Dialogue
 
 open Verso.Genre Manual
-open LeanGeodesyManualJa
+open LeanGeodesyManualJa LeanGeodesyBookYaruo
 
 #doc (Manual) "第3部 Mercator はなぜあの式なのか" =>
 %%%
@@ -235,3 +235,5 @@ $$`h = \frac{a \sec \varphi}{M}, \qquad k = \frac{a \sec \varphi}{N}`
 :::yaranaio
 次は、地図を離れて地球の上に戻る。Google マップで航空路を引くと、地図の上で曲がって見えるだろ。最短の道がなぜ曲がるのか。そこで第1部のものさしが、もう一度主役になる。
 :::
+
+第4部「最短経路はなぜ曲がるのか」は準備中です。それまでの間、同じ内容を散文で書いた[日本語版の「なぜ最短経路はあの形になるのか」](https://yuiseki.github.io/LeanGeodesy/manual-ja/part1/shortest-paths/)から読み進められます。
