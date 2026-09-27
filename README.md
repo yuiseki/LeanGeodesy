@@ -97,7 +97,7 @@ A selection; [docs/REFERENCE.md](docs/REFERENCE.md) lists everything.
 | Lambert's cylindrical projection keeps the area of every latitude-longitude cell | `lambertCylindrical_preserves_cellArea` |
 | EPSG:4326 geographic 2D and EPSG:3857 convert back and forth as a bijection | `webMercatorEquiv` |
 | Web Mercator tiles at zoom `z`, quadtree paths of length `z` and Morton codes below `4^z` are in bijection | `tile_path_morton_bijective`, `mortonEquiv_eq_trans` |
-| The Hilbert order visits every tile once and consecutive tiles share an edge; the Morton order does not | `hilbertEquiv`, `hilbert_adjacent`, `morton_not_adjacent` |
+| Morton and Hilbert are spatial orders: every quadtree subtree is one interval of indices; only Hilbert keeps consecutive tiles adjacent, with a computable, choice-free encoder | `SpatialOrder.subtree_eq_symm_interval`, `hilbertOrder_isAdjacentOrder`, `mortonOrder_not_isAdjacentOrder` |
 
 ## What map projections keep and distort
 

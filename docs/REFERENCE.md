@@ -560,6 +560,30 @@ zoom `z`. From the pixel coordinates of `Projection.WebMercator`:
   (`hilbertD_halve`, `parent_hilbert_decode`). The Morton order, in contrast,
   is not adjacent at any zoom `z ≥ 1` (`morton_not_adjacent`). Only the finite
   grid order is covered, not the continuous Hilbert curve.
+  The encoder is an explicit recursion: `quadUnplace` reads off the quadrant
+  of a cell and undoes its symmetry, and `hilbertE` applies it level by level
+  (`hilbertE_hilbertD`, `hilbertD_hilbertE`). `encode`, `decode` and
+  `hilbertEquiv` are computable and do not use `Classical.choice`; the axiom
+  audit pins them to `propext` and `Quot.sound`.
+- Ancestors and subtrees. The ancestor `k` generations up (`ancestor`) has
+  column and row divided by `2^k` (`ancestor_val`). For Hilbert, the ancestor of
+  the tile visited `i`-th at zoom `z + k` is the tile visited `(i / 4^k)`-th at
+  zoom `z` (`ancestor_decode`), so a tile descends from `s` exactly when its
+  index lies in `[encode s · 4^k, (encode s + 1) · 4^k)`, and the subtree of a
+  tile is the image of one interval of indices
+  (`ancestor_eq_iff_encode_mem_interval`, `subtree_eq_decode_interval`).
+- Spatial orders (`Tiles.SpatialOrder`). A spatial order numbers the tiles of
+  every zoom level so that a parent's number is its child's number divided by
+  4 (`SpatialOrder`). For any spatial order the ancestor's number is the
+  number divided by `4^k` (`index_ancestor`, `ancestor_symm`), descent is
+  membership in an interval of numbers (`ancestor_eq_iff_mem_interval`), and
+  every subtree is one interval (`subtree_eq_symm_interval`). Morton and
+  Hilbert are both spatial orders (`mortonOrder`, `hilbertOrder`), with the
+  Morton instances stated as `morton_ancestor`,
+  `morton_ancestor_eq_iff_mem_interval` and `morton_subtree_eq_interval`.
+  Adjacency (`Tiles.Adjacency`) tells them apart: the Hilbert order is an
+  adjacent order and the Morton order is not
+  (`hilbertOrder_isAdjacentOrder`, `mortonOrder_not_isAdjacentOrder`).
 
 ### Projection.TransverseMercator
 
@@ -743,6 +767,8 @@ other file refers to the labels.
 | `LeanGeodesy/Tiles/Grid.lean` | The integer tile grid of Web Mercator |
 | `LeanGeodesy/Tiles/Quadtree.lean` | The tile quadtree; tiles as quadtree paths |
 | `LeanGeodesy/Tiles/Morton.lean` | Morton codes; tiles, paths and codes in bijection |
+| `LeanGeodesy/Tiles/Adjacency.lean` | Adjacent cells and tiles |
+| `LeanGeodesy/Tiles/SpatialOrder.lean` | Spatial orders: ancestors, subtrees as index intervals, adjacency; Morton and Hilbert instances |
 | `LeanGeodesy/Tiles/Hilbert.lean` | The Hilbert order: a bijection whose consecutive tiles share an edge, nested like the quadtree |
 | `LeanGeodesy/Projection/TransverseMercator.lean` | Spherical transverse Mercator, conformality, UTM scale |
 | `LeanGeodesy/Geodesic.lean` | Central angle, haversine, great-circle distance as a metric |
