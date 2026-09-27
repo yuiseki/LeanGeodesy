@@ -195,7 +195,7 @@ theorem sphereInverse_toECEF (E : ReferenceEllipsoid) (hf : E.f = 0) (c : Geodet
     (hh : -E.a < c.height) (hc : 0 < cos c.lat.1) :
     sphereInverse E.a (GeodeticCoordinate.toECEF E c) = c := by
   have hN : E.primeVerticalRadius c.lat.1 = E.a := by
-    have he : E.e2 = 0 := (E.isSphere_tfae.out 0 2).mp hf
+    have he : E.e2 = 0 := (E.isSphere_tfae.out 1 3).mp hf
     simp [ReferenceEllipsoid.primeVerticalRadius, he]
   have hr := GeodeticCoordinate.norm_toECEF_of_sphere E c hf hh.le
   have hz : (GeodeticCoordinate.toECEF E c) 2 = (E.a + c.height) * sin c.lat.1 := by
@@ -205,8 +205,8 @@ theorem sphereInverse_toECEF (E : ReferenceEllipsoid) (hf : E.f = 0) (c : Geodet
   have hlon := GeodeticCoordinate.ecefLongitude_toECEF E c hc (by rw [hN]; exact hpos)
   obtain ⟨⟨φ, hφ⟩, lon, h⟩ := c
   simp only at hr hz hlon hN hpos ⊢
-  simp only [sphereInverse, hr, hz, hlon, GeodeticCoordinate.mk.injEq, add_sub_cancel_left,
-    and_true]
+  simp only [sphereInverse, hr, hz, hlon, add_sub_cancel_left]
+  congr 1
   apply Subtype.ext
   simp only
   rw [mul_div_cancel_left₀ _ hpos.ne', arcsin_sin hφ.1 hφ.2]

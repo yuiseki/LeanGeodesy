@@ -126,7 +126,7 @@ theorem meridianArc_neg (φ : ℝ) : E.meridianArc (-φ) = -E.meridianArc φ := 
 
 /-- On a sphere the meridian arc is `a φ`. -/
 theorem meridianArc_of_sphere (hf : E.f = 0) (φ : ℝ) : E.meridianArc φ = E.a * φ := by
-  have he : E.e2 = 0 := (E.isSphere_tfae.out 0 2).mp hf
+  have he : E.e2 = 0 := (E.isSphere_tfae.out 1 3).mp hf
   have hM : ∀ ψ, E.meridianRadius ψ = E.a := fun ψ => by
     simp [meridianRadius, W2, he]
   simp only [meridianArc, hM, intervalIntegral.integral_const, sub_zero, smul_eq_mul]

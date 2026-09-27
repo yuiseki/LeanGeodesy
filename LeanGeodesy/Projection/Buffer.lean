@@ -121,7 +121,7 @@ theorem image_geodesicDisk (hR : 0 < R) {r : ℝ} (hr : r < π * R) :
 theorem mem_geodesicDisk_iff (hR : 0 < R) (r : ℝ) (p : ℝ × ℝ) :
     p ∈ geodesicDisk R r ↔ p.1 ∈ Set.Icc (-(π / 2)) (π / 2) ∧ π / 2 - r / R ≤ p.1 := by
   unfold geodesicDisk
-  simp only [Set.mem_setOf_eq]
+  simp only [Set.mem_ofPred_eq]
   constructor
   · rintro ⟨hφ, hd⟩
     rw [greatCircleDistance, centralAngle, direction_pi_div_two, angle_northPole hφ] at hd

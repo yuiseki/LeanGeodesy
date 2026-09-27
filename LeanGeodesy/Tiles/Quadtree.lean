@@ -76,12 +76,13 @@ theorem parent_eq_iff {z : ℕ} (t : Tile (z + 1)) (s : Tile z) :
 /-- Each tile has exactly four children. -/
 theorem card_children {z : ℕ} (s : Tile z) :
     (Finset.univ.filter fun t : Tile (z + 1) => parent t = s).card = 4 := by
+  have hinj : Function.Injective fun d : Fin 4 => (split z).symm (s, d) := fun d d' h => by
+    simpa using congrArg (fun t => (split z t).2) h
   have : (Finset.univ.filter fun t : Tile (z + 1) => parent t = s) =
-      (Finset.univ : Finset (Fin 4)).map ⟨fun d => (split z).symm (s, d),
-        fun d d' h => by simpa using congrArg (fun t => (split z t).2) h⟩ := by
+      (Finset.univ : Finset (Fin 4)).map ⟨_, hinj⟩ := by
     ext t
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and, Finset.mem_map,
-      Function.Embedding.coeFn_mk, parent]
+    rw [Finset.mem_filter, Finset.mem_map]
+    simp only [Finset.mem_univ, true_and, Function.Embedding.coeFn_mk, parent]
     constructor
     · intro h
       exact ⟨(split z t).2, by rw [← h]; simp⟩

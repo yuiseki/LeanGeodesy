@@ -2,7 +2,7 @@ import LeanGeodesy.GeodeticCoordinate
 import LeanGeodesy.Projection.Mercator
 import Mathlib.Geometry.Euclidean.Angle.Unoriented.Basic
 import Mathlib.Analysis.Real.Pi.Bounds
-import Mathlib.Data.ENNReal.Real
+import Mathlib.Basic.ENNReal.Real
 
 /-!
 # Great-circle distance

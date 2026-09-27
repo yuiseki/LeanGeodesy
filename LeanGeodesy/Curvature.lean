@@ -56,7 +56,7 @@ theorem meridianRadius_pos (φ : ℝ) : 0 < meridianRadius E φ := by
 theorem hasDerivAt_W2 (φ : ℝ) :
     HasDerivAt (W2 E) (-(E.e2 * (2 * sin φ * cos φ))) φ := by
   unfold W2
-  convert ((hasDerivAt_sin φ).pow 2).const_mul E.e2 |>.const_sub 1 using 1 <;> try rfl
+  convert ((hasDerivAt_sin φ).pow 2).const_mul E.e2 |>.const_sub 1 using 1
   ring
 
 /-- The derivative of the prime vertical radius. -/
@@ -68,7 +68,7 @@ theorem hasDerivAt_primeVerticalRadius (φ : ℝ) :
   have h := (hasDerivAt_const φ E.a).div ((hasDerivAt_W2 E φ).sqrt hD.ne') hs.ne'
   have hN : E.primeVerticalRadius = fun φ => E.a / √(W2 E φ) := rfl
   rw [hN]
-  convert h using 1 <;> try rfl
+  convert h using 1
   have hsq : √(W2 E φ) ^ 2 = W2 E φ := sq_sqrt hD.le
   generalize √(W2 E φ) = s at hs hsq ⊢
   rw [← hsq]
@@ -81,7 +81,7 @@ theorem hasDerivAt_meridianPoint_fst (φ : ℝ) :
       (-(meridianRadius E φ * sin φ)) φ := by
   have hD := W2_pos E φ
   have hs : 0 < √(W2 E φ) := sqrt_pos.mpr hD
-  convert (hasDerivAt_primeVerticalRadius E φ).mul (hasDerivAt_cos φ) using 1 <;> try rfl
+  convert (hasDerivAt_primeVerticalRadius E φ).mul (hasDerivAt_cos φ) using 1
   have hp := sin_sq_add_cos_sq φ
   simp only [meridianRadius, ReferenceEllipsoid.primeVerticalRadius]
   rw [show 1 - E.e2 * sin φ ^ 2 = W2 E φ from rfl]
@@ -98,7 +98,7 @@ theorem hasDerivAt_meridianPoint_snd (φ : ℝ) :
       (meridianRadius E φ * cos φ) φ := by
   have hD := W2_pos E φ
   have hs : 0 < √(W2 E φ) := sqrt_pos.mpr hD
-  convert ((hasDerivAt_primeVerticalRadius E φ).mul_const (1 - E.e2)).mul (hasDerivAt_sin φ) using 1 <;> try rfl
+  convert ((hasDerivAt_primeVerticalRadius E φ).mul_const (1 - E.e2)).mul (hasDerivAt_sin φ) using 1
   have hp := sin_sq_add_cos_sq φ
   simp only [meridianRadius, ReferenceEllipsoid.primeVerticalRadius]
   rw [show 1 - E.e2 * sin φ ^ 2 = W2 E φ from rfl]
@@ -118,7 +118,7 @@ theorem hasDerivAt_meridianRadius (φ : ℝ) :
   have h := (hasDerivAt_const φ (E.a * (1 - E.e2))).div hprod (mul_pos hD hs).ne'
   have hM : E.meridianRadius = fun φ => E.a * (1 - E.e2) / (W2 E φ * √(W2 E φ)) := rfl
   rw [hM]
-  convert h using 1 <;> try rfl
+  convert h using 1
   have hsq : √(W2 E φ) ^ 2 = W2 E φ := sq_sqrt hD.le
   simp only [Pi.mul_apply]
   generalize √(W2 E φ) = s at hs hsq ⊢
@@ -156,8 +156,7 @@ theorem hasDerivAt_ellipsoidPoint_lon (φ lam : ℝ) :
     HasDerivAt (fun lam => ellipsoidPoint E φ lam) (parallelTangent E φ lam) lam := by
   unfold ellipsoidPoint parallelTangent
   refine hasDerivAt_vec3 ?_ ?_ (hasDerivAt_const _ _)
-  · convert (hasDerivAt_cos lam).const_mul (E.primeVerticalRadius φ * cos φ) using 1 <;> try rfl
-    ring
+  · convert (hasDerivAt_cos lam).const_mul (E.primeVerticalRadius φ * cos φ) using 1; ring
   · exact (hasDerivAt_sin lam).const_mul _
 
 /-- The meridian tangent has length `M`. -/

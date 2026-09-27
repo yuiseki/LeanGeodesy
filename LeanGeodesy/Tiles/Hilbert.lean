@@ -214,14 +214,14 @@ theorem quadUnplace_quadPlace {n q : ℕ} {p : ℕ × ℕ} (hp : p.1 < n ∧ p.2
   obtain ⟨ha, hb⟩ := hp
   have : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 := by omega
   rcases this with rfl | rfl | rfl | rfl
-  · rw [quadPlace_zero]; unfold quadUnplace; rw [if_pos hb, if_pos ha]
-  · rw [quadPlace_one]; unfold quadUnplace; rw [if_pos ha, if_neg (by simp only; omega)]
+  · rw [quadPlace_zero]; unfold quadUnplace; rw [ite_eq_left hb, ite_eq_left ha]
+  · rw [quadPlace_one]; unfold quadUnplace; rw [ite_eq_left ha, ite_eq_right (by simp only; omega)]
     exact Prod.ext rfl (Prod.ext rfl (by simp only; omega))
   · rw [quadPlace_two]; unfold quadUnplace
-    rw [if_neg (by simp only; omega), if_neg (by simp only; omega)]
+    rw [ite_eq_right (by simp only; omega), ite_eq_right (by simp only; omega)]
     exact Prod.ext rfl (Prod.ext (by simp only; omega) (by simp only; omega))
   · rw [quadPlace_three]; unfold quadUnplace
-    rw [if_neg (by simp only; omega), if_pos (by simp only; omega)]
+    rw [ite_eq_right (by simp only; omega), ite_eq_left (by simp only; omega)]
     exact Prod.ext rfl (Prod.ext (by simp only; omega) (by simp only; omega))
 
 theorem quadUnplace_spec {n : ℕ} {P : ℕ × ℕ} (hP : P.1 < 2 * n ∧ P.2 < 2 * n) :
@@ -406,7 +406,7 @@ theorem subtree_eq_decode_interval {z k : ℕ} (s : Tile z) :
     {t : Tile (z + k) | ancestor k t = s} =
       decode (z + k) '' {i | (encode z s).1 * 4 ^ k ≤ i.1 ∧ i.1 < ((encode z s).1 + 1) * 4 ^ k} := by
   ext t
-  simp only [Set.mem_setOf_eq, Set.mem_image]
+  simp only [Set.mem_ofPred_eq, Set.mem_image]
   constructor
   · intro h
     exact ⟨encode (z + k) t, (ancestor_eq_iff_encode_mem_interval t s).mp h, decode_encode _ t⟩

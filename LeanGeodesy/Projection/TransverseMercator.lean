@@ -92,7 +92,7 @@ theorem hasDerivAt_mercatorY_arcsin {B : ℝ} (hB : B ^ 2 < 1) :
   have hB2 : B ≠ 1 := fun h => by rw [h] at hB; norm_num at hB
   have h := (hasDerivAt_mercatorY hc).comp B (hasDerivAt_arcsin hB1 hB2)
   rw [cos_arcsin] at h
-  convert h using 1 <;> try rfl
+  convert h using 1 <;> (try rfl)
   field_simp
   exact sq_sqrt h1.le
 
@@ -113,7 +113,7 @@ theorem hasDerivAt_tmX_lat (hl : 0 < cos lam) :
   have h := ((hasDerivAt_mercatorY_arcsin (tmB_sq_lt_one φ hl)).comp φ
     (hasDerivAt_tmB_lat φ lam)).const_mul R
   unfold tmX
-  convert h using 1 <;> try rfl
+  convert h using 1 <;> (try rfl)
   ring
 
 theorem hasDerivAt_tmX_lon (hl : 0 < cos lam) :
@@ -121,7 +121,7 @@ theorem hasDerivAt_tmX_lon (hl : 0 < cos lam) :
   have h := ((hasDerivAt_mercatorY_arcsin (tmB_sq_lt_one φ hl)).comp lam
     (hasDerivAt_tmB_lon φ lam)).const_mul R
   unfold tmX
-  convert h using 1 <;> try rfl
+  convert h using 1 <;> (try rfl)
   ring
 
 /-- `1 - B² = cos² φ cos² λ + sin² φ`. -/
@@ -138,7 +138,7 @@ theorem hasDerivAt_tmY_lat (hφ : 0 < cos φ) (hl : 0 < cos lam) :
     (hasDerivAt_tan hφ.ne').div_const _
   have h := ((hasDerivAt_arctan (tan φ / cos lam)).comp φ hu).const_mul R
   unfold tmY
-  convert h using 1 <;> try rfl
+  convert h using 1 <;> (try rfl)
   have hB := tmB_sq_lt_one φ hl
   have hD : 0 < 1 - tmB φ lam ^ 2 := by linarith
   rw [one_sub_tmB_sq] at hD ⊢
@@ -152,7 +152,7 @@ theorem hasDerivAt_tmY_lon (hφ : 0 < cos φ) (hl : 0 < cos lam) :
       lam := (hasDerivAt_const lam (tan φ)).div (hasDerivAt_cos lam) hl.ne'
   have h := ((hasDerivAt_arctan (tan φ / cos lam)).comp lam hu).const_mul R
   unfold tmY
-  convert h using 1 <;> try rfl
+  convert h using 1 <;> (try rfl)
   have hB := tmB_sq_lt_one φ hl
   have hD : 0 < 1 - tmB φ lam ^ 2 := by linarith
   rw [one_sub_tmB_sq] at hD ⊢

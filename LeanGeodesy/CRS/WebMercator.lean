@@ -63,7 +63,7 @@ theorem webMercatorForward_mapsTo :
     Set.MapsTo webMercatorForward webMercatorDomain webMercatorImage := by
   intro c hc
   rw [webMercatorForward_eq]
-  simp only [webMercatorImage, Set.mem_setOf_eq, vec2_0, vec2_1]
+  simp only [webMercatorImage, Set.mem_ofPred_eq, vec2_0, vec2_1]
   exact ⟨x_mem c.lon, (y_mem_iff (lat_mem_Ioo_of_mem_webMercatorDomain hc)).mpr hc⟩
 
 theorem webMercatorBackward_mapsTo :

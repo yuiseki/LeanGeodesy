@@ -107,7 +107,7 @@ theorem toECEF_eq : toECEF E c = surfacePoint E c + c.height • c.normal := by
 
 /-- On a sphere of radius `R`, the position is `R + h` along the normal. -/
 theorem toECEF_of_sphere (hf : E.f = 0) : toECEF E c = (E.a + c.height) • c.normal := by
-  have he : E.e2 = 0 := (E.isSphere_tfae.out 0 2).mp hf
+  have he : E.e2 = 0 := (E.isSphere_tfae.out 1 3).mp hf
   have hN : E.primeVerticalRadius c.lat.1 = E.a := by
     simp [ReferenceEllipsoid.primeVerticalRadius, he]
   simp only [toECEF, normal, vec3_smul, hN, he, sub_zero, mul_one]

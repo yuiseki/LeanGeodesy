@@ -80,7 +80,7 @@ theorem subtree_eq_symm_interval {z k : ℕ} (s : Tile z) :
       (O.index (z + k)).symm ''
         {i | (O.index z s).1 * 4 ^ k ≤ i.1 ∧ i.1 < ((O.index z s).1 + 1) * 4 ^ k} := by
   ext t
-  simp only [Set.mem_setOf_eq, Set.mem_image]
+  simp only [Set.mem_ofPred_eq, Set.mem_image]
   constructor
   · intro h
     exact ⟨O.index (z + k) t, (O.ancestor_eq_iff_mem_interval t s).mp h, Equiv.symm_apply_apply _ t⟩

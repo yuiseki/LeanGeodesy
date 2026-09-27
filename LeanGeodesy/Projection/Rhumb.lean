@@ -68,12 +68,9 @@ theorem hasDerivAt_latitudeCurve {lon : ℝ → ℝ} {lon' φ : ℝ} (h : HasDer
   unfold spherePoint meridianTangent parallelTangent
   rw [vec3_smul, vec3_add]
   refine hasDerivAt_vec3 ?_ ?_ ?_
-  · convert ((hasDerivAt_cos φ).const_mul R).mul (h.cos) using 1 <;> try rfl
-    ring
-  · convert ((hasDerivAt_cos φ).const_mul R).mul (h.sin) using 1 <;> try rfl
-    ring
-  · convert (hasDerivAt_sin φ).const_mul R using 1 <;> try rfl
-    ring
+  · convert ((hasDerivAt_cos φ).const_mul R).mul (h.cos) using 1; ring
+  · convert ((hasDerivAt_cos φ).const_mul R).mul (h.sin) using 1; ring
+  · convert (hasDerivAt_sin φ).const_mul R using 1; ring
 
 section Components
 
@@ -138,7 +135,7 @@ theorem hasDerivAt_rhumbLon (lam₀ φ₀ α : ℝ) {φ : ℝ} (hc : 0 < cos φ)
     HasDerivAt (rhumbLon lam₀ φ₀ α) (tan α / cos φ) φ := by
   unfold rhumbLon
   convert ((hasDerivAt_mercatorY hc).sub_const (mercatorY φ₀)).const_mul (tan α) |>.const_add lam₀
-    using 1 <;> try rfl
+    using 1
   ring
 
 /-- The rhumb line keeps bearing `α` all along. -/
@@ -165,7 +162,7 @@ theorem eqOn_Ioo_of_hasDerivAt_eq {f g d : ℝ → ℝ} {φ₀ : ℝ}
     (hg : ∀ φ ∈ Set.Ioo (-(π / 2)) (π / 2), HasDerivAt g (d φ) φ) (h0 : f φ₀ = g φ₀) :
     ∀ φ ∈ Set.Ioo (-(π / 2)) (π / 2), f φ = g φ := by
   have hd : ∀ φ ∈ Set.Ioo (-(π / 2)) (π / 2), HasDerivAt (fun t => f t - g t) 0 φ := fun φ hφ => by
-    convert (hf φ hφ).sub (hg φ hφ) using 1 <;> try rfl
+    convert (hf φ hφ).sub (hg φ hφ) using 1
     rw [sub_self]
   intro φ hφ
   have hconst := Convex.is_const_of_fderivWithin_eq_zero (convex_Ioo _ _)

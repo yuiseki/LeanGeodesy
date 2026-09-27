@@ -260,7 +260,7 @@ theorem scale_ratio (R : ℝ) (hR : 0 < R) {φ : ℝ} (hc : 0 < cos φ) :
 /-- On a sphere the two scales agree: Mercator is conformal there. -/
 theorem meridianScale_eq_parallelScale_of_sphere (hf : E.f = 0) (R φ : ℝ) :
     meridianScale E R φ = parallelScale E R φ := by
-  have he : E.e2 = 0 := (E.isSphere_tfae.out 0 2).mp hf
+  have he : E.e2 = 0 := (E.isSphere_tfae.out 1 3).mp hf
   simp [meridianScale, parallelScale, ReferenceEllipsoid.meridianRadius, ReferenceEllipsoid.W2, ReferenceEllipsoid.primeVerticalRadius,
     he, div_div, mul_comm]
 

@@ -80,7 +80,7 @@ theorem hasDerivAt_greatArc_zero (u w : E3) :
   have hs := ((hasDerivAt_id (0 : ℝ)).mul_const (angle u w)).sin.smul_const (arcNormal u w)
   have h := hc.add hs
   unfold greatArc
-  convert h using 1 <;> try rfl
+  convert h using 1 <;> (try rfl)
   simp
 
 /-- A tangent vector at the north pole, read in the tangent plane. -/
@@ -125,9 +125,9 @@ theorem hasDerivAt_azimuthalEquidistant_lat (R φ lam : ℝ) :
     HasDerivAt (fun φ => azimuthalEquidistant R φ lam) (vec2 (-(R * cos lam)) (-(R * sin lam))) φ := by
   unfold azimuthalEquidistant
   refine hasDerivAt_vec2 ?_ ?_
-  · convert (((hasDerivAt_id φ).const_sub (π / 2)).const_mul R).mul_const (cos lam) using 1 <;> try rfl
+  · convert (((hasDerivAt_id φ).const_sub (π / 2)).const_mul R).mul_const (cos lam) using 1 <;> (try rfl)
     simp
-  · convert (((hasDerivAt_id φ).const_sub (π / 2)).const_mul R).mul_const (sin lam) using 1 <;> try rfl
+  · convert (((hasDerivAt_id φ).const_sub (π / 2)).const_mul R).mul_const (sin lam) using 1 <;> (try rfl)
     simp
 
 theorem hasDerivAt_azimuthalEquidistant_lon (R φ lam : ℝ) :
@@ -135,8 +135,7 @@ theorem hasDerivAt_azimuthalEquidistant_lon (R φ lam : ℝ) :
       (vec2 (-(R * (π / 2 - φ) * sin lam)) (R * (π / 2 - φ) * cos lam)) lam := by
   unfold azimuthalEquidistant
   refine hasDerivAt_vec2 ?_ ?_
-  · convert (hasDerivAt_cos lam).const_mul (R * (π / 2 - φ)) using 1 <;> try rfl
-    ring
+  · convert (hasDerivAt_cos lam).const_mul (R * (π / 2 - φ)) using 1; ring
   · exact (hasDerivAt_sin lam).const_mul (R * (π / 2 - φ))
 
 /-- The partial derivatives as a local distortion on the sphere of radius `R`. -/

@@ -132,7 +132,7 @@ theorem geocentric_tan {φ : ℝ} (hc : cos φ ≠ 0) :
 /-- On a sphere, geodetic and geocentric latitude agree. -/
 theorem geocentric_tan_of_sphere (hf : E.f = 0) {φ : ℝ} (hc : cos φ ≠ 0) :
     (E.meridianPoint φ).2 / (E.meridianPoint φ).1 = tan φ := by
-  have he : E.e2 = 0 := (E.isSphere_tfae.out 0 2).mp hf
+  have he : E.e2 = 0 := (E.isSphere_tfae.out 1 3).mp hf
   rw [E.geocentric_tan hc, he, sub_zero, one_mul]
 
 /-- On a flattened ellipsoid the geocentric latitude is never further from

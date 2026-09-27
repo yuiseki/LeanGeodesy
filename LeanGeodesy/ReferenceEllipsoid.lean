@@ -120,7 +120,7 @@ theorem isSphere_tfae : List.TFAE [E.f = 0, E.b = E.a, E.e2 = 0, E.toSet = spher
 def ofSphere (R : ℝ) (hR : 0 < R) : ReferenceEllipsoid := ⟨R, 0, hR, le_rfl, zero_lt_one⟩
 
 theorem ofSphere_toSet (R : ℝ) (hR : 0 < R) : (ofSphere R hR).toSet = sphere R :=
-  ((ofSphere R hR).isSphere_tfae.out 0 3).mp rfl
+  ((ofSphere R hR).isSphere_tfae.out 1 4).mp rfl
 
 end ReferenceEllipsoid
 
