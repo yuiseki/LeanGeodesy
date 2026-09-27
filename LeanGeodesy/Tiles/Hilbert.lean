@@ -35,7 +35,9 @@ So
 - it is nested like the quadtree: the tile visited `i`-th at zoom `z + 1` has
   as parent the tile visited `i / 4`-th at zoom `z` (`parent_hilbert_decode`),
   so the tiles `4k .. 4k + 3` are the four children of tile `k`, in an order
-  that depends on the orientation;
+  that depends on the orientation; more generally the ancestor `k` generations
+  up of the tile visited `i`-th is the tile visited `i / 4^k`-th
+  (`ancestor_decode`);
 - the Morton order, in contrast, is not adjacent at any zoom `z ≥ 1`: codes
   1 and 2 are always `(1, 0)` and `(0, 1)` (`morton_not_adjacent`).
 -/
@@ -345,6 +347,19 @@ theorem parent_hilbert_decode {z : ℕ} (i : Fin (4 ^ (z + 1))) :
   ext
   · exact congrArg Prod.fst h
   · exact congrArg Prod.snd h
+
+/-- The ancestor `k` generations up of the tile visited `i`-th at zoom `z + k` is
+the tile visited `i / 4^k`-th at zoom `z`. -/
+theorem ancestor_decode {z : ℕ} : (k : ℕ) → (i : Fin (4 ^ (z + k))) →
+    ancestor k (decode (z + k) i) =
+      decode z ⟨i.1 / 4 ^ k, by
+        rw [Nat.div_lt_iff_lt_mul (four_pow_pos k), ← pow_add]; exact i.2⟩
+  | 0, i => by simp [ancestor]
+  | k + 1, i => by
+    show ancestor k (parent (decode (z + k + 1) i)) = _
+    rw [parent_hilbert_decode, ancestor_decode k]
+    congr 2
+    rw [Nat.div_div_eq_div_mul, ← pow_succ']
 
 /-! ## The Morton order is not adjacent -/
 

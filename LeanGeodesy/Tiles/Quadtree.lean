@@ -19,7 +19,8 @@ Tile (z + 1) ≃ Tile z × Fin 4
 Repeating it from the root, a tile at zoom `z` is the same thing as a path
 of `z` child digits from the root of the quadtree, coarsest first
 (`QuadPath`, `tileEquivPath`): the path of a tile is the path of its parent
-followed by its own digit (`tileEquivPath_succ`).
+followed by its own digit (`tileEquivPath_succ`). The ancestor `k` generations
+up (`ancestor`) has the column and row divided by `2^k` (`ancestor_val`).
 
 This file is pure combinatorics on natural numbers; `Tiles.Grid` connects it
 to Web Mercator and `Tiles.Morton` to Morton codes.
@@ -110,5 +111,23 @@ theorem tileEquivPath_succ {z : ℕ} (t : Tile (z + 1)) :
     tileEquivPath (z + 1) t = Fin.snoc (α := fun _ => Fin 4) (tileEquivPath z (parent t))
       (split z t).2 := by
   simp [tileEquivPath, parent, Fin.snocEquiv]
+
+/-! ## Ancestors -/
+
+/-- The ancestor `k` generations up: the parent taken `k` times. -/
+def ancestor {z : ℕ} : (k : ℕ) → Tile (z + k) → Tile z
+  | 0, t => t
+  | k + 1, t => ancestor k (parent t)
+
+/-- The ancestor `k` generations up has the column and row divided by `2^k`. -/
+theorem ancestor_val {z : ℕ} : (k : ℕ) → (t : Tile (z + k)) →
+    (ancestor k t).1.1 = t.1.1 / 2 ^ k ∧ (ancestor k t).2.1 = t.2.1 / 2 ^ k
+  | 0, t => by simp [ancestor]
+  | k + 1, t => by
+    obtain ⟨h1, h2⟩ := ancestor_val k (parent t)
+    simp only [ancestor]
+    rw [h1, h2, (parent_val t).1, (parent_val t).2, Nat.div_div_eq_div_mul, Nat.div_div_eq_div_mul,
+      ← pow_succ']
+    exact ⟨rfl, rfl⟩
 
 end Geodesy.Tiles

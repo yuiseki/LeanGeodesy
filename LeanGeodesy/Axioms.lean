@@ -1370,3 +1370,11 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Tiles.hilbertEquiv' depends on axioms: [propext, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.hilbertEquiv
+
+/-- info: 'Geodesy.Tiles.ancestor_val' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.ancestor_val
+
+/-- info: 'Geodesy.Tiles.ancestor_decode' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.ancestor_decode
