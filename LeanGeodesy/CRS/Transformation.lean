@@ -55,6 +55,7 @@ end GeographicCRS
 /-- A transformation from the geographic CRS `C` to `D`: the Helmert
 transformation taking positions in `C`'s frame to positions in `D`'s. -/
 structure CRSTransformation (C D : GeographicCRS) where
+  /-- The Helmert transformation from the frame of `C` to the frame of `D`. -/
   helmert : Helmert
 
 namespace CRSTransformation

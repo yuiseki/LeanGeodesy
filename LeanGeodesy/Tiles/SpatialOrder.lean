@@ -31,7 +31,9 @@ namespace Geodesy.Tiles
 /-- A numbering of the tiles of every zoom level compatible with the quadtree:
 the parent's number is the tile's number divided by 4. -/
 structure SpatialOrder where
+  /-- The number of each tile at zoom `z`, one-to-one onto `0 .. 4^z - 1`. -/
   index : (z : ℕ) → Tile z ≃ Fin (4 ^ z)
+  /-- The parent's number is the tile's number divided by 4. -/
   index_parent : ∀ (z : ℕ) (t : Tile (z + 1)), (index z (parent t)).1 = (index (z + 1) t).1 / 4
 
 namespace SpatialOrder

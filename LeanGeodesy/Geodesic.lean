@@ -546,6 +546,7 @@ theorem greatCircleDistance_eq_zero_iff (hR : 0 < R) (φ₁ lam₁ φ₂ lam₂ 
     greatCircleDistance R φ₁ lam₁ φ₂ lam₂ = 0 ↔ direction φ₁ lam₁ = direction φ₂ lam₂ := by
   rw [greatCircleDistance, mul_eq_zero, or_iff_right hR.ne', centralAngle_eq_zero_iff]
 
+/-- The triangle inequality for the great-circle distance. -/
 theorem greatCircleDistance_triangle (hR : 0 ≤ R) (φ₁ lam₁ φ₂ lam₂ φ₃ lam₃ : ℝ) :
     greatCircleDistance R φ₁ lam₁ φ₃ lam₃ ≤
       greatCircleDistance R φ₁ lam₁ φ₂ lam₂ + greatCircleDistance R φ₂ lam₂ φ₃ lam₃ := by

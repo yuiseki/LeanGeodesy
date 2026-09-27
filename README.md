@@ -175,9 +175,12 @@ The viewer runs at `http://localhost:5326`. `LeanGeodesy.lean` and
 `LeanGeodesy/` in `atlas/` are links to the library, because lean-atlas finds
 modules and sources relative to the working directory.
 
-A [Verso](https://github.com/leanprover/verso) manual in the nested project
-`manual/` explains the same projection spine in prose and mathematics, with
-each declaration's signature and docstring taken from the built library:
+A [Verso](https://github.com/leanprover/verso) book in the nested project
+`manual/` walks through the library in three parts, in reading order: the
+Earth as an ellipsoid (ellipsoid geometry, differential geometry,
+projection, geodesics), tiles (tile grid, quadtree, Morton and Hilbert
+orders) and coordinate reference systems. Each declaration's signature and
+docstring are taken from the built library:
 
 ```
 cd manual

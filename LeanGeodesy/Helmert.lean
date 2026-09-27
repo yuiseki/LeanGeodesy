@@ -90,9 +90,13 @@ end Rotation
 
 /-- A Helmert transformation `x ↦ t + s · R x`. -/
 structure Helmert where
+  /-- The translation `t`, in metres. -/
   translation : E3
+  /-- The scale factor `s`. -/
   scale : ℝ
+  /-- The scale factor is positive. -/
   scale_pos : 0 < scale
+  /-- The rotation `R`. -/
   rotation : Rotation
 
 namespace Helmert

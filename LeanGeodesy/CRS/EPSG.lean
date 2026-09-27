@@ -46,7 +46,9 @@ example : epsg3857.toString = "EPSG:3857" := by decide
 /-- A constructed object together with the identifier of the published
 definition it is meant to correspond to. -/
 structure Labelled (α : Type) where
+  /-- The identifier of the published definition. -/
   identifier : Identifier
+  /-- The object constructed in this library. -/
   value : α
 
 /-- `EPSG:4326` names the WGS 84 geographic CRS. -/

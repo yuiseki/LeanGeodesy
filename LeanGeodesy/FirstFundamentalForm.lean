@@ -257,6 +257,7 @@ noncomputable def firstFormE' (φ : ℝ) : ℝ :=
 noncomputable def firstFormG' (φ : ℝ) : ℝ :=
   2 * (E.primeVerticalRadius φ * cos φ) * (-(E.meridianRadius φ * sin φ))
 
+/-- `E = M²` changes with latitude at rate `E' = 2 M M'`. -/
 theorem hasDerivAt_firstFormE (φ lam : ℝ) :
     HasDerivAt (fun φ => E.firstFormE φ lam) (E.firstFormE' φ) φ := by
   have hfun : (fun φ => E.firstFormE φ lam) = fun φ => E.meridianRadius φ ^ 2 := by
@@ -266,6 +267,7 @@ theorem hasDerivAt_firstFormE (φ lam : ℝ) :
   push_cast
   ring
 
+/-- `G = (N cos φ)²` changes with latitude at rate `G' = -2 N cos φ · M sin φ`. -/
 theorem hasDerivAt_firstFormG (φ lam : ℝ) :
     HasDerivAt (fun φ => E.firstFormG φ lam) (E.firstFormG' φ) φ := by
   have hfun : (fun φ => E.firstFormG φ lam) = fun φ => (E.primeVerticalRadius φ * cos φ) ^ 2 := by

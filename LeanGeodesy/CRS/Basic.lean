@@ -79,9 +79,13 @@ structure ProjectedCRS where
   forward : base.Coordinate → E2
   /-- Its inverse. -/
   inverse : E2 → base.Coordinate
+  /-- The projection sends the domain into the image. -/
   forward_mapsTo : Set.MapsTo forward domain image
+  /-- The inverse sends the image into the domain. -/
   inverse_mapsTo : Set.MapsTo inverse image domain
+  /-- The inverse undoes the projection on the domain. -/
   inverse_forward : ∀ c ∈ domain, inverse (forward c) = c
+  /-- The projection undoes the inverse on the image. -/
   forward_inverse : ∀ p ∈ image, forward (inverse p) = p
 
 namespace ProjectedCRS

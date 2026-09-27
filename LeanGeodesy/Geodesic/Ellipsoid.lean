@@ -91,14 +91,21 @@ variable (E : ReferenceEllipsoid)
 
 /-- A twice differentiable curve on the ellipsoid, in latitude and longitude. -/
 structure EllipsoidCurve where
+  /-- The latitude along the curve. -/
   lat : ℝ → ℝ
+  /-- The longitude along the curve, unwrapped. -/
   lon : ℝ → ℝ
+  /-- The rate of change of the latitude. -/
   lat' : ℝ → ℝ
+  /-- The rate of change of the longitude. -/
   lon' : ℝ → ℝ
   /-- The acceleration in space. -/
   acc : ℝ → E3
+  /-- `lat'` is the derivative of `lat`. -/
   hasDerivAt_lat : ∀ t, HasDerivAt lat (lat' t) t
+  /-- `lon'` is the derivative of `lon`. -/
   hasDerivAt_lon : ∀ t, HasDerivAt lon (lon' t) t
+  /-- `acc` is the derivative of the velocity `dr (lat', lon')`. -/
   hasDerivAt_vel : ∀ t, HasDerivAt (fun s => E.dr (lat s) (lon s) (lat' s, lon' s)) (acc t) t
 
 namespace EllipsoidCurve

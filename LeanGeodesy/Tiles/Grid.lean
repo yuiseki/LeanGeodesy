@@ -60,6 +60,7 @@ theorem tileIndex_spec {p : ℝ} (hp : 0 ≤ p) :
   unfold tileIndex
   constructor <;> linarith
 
+/-- The tile contains the point's pixel: `256 · tileX ≤ pixelX < 256 · (tileX + 1)`. -/
 theorem tileX_spec (z : ℕ) {x : ℝ} (hx : -halfExtent ≤ x) :
     256 * (tileX z x : ℝ) ≤ pixelX z x ∧ pixelX z x < 256 * ((tileX z x : ℝ) + 1) :=
   tileIndex_spec (pixelX_nonneg z hx)

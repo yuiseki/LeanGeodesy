@@ -33,7 +33,9 @@ open Real
 
 /-- Latitude, longitude and ellipsoidal height. -/
 structure GeodeticCoordinate where
+  /-- Geodetic latitude, in `[-π/2, π/2]`. -/
   lat : GeodeticLatitude
+  /-- Longitude, an angle modulo a full turn. -/
   lon : GeodeticLongitude
   /-- Height above the ellipsoid, along its normal, in metres. -/
   height : ℝ
