@@ -1,4 +1,5 @@
 import LeanGeodesy.Tiles.Morton
+import LeanGeodesy.Tiles.Adjacency
 
 /-!
 # The Hilbert order on the tile grid
@@ -102,10 +103,6 @@ theorem hilbertD_last : (z : ℕ) → hilbertD z (4 ^ z - 1) = (2 ^ z - 1, 0)
 
 /-! ## Consecutive tiles share an edge -/
 
-/-- Two cells share an edge. -/
-def AdjN (p q : ℕ × ℕ) : Prop :=
-  (p.1 = q.1 ∧ (p.2 + 1 = q.2 ∨ q.2 + 1 = p.2)) ∨ (p.2 = q.2 ∧ (p.1 + 1 = q.1 ∨ q.1 + 1 = p.1))
-
 /-- The symmetries and translations of `quadPlace` keep neighbours neighbours. -/
 theorem quadPlace_adj {n q : ℕ} {p p' : ℕ × ℕ} (hp : p.1 < n ∧ p.2 < n) (hp' : p'.1 < n ∧ p'.2 < n)
     (h : AdjN p p') : AdjN (quadPlace n q p) (quadPlace n q p') := by
@@ -195,9 +192,6 @@ theorem encode_decode (z : ℕ) (i : Fin (4 ^ z)) : encode z (decode z i) = i :=
 
 theorem decode_encode (z : ℕ) (t : Tile z) : decode z (encode z t) = t :=
   (hilbertEquiv z).apply_symm_apply t
-
-/-- Two tiles share an edge. -/
-def Adjacent {z : ℕ} (s t : Tile z) : Prop := AdjN (s.1.1, s.2.1) (t.1.1, t.2.1)
 
 /-- Consecutive tiles of the Hilbert order share an edge. -/
 theorem hilbert_adjacent {z : ℕ} (i : Fin (4 ^ z)) (h : i.1 + 1 < 4 ^ z) :

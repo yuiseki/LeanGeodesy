@@ -1318,3 +1318,19 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Tiles.morton_not_adjacent' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.morton_not_adjacent
+
+/-- info: 'Geodesy.Tiles.AdjN.symm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.AdjN.symm
+
+/-- info: 'Geodesy.Tiles.AdjN.irrefl' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.AdjN.irrefl
+
+/-- info: 'Geodesy.Tiles.Adjacent.symm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.Adjacent.symm
+
+/-- info: 'Geodesy.Tiles.Adjacent.ne' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.Adjacent.ne

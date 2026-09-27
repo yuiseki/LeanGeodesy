@@ -25,6 +25,7 @@ import LeanGeodesy.Projection.FirstForm
 import LeanGeodesy.Tiles.Grid
 import LeanGeodesy.Tiles.Quadtree
 import LeanGeodesy.Tiles.Morton
+import LeanGeodesy.Tiles.Adjacency
 import LeanGeodesy.Tiles.Hilbert
 import LeanGeodesy.Projection.TransverseMercator
 import LeanGeodesy.Geodesic
