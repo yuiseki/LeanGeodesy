@@ -78,7 +78,7 @@ theorem tile_path_morton_bijective (z : ℕ) :
 theorem mortonEquiv_succ_val {z : ℕ} (t : Tile (z + 1)) :
     (mortonEquiv (z + 1) t).1 = 4 * (mortonEquiv z (parent t)).1 + childDigit t.1.1 t.2.1 := by
   simp only [mortonEquiv, Equiv.trans_apply, Equiv.prodCongr_apply, Equiv.coe_refl, Prod.map,
-    id, finCongr_apply, Fin.coe_cast, finProdFinEquiv_apply_val, parent, split, Equiv.coe_fn_mk]
+    id, finCongr_apply, Fin.val_cast, finProdFinEquiv_apply_val, parent, split, Equiv.coe_fn_mk]
   ring
 
 /-- The Morton code is the quadtree path read as a base-4 number, coarsest digit first. -/
@@ -88,7 +88,7 @@ theorem mortonEquiv_val_eq_path : (z : ℕ) → (t : Tile z) →
   | z + 1, t => by
     rw [mortonEquiv_succ_val, mortonEquiv_val_eq_path z (parent t), tileEquivPath_succ,
       Fin.sum_univ_castSucc, Finset.mul_sum]
-    simp only [Fin.snoc_castSucc, Fin.snoc_last, Fin.coe_castSucc, Fin.val_last]
+    simp only [Fin.snoc_castSucc, Fin.snoc_last, Fin.val_castSucc, Fin.val_last]
     congr 1
     · refine Finset.sum_congr rfl fun i _ => ?_
       have hi := i.2

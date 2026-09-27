@@ -3,6 +3,7 @@ import LeanGeodesy.WGS84
 import LeanGeodesy.Angle
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 import Mathlib.Analysis.Calculus.MeanValue
+import Mathlib.Analysis.Calculus.Deriv.MeanValue
 
 /-!
 # Meridian arc length
