@@ -210,8 +210,20 @@ The generator runs in the
 interpreter; building it as an executable would compile Mathlib to native
 code.
 
-The book, its Japanese companions (`/manual-ja/`, `/book-yaruo/`) and the
-atlas are published at
+A [Verso Blueprint](https://github.com/leanprover/verso-blueprint) in the
+nested project `blueprint/` lays out how the local distortion of map
+projections follows from the reference ellipsoid, linking each step to the
+declarations that prove it and drawing the dependency graph:
+
+```
+cd blueprint
+lake exe vbp build
+```
+
+The site is written to `blueprint/_out/site/html-multi/`.
+
+The book, its Japanese companions (`/manual-ja/`, `/book-yaruo/`), the
+blueprint (`/blueprint/`) and the atlas are published at
 <https://yuiseki.github.io/LeanGeodesy/> by `.github/workflows/pages.yml` on
 every push to `main`. `atlas/build-pages.sh` builds the viewer as a static
 site: without a server, it reads the sources as files.

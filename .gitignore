@@ -7,3 +7,5 @@ __pycache__/
 /manual/_out
 /manual/_out-ja
 /manual/_out-yaruo
+/blueprint/.lake
+/blueprint/_out
