@@ -1398,3 +1398,43 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Tiles.subtree_eq_decode_interval' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.subtree_eq_decode_interval
+
+/-- info: 'Geodesy.Tiles.SpatialOrder.index_ancestor' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.SpatialOrder.index_ancestor
+
+/-- info: 'Geodesy.Tiles.SpatialOrder.ancestor_eq_iff' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.SpatialOrder.ancestor_eq_iff
+
+/-- info: 'Geodesy.Tiles.SpatialOrder.ancestor_eq_iff_mem_interval' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.SpatialOrder.ancestor_eq_iff_mem_interval
+
+/-- info: 'Geodesy.Tiles.SpatialOrder.ancestor_symm' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.SpatialOrder.ancestor_symm
+
+/-- info: 'Geodesy.Tiles.SpatialOrder.subtree_eq_symm_interval' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.SpatialOrder.subtree_eq_symm_interval
+
+/-- info: 'Geodesy.Tiles.hilbertOrder_isAdjacentOrder' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.hilbertOrder_isAdjacentOrder
+
+/-- info: 'Geodesy.Tiles.mortonOrder_not_isAdjacentOrder' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.mortonOrder_not_isAdjacentOrder
+
+/-- info: 'Geodesy.Tiles.morton_ancestor' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.morton_ancestor
+
+/-- info: 'Geodesy.Tiles.morton_ancestor_eq_iff_mem_interval' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.morton_ancestor_eq_iff_mem_interval
+
+/-- info: 'Geodesy.Tiles.morton_subtree_eq_interval' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.morton_subtree_eq_interval
