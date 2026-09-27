@@ -9,7 +9,7 @@ open LeanGeodesyBookYaruo
 
 #doc (Manual) "やる夫が Lean で学ぶ測地学" =>
 %%%
-shortTitle := "やる夫の測地学"
+shortTitle := "やる夫で学ぶ測地学"
 tag := "yaruo-top"
 %%%
 
