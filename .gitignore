@@ -5,3 +5,4 @@ __pycache__/
 /atlas/graph.json*
 /manual/.lake
 /manual/_out
+/manual/_out-ja

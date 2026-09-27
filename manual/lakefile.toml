@@ -1,5 +1,4 @@
 name = "LeanGeodesyManual"
-globs = ["LeanGeodesyManual", "LeanGeodesyManual.+"]
 reservoir = false
 version = "0.1.0"
 packagesDir = "../.lake/packages"
@@ -16,7 +15,7 @@ rev = "v4.34.0"
 
 [[lean_lib]]
 name = "LeanGeodesyManual"
-globs = ["LeanGeodesyManual", "LeanGeodesyManual.+"]
+globs = ["LeanGeodesyManual", "LeanGeodesyManual.+", "LeanGeodesyManualJa", "LeanGeodesyManualJa.+"]
 
 # The generator is run with the interpreter (see the README) rather than
 # built as an executable, which would compile Mathlib to native code.

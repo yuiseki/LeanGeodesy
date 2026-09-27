@@ -188,11 +188,21 @@ lake build
 lake env lean --run LeanGeodesyManualMain.lean --output _out
 ```
 
-The site is written to `manual/_out/html-multi/`. The generator runs in the
+The site is written to `manual/_out/html-multi/`. A Japanese companion,
+`LeanGeodesyManualJa`, explains the path from the first fundamental form to
+Mercator's conformality in its own prose; it shows each declaration's
+signature through a small `leanDecl` block command that leaves the English
+docstring out:
+
+```
+lake env lean --run LeanGeodesyManualJaMain.lean --output _out-ja
+```
+
+The generator runs in the
 interpreter; building it as an executable would compile Mathlib to native
 code.
 
-The book and the atlas are published at
+The book, its Japanese companion (`/manual-ja/`) and the atlas are published at
 <https://yuiseki.github.io/LeanGeodesy/> by `.github/workflows/pages.yml` on
 every push to `main`. `atlas/build-pages.sh` builds the viewer as a static
 site: without a server, it reads the sources as files.
