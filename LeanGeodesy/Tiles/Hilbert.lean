@@ -37,7 +37,10 @@ So
   so the tiles `4k .. 4k + 3` are the four children of tile `k`, in an order
   that depends on the orientation; more generally the ancestor `k` generations
   up of the tile visited `i`-th is the tile visited `i / 4^k`-th
-  (`ancestor_decode`);
+  (`ancestor_decode`). So the tiles descending from one tile are exactly the
+  tiles whose Hilbert indices fill one interval, the indices with that tile's
+  index as base-4 prefix (`ancestor_eq_iff_encode_mem_interval`,
+  `subtree_eq_decode_interval`);
 - the Morton order, in contrast, is not adjacent at any zoom `z ≥ 1`: codes
   1 and 2 are always `(1, 0)` and `(0, 1)` (`morton_not_adjacent`).
 -/
@@ -360,6 +363,55 @@ theorem ancestor_decode {z : ℕ} : (k : ℕ) → (i : Fin (4 ^ (z + k))) →
     rw [parent_hilbert_decode, ancestor_decode k]
     congr 2
     rw [Nat.div_div_eq_div_mul, ← pow_succ']
+
+/-! ## Subtrees are intervals of indices -/
+
+/-- `e / N = p` exactly when `e` lies in `[p N, (p + 1) N)`. -/
+theorem div_eq_iff_mem_interval {e p N : ℕ} (hN : 0 < N) : e / N = p ↔ p * N ≤ e ∧ e < (p + 1) * N := by
+  rw [le_antisymm_iff, ← Nat.lt_succ_iff, Nat.div_lt_iff_lt_mul hN, Nat.le_div_iff_mul_le hN, and_comm]
+
+/-- A tile at zoom `z + k` descends from the tile `s` at zoom `z` exactly when its
+Hilbert index has `s`'s index as its base-4 prefix. -/
+theorem ancestor_eq_iff_encode {z k : ℕ} (t : Tile (z + k)) (s : Tile z) :
+    ancestor k t = s ↔ (encode (z + k) t).1 / 4 ^ k = (encode z s).1 := by
+  have h := ancestor_decode k (encode (z + k) t)
+  rw [decode_encode] at h
+  rw [h]
+  constructor
+  · intro hs
+    have := congrArg (encode z) hs
+    rw [encode_decode] at this
+    exact congrArg Fin.val this
+  · intro he
+    rw [← decode_encode z s]
+    exact congrArg (decode z) (Fin.ext he)
+
+/-- So the descendants `k` generations down of a tile are exactly the tiles
+whose Hilbert indices fill one interval of length `4^k`. -/
+theorem ancestor_eq_iff_encode_mem_interval {z k : ℕ} (t : Tile (z + k)) (s : Tile z) :
+    ancestor k t = s ↔
+      (encode z s).1 * 4 ^ k ≤ (encode (z + k) t).1 ∧ (encode (z + k) t).1 < ((encode z s).1 + 1) * 4 ^ k := by
+  rw [ancestor_eq_iff_encode, div_eq_iff_mem_interval (four_pow_pos k)]
+
+/-- The same, in terms of `decode`: the tile visited `i`-th at zoom `z + k` descends
+from the tile visited `p`-th at zoom `z` exactly when `i / 4^k = p`. -/
+theorem ancestor_decode_eq_iff {z k : ℕ} (i : Fin (4 ^ (z + k))) (p : Fin (4 ^ z)) :
+    ancestor k (decode (z + k) i) = decode z p ↔ i.1 / 4 ^ k = p.1 := by
+  rw [ancestor_eq_iff_encode, encode_decode, encode_decode]
+
+/-- The subtree of a tile, `k` generations deep, is the image under `decode` of
+the interval of indices with that tile's index as prefix. -/
+theorem subtree_eq_decode_interval {z k : ℕ} (s : Tile z) :
+    {t : Tile (z + k) | ancestor k t = s} =
+      decode (z + k) '' {i | (encode z s).1 * 4 ^ k ≤ i.1 ∧ i.1 < ((encode z s).1 + 1) * 4 ^ k} := by
+  ext t
+  simp only [Set.mem_setOf_eq, Set.mem_image]
+  constructor
+  · intro h
+    exact ⟨encode (z + k) t, (ancestor_eq_iff_encode_mem_interval t s).mp h, decode_encode _ t⟩
+  · rintro ⟨i, hi, rfl⟩
+    rw [ancestor_eq_iff_encode_mem_interval, encode_decode]
+    exact hi
 
 /-! ## The Morton order is not adjacent -/
 

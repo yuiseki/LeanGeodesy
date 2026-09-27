@@ -1378,3 +1378,23 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Tiles.ancestor_decode' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.ancestor_decode
+
+/-- info: 'Geodesy.Tiles.div_eq_iff_mem_interval' depends on axioms: [propext] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.div_eq_iff_mem_interval
+
+/-- info: 'Geodesy.Tiles.ancestor_eq_iff_encode' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.ancestor_eq_iff_encode
+
+/-- info: 'Geodesy.Tiles.ancestor_eq_iff_encode_mem_interval' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.ancestor_eq_iff_encode_mem_interval
+
+/-- info: 'Geodesy.Tiles.ancestor_decode_eq_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.ancestor_decode_eq_iff
+
+/-- info: 'Geodesy.Tiles.subtree_eq_decode_interval' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.subtree_eq_decode_interval
