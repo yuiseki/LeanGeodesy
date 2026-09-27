@@ -27,8 +27,11 @@ join: the end of each quadrant's curve is next to the start of the next one.
 So
 
 - consecutive tiles share an edge (`hilbertD_adj`, `hilbert_adjacent`);
-- the order visits every tile exactly once: `decode : Fin (4^z) → Tile z` is a
-  bijection with inverse `encode` (`hilbertEquiv`, `hilbertD_injective`);
+- the order visits every tile exactly once: `decode : Fin (4^z) → Tile z` and
+  the recursive, computable `encode` (`hilbertE`, which reads off the quadrant
+  and undoes its symmetry) are inverse bijections (`encode_decode`,
+  `decode_encode`, `hilbertEquiv`). Neither the maps nor the equivalence use
+  `Classical.choice`; the axiom audit pins them to `propext` and `Quot.sound`;
 - it is nested like the quadtree: the tile visited `i`-th at zoom `z + 1` has
   as parent the tile visited `i / 4`-th at zoom `z` (`parent_hilbert_decode`),
   so the tiles `4k .. 4k + 3` are the four children of tile `k`, in an order
@@ -47,6 +50,11 @@ def quadPlace (n q : ℕ) (p : ℕ × ℕ) : ℕ × ℕ :=
   else if q = 2 then (p.1 + n, p.2 + n)
   else (2 * n - 1 - p.2, n - 1 - p.1)
 
+theorem quadPlace_zero (n : ℕ) (p : ℕ × ℕ) : quadPlace n 0 p = (p.2, p.1) := rfl
+theorem quadPlace_one (n : ℕ) (p : ℕ × ℕ) : quadPlace n 1 p = (p.1, p.2 + n) := rfl
+theorem quadPlace_two (n : ℕ) (p : ℕ × ℕ) : quadPlace n 2 p = (p.1 + n, p.2 + n) := rfl
+theorem quadPlace_three (n : ℕ) (p : ℕ × ℕ) : quadPlace n 3 p = (2 * n - 1 - p.2, n - 1 - p.1) := rfl
+
 /-- The tile visited `i`-th by the Hilbert order at zoom `z`. -/
 def hilbertD : ℕ → ℕ → ℕ × ℕ
   | 0, _ => (0, 0)
@@ -55,7 +63,7 @@ def hilbertD : ℕ → ℕ → ℕ × ℕ
 theorem hilbertD_succ (z i : ℕ) :
     hilbertD (z + 1) i = quadPlace (2 ^ z) (i / 4 ^ z) (hilbertD z (i % 4 ^ z)) := rfl
 
-theorem four_pow_pos (z : ℕ) : 0 < 4 ^ z := by positivity
+theorem four_pow_pos (z : ℕ) : 0 < 4 ^ z := Nat.pow_pos (by decide)
 
 theorem four_pow_succ' (z : ℕ) : 4 ^ (z + 1) = 4 * 4 ^ z := by rw [pow_succ, Nat.mul_comm]
 
@@ -63,18 +71,23 @@ theorem four_pow_succ' (z : ℕ) : 4 ^ (z + 1) = 4 * 4 ^ z := by rw [pow_succ, N
 theorem div_four_pow_lt {z i : ℕ} (hi : i < 4 ^ (z + 1)) : i / 4 ^ z < 4 := by
   rw [Nat.div_lt_iff_lt_mul (four_pow_pos z)]
   rw [four_pow_succ'] at hi
-  linarith
+  omega
 
 /-- The Hilbert order stays in the grid. -/
 theorem hilbertD_lt : (z i : ℕ) → i < 4 ^ z → (hilbertD z i).1 < 2 ^ z ∧ (hilbertD z i).2 < 2 ^ z
-  | 0, _, _ => by simp [hilbertD]
+  | 0, _, _ => ⟨Nat.one_pos, Nat.one_pos⟩
   | z + 1, i, hi => by
     have hq := div_four_pow_lt hi
     have hp := hilbertD_lt z (i % 4 ^ z) (Nat.mod_lt _ (four_pow_pos z))
     have h2 := two_pow_succ' z
     rw [hilbertD_succ]
-    unfold quadPlace
-    split_ifs <;> simp only <;> omega
+    generalize i / 4 ^ z = q at hq ⊢
+    have : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 := by omega
+    rcases this with rfl | rfl | rfl | rfl
+    · rw [quadPlace_zero]; exact ⟨by omega, by omega⟩
+    · rw [quadPlace_one]; exact ⟨by omega, by simp only; omega⟩
+    · rw [quadPlace_two]; exact ⟨by simp only; omega, by simp only; omega⟩
+    · rw [quadPlace_three]; exact ⟨by simp only; omega, by simp only; omega⟩
 
 /-- It starts at `(0, 0)`. -/
 theorem hilbertD_zero : (z : ℕ) → hilbertD z 0 = (0, 0)
@@ -179,19 +192,118 @@ theorem card_tile (z : ℕ) : Fintype.card (Tile z) = 4 ^ z := by
   rw [Fintype.card_prod, Fintype.card_fin, ← mul_pow]
   norm_num
 
-/-- The Hilbert order visits every tile exactly once: `decode` is a bijection. -/
-noncomputable def hilbertEquiv (z : ℕ) : Fin (4 ^ z) ≃ Tile z :=
-  Equiv.ofBijective (decode z) ((Fintype.bijective_iff_injective_and_card _).mpr
-    ⟨hilbertD_injective z, by rw [Fintype.card_fin, card_tile]⟩)
+/-! ## A computable encoder -/
 
-/-- The Hilbert index of a tile. -/
-noncomputable def encode (z : ℕ) : Tile z → Fin (4 ^ z) := (hilbertEquiv z).symm
+/-- Undo `quadPlace`: the quadrant of a point of the `2n × 2n` grid and its
+position in the `n × n` grid before the symmetry. -/
+def quadUnplace (n : ℕ) (P : ℕ × ℕ) : ℕ × (ℕ × ℕ) :=
+  if P.1 < n then
+    if P.2 < n then (0, (P.2, P.1)) else (1, (P.1, P.2 - n))
+  else
+    if P.2 < n then (3, (n - 1 - P.2, 2 * n - 1 - P.1)) else (2, (P.1 - n, P.2 - n))
+
+theorem quadUnplace_quadPlace {n q : ℕ} {p : ℕ × ℕ} (hp : p.1 < n ∧ p.2 < n) (hq : q < 4) :
+    quadUnplace n (quadPlace n q p) = (q, p) := by
+  obtain ⟨a, b⟩ := p
+  obtain ⟨ha, hb⟩ := hp
+  have : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 := by omega
+  rcases this with rfl | rfl | rfl | rfl
+  · rw [quadPlace_zero]; unfold quadUnplace; rw [if_pos hb, if_pos ha]
+  · rw [quadPlace_one]; unfold quadUnplace; rw [if_pos ha, if_neg (by simp only; omega)]
+    exact Prod.ext rfl (Prod.ext rfl (by simp only; omega))
+  · rw [quadPlace_two]; unfold quadUnplace
+    rw [if_neg (by simp only; omega), if_neg (by simp only; omega)]
+    exact Prod.ext rfl (Prod.ext (by simp only; omega) (by simp only; omega))
+  · rw [quadPlace_three]; unfold quadUnplace
+    rw [if_neg (by simp only; omega), if_pos (by simp only; omega)]
+    exact Prod.ext rfl (Prod.ext (by simp only; omega) (by simp only; omega))
+
+theorem quadUnplace_spec {n : ℕ} {P : ℕ × ℕ} (hP : P.1 < 2 * n ∧ P.2 < 2 * n) :
+    (quadUnplace n P).1 < 4 ∧ ((quadUnplace n P).2.1 < n ∧ (quadUnplace n P).2.2 < n) ∧
+      quadPlace n (quadUnplace n P).1 (quadUnplace n P).2 = P := by
+  obtain ⟨X, Y⟩ := P
+  obtain ⟨h1, h2⟩ := hP
+  unfold quadUnplace
+  split_ifs with ha hb hb
+  · exact ⟨by simp only; omega, ⟨hb, ha⟩, by rw [quadPlace_zero]⟩
+  · refine ⟨by simp only; omega, ⟨ha, by simp only; omega⟩, ?_⟩
+    rw [quadPlace_one]
+    exact Prod.ext rfl (by simp only; omega)
+  · refine ⟨by simp only; omega, ⟨by simp only; omega, by simp only; omega⟩, ?_⟩
+    rw [quadPlace_three]
+    exact Prod.ext (by simp only; omega) (by simp only; omega)
+  · refine ⟨by simp only; omega, ⟨by simp only; omega, by simp only; omega⟩, ?_⟩
+    rw [quadPlace_two]
+    exact Prod.ext (by simp only; omega) (by simp only; omega)
+
+/-- The Hilbert index of a cell, computed recursively from its quadrant: the
+inverse of `hilbertD`, with no choice involved. -/
+def hilbertE : ℕ → ℕ × ℕ → ℕ
+  | 0, _ => 0
+  | z + 1, P => (quadUnplace (2 ^ z) P).1 * 4 ^ z + hilbertE z (quadUnplace (2 ^ z) P).2
+
+theorem hilbertE_lt : (z : ℕ) → (P : ℕ × ℕ) → P.1 < 2 ^ z ∧ P.2 < 2 ^ z → hilbertE z P < 4 ^ z
+  | 0, _, _ => by simp [hilbertE]
+  | z + 1, P, hP => by
+    have h2 := two_pow_succ' z
+    have h4 := four_pow_succ' z
+    obtain ⟨hq, hp, _⟩ := quadUnplace_spec (n := 2 ^ z) (P := P) (by rw [← h2]; exact hP)
+    have ih := hilbertE_lt z _ hp
+    simp only [hilbertE]
+    rw [h4]
+    have : (quadUnplace (2 ^ z) P).1 = 0 ∨ (quadUnplace (2 ^ z) P).1 = 1 ∨
+        (quadUnplace (2 ^ z) P).1 = 2 ∨ (quadUnplace (2 ^ z) P).1 = 3 := by omega
+    rcases this with h | h | h | h <;> rw [h] <;> omega
+
+/-- `hilbertE` undoes `hilbertD`. -/
+theorem hilbertE_hilbertD : (z i : ℕ) → i < 4 ^ z → hilbertE z (hilbertD z i) = i
+  | 0, i, hi => (Nat.lt_one_iff.mp hi).symm
+  | z + 1, i, hi => by
+    have hN := four_pow_pos z
+    have hr := Nat.mod_lt i hN
+    rw [hilbertD_succ, hilbertE,
+      quadUnplace_quadPlace (hilbertD_lt z _ hr) (div_four_pow_lt hi), hilbertE_hilbertD z _ hr]
+    exact Nat.div_add_mod' i (4 ^ z)
+
+/-- `hilbertD` undoes `hilbertE`. -/
+theorem hilbertD_hilbertE : (z : ℕ) → (P : ℕ × ℕ) → P.1 < 2 ^ z ∧ P.2 < 2 ^ z →
+    hilbertD z (hilbertE z P) = P
+  | 0, P, hP => by
+    obtain ⟨X, Y⟩ := P
+    obtain ⟨hX, hY⟩ := hP
+    exact Prod.ext (show 0 = X by omega) (show 0 = Y by omega)
+  | z + 1, P, hP => by
+    have hN := four_pow_pos z
+    have h2 := two_pow_succ' z
+    obtain ⟨hq, hp, hplace⟩ := quadUnplace_spec (n := 2 ^ z) (P := P) (by rw [← h2]; exact hP)
+    have he := hilbertE_lt z _ hp
+    obtain ⟨e1, e2⟩ := div_mod_add_mul (q := (quadUnplace (2 ^ z) P).1) hN he
+    rw [hilbertE, hilbertD_succ, Nat.add_comm, Nat.mul_comm,
+      e1, e2, hilbertD_hilbertE z _ hp, hplace]
+
+/-- The Hilbert index of a tile, computed by `hilbertE`. -/
+def encode (z : ℕ) (t : Tile z) : Fin (4 ^ z) :=
+  ⟨hilbertE z (t.1.1, t.2.1), hilbertE_lt z _ ⟨t.1.2, t.2.2⟩⟩
 
 theorem encode_decode (z : ℕ) (i : Fin (4 ^ z)) : encode z (decode z i) = i :=
-  (hilbertEquiv z).symm_apply_apply i
+  Fin.ext (hilbertE_hilbertD z i i.2)
 
-theorem decode_encode (z : ℕ) (t : Tile z) : decode z (encode z t) = t :=
-  (hilbertEquiv z).apply_symm_apply t
+theorem decode_encode (z : ℕ) (t : Tile z) : decode z (encode z t) = t := by
+  have h := hilbertD_hilbertE z (t.1.1, t.2.1) ⟨t.1.2, t.2.2⟩
+  ext
+  · exact congrArg Prod.fst h
+  · exact congrArg Prod.snd h
+
+/-- The Hilbert order visits every tile exactly once: `decode` and `encode` are
+inverse bijections, both computable. -/
+def hilbertEquiv (z : ℕ) : Fin (4 ^ z) ≃ Tile z where
+  toFun := decode z
+  invFun := encode z
+  left_inv := encode_decode z
+  right_inv := decode_encode z
+
+/-- `encode` computes: the last tile at zoom 2, `(3, 0)`, has index 15. -/
+example : (encode 2 (⟨3, by norm_num⟩, ⟨0, by norm_num⟩)).1 = 15 := by decide
 
 /-- Consecutive tiles of the Hilbert order share an edge. -/
 theorem hilbert_adjacent {z : ℕ} (i : Fin (4 ^ z)) (h : i.1 + 1 < 4 ^ z) :

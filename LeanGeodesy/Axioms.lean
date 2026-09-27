@@ -1271,7 +1271,7 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.morton_jumps
 
-/-- info: 'Geodesy.Tiles.hilbertD_lt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/-- info: 'Geodesy.Tiles.hilbertD_lt' depends on axioms: [propext, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.hilbertD_lt
 
@@ -1279,7 +1279,7 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.hilbertD_zero
 
-/-- info: 'Geodesy.Tiles.hilbertD_last' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/-- info: 'Geodesy.Tiles.hilbertD_last' depends on axioms: [propext, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.hilbertD_last
 
@@ -1287,19 +1287,19 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.hilbertD_adj
 
-/-- info: 'Geodesy.Tiles.hilbertD_inj' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/-- info: 'Geodesy.Tiles.hilbertD_inj' depends on axioms: [propext, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.hilbertD_inj
 
-/-- info: 'Geodesy.Tiles.hilbertD_injective' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/-- info: 'Geodesy.Tiles.hilbertD_injective' depends on axioms: [propext, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.hilbertD_injective
 
-/-- info: 'Geodesy.Tiles.encode_decode' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/-- info: 'Geodesy.Tiles.encode_decode' depends on axioms: [propext, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.encode_decode
 
-/-- info: 'Geodesy.Tiles.decode_encode' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/-- info: 'Geodesy.Tiles.decode_encode' depends on axioms: [propext, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.decode_encode
 
@@ -1334,3 +1334,39 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Tiles.Adjacent.ne' depends on axioms: [propext, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.Adjacent.ne
+
+/-- info: 'Geodesy.Tiles.quadUnplace_quadPlace' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.quadUnplace_quadPlace
+
+/-- info: 'Geodesy.Tiles.quadUnplace_spec' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.quadUnplace_spec
+
+/-- info: 'Geodesy.Tiles.hilbertE_lt' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.hilbertE_lt
+
+/-- info: 'Geodesy.Tiles.hilbertE_hilbertD' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.hilbertE_hilbertD
+
+/-- info: 'Geodesy.Tiles.hilbertD_hilbertE' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.hilbertD_hilbertE
+
+/-- info: 'Geodesy.Tiles.hilbertE' depends on axioms: [propext] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.hilbertE
+
+/-- info: 'Geodesy.Tiles.encode' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.encode
+
+/-- info: 'Geodesy.Tiles.decode' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.decode
+
+/-- info: 'Geodesy.Tiles.hilbertEquiv' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.hilbertEquiv
