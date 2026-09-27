@@ -189,11 +189,12 @@ lake env lean --run LeanGeodesyManualMain.lean --output _out
 ```
 
 The site is written to `manual/_out/html-multi/`. A Japanese companion,
-`LeanGeodesyManualJa`, is written separately in Japanese around questions a
-GIS engineer meets; Part I goes from the reference ellipsoid through the first
-fundamental form to projection distortion, geodesics and Clairaut's relation,
-and Part II from the tile grid to the quadtree, Morton and Hilbert orders and
-subtrees as integer intervals; it shows each declaration's
+`LeanGeodesyManualJa`, is a dialogue ("やる夫が Lean で学ぶ測地学"): a GIS
+user and a mathematician work from everyday questions to the reference
+ellipsoid, the first fundamental form, projection distortion and why
+Mercator's formula follows from conformality; later chapters, still in prose,
+cover area, azimuthal projections, geodesics, Clairaut's relation and tiles.
+The dialogue uses two small block directives, `:::yaruo` and `:::yaranaio`; it shows each declaration's
 signature through a small `leanDecl` block command that leaves the English
 docstring out:
 
