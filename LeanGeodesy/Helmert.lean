@@ -151,20 +151,21 @@ def cross (r v : E3) : E3 :=
 /-- The linearised rotation by the small angles `r`: `v + r × v`. -/
 def smallRotation (r v : E3) : E3 := v + cross r v
 
-theorem inner_eq_components (u v : E3) : (inner u v : ℝ) = u 0 * v 0 + u 1 * v 1 + u 2 * v 2 := by
+theorem inner_eq_components (u v : E3) : (inner ℝ u v : ℝ) = u 0 * v 0 + u 1 * v 1 + u 2 * v 2 := by
   rw [← vec3_eta u, ← vec3_eta v]
   simp only [vec3, PiLp.inner_apply, Fin.sum_univ_three]
   simp
+  ring
 
 /-- `r × v` is perpendicular to `v`. -/
-theorem inner_cross_right (r v : E3) : (inner v (cross r v) : ℝ) = 0 := by
+theorem inner_cross_right (r v : E3) : (inner ℝ v (cross r v) : ℝ) = 0 := by
   rw [inner_eq_components, cross]
   simp only [vec3_0, vec3_1, vec3_2]
   ring
 
 /-- Lagrange's identity: `‖r × v‖² = ‖r‖² ‖v‖² - ⟪r, v⟫²`. -/
 theorem norm_cross_sq (r v : E3) :
-    ‖cross r v‖ ^ 2 = ‖r‖ ^ 2 * ‖v‖ ^ 2 - (inner r v : ℝ) ^ 2 := by
+    ‖cross r v‖ ^ 2 = ‖r‖ ^ 2 * ‖v‖ ^ 2 - (inner ℝ r v : ℝ) ^ 2 := by
   rw [norm_sq_eq, norm_sq_eq, norm_sq_eq, inner_eq_components, cross]
   simp only [vec3_0, vec3_1, vec3_2]
   ring
@@ -203,7 +204,7 @@ theorem norm_smallRotation_le (r v : E3) :
   · nlinarith [sq_nonneg ‖cross r v‖]
   · -- `‖v‖² + ‖r‖²‖v‖² ≤ (‖v‖ + ‖r‖²‖v‖/2)²`.
     have hle : ‖smallRotation r v‖ ^ 2 ≤ (‖v‖ + ‖r‖ ^ 2 * ‖v‖ / 2) ^ 2 := by
-      nlinarith [sq_nonneg (inner r v : ℝ), sq_nonneg (‖r‖ ^ 2 * ‖v‖ / 2), mul_nonneg hv hr]
+      nlinarith [sq_nonneg (inner ℝ r v : ℝ), sq_nonneg (‖r‖ ^ 2 * ‖v‖ / 2), mul_nonneg hv hr]
     exact le_of_pow_le_pow_left₀ two_ne_zero (by positivity) hle
 
 /-- For angles up to a microradian and points within 7000 km of the centre,

@@ -45,12 +45,12 @@ open Real
 
 /-- The northward component of a tangent vector at `(φ, λ)`, in metres: its inner
 product with the unit meridian tangent. -/
-noncomputable def northComponent (R φ lam : ℝ) (v : E3) : ℝ := inner v (meridianTangent R φ lam) / R
+noncomputable def northComponent (R φ lam : ℝ) (v : E3) : ℝ := inner ℝ v (meridianTangent R φ lam) / R
 
 /-- The eastward component of a tangent vector at `(φ, λ)`, in metres: its inner
 product with the unit parallel tangent. -/
 noncomputable def eastComponent (R φ lam : ℝ) (v : E3) : ℝ :=
-  inner v (parallelTangent R φ lam) / (R * cos φ)
+  inner ℝ v (parallelTangent R φ lam) / (R * cos φ)
 
 /-- A tangent vector at `(φ, λ)` points at bearing `α` (clockwise from north)
 when its east and north components are a positive multiple of

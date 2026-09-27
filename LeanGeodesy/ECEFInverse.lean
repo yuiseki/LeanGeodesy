@@ -158,16 +158,16 @@ theorem toECEF_surjective (E : ReferenceEllipsoid) :
       simp only [ReferenceEllipsoid.latitudeResidual] at hF
       simp only [hh, ReferenceEllipsoid.W2]
       linear_combination cos φ * hF + (N * E.e2 * sin φ + z) * sin_sq_add_cos_sq φ
-    have habs : Complex.abs ⟨x, y⟩ = p := by
-      rw [Complex.abs_apply, Complex.normSq_mk, hpdef]
+    have habs : ‖(⟨x, y⟩ : ℂ)‖ = p := by
+      rw [Complex.norm_def, Complex.normSq_mk, hpdef]
       congr 1
       ring
     refine ⟨⟨⟨φ, hφ.1.le, hφ.2.le⟩, ecefLongitude x y, h⟩, ?_⟩
     rw [← vec3_eta P]
     simp only [GeodeticCoordinate.toECEF, ecefLongitude, Real.Angle.cos_coe, Real.Angle.sin_coe]
     refine vec3_congr ?_ ?_ hzs
-    · rw [hpc, ← habs, Complex.abs_mul_cos_arg]
-    · rw [hpc, ← habs, Complex.abs_mul_sin_arg]
+    · rw [hpc, ← habs, Complex.norm_mul_cos_arg]
+    · rw [hpc, ← habs, Complex.norm_mul_sin_arg]
   · -- On the axis: straight above or below the north pole.
     have hxy : x ^ 2 + y ^ 2 = 0 := by
       have h2 := sq_sqrt (add_nonneg (sq_nonneg x) (sq_nonneg y))

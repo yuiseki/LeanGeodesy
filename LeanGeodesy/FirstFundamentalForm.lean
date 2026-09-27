@@ -71,15 +71,15 @@ variable (E : ReferenceEllipsoid)
 
 /-- `E = ⟨∂r/∂φ, ∂r/∂φ⟩`. -/
 noncomputable def firstFormE (φ lam : ℝ) : ℝ :=
-  inner (deriv (fun φ => E.ellipsoidPoint φ lam) φ) (deriv (fun φ => E.ellipsoidPoint φ lam) φ)
+  inner ℝ (deriv (fun φ => E.ellipsoidPoint φ lam) φ) (deriv (fun φ => E.ellipsoidPoint φ lam) φ)
 
 /-- `F = ⟨∂r/∂φ, ∂r/∂λ⟩`. -/
 noncomputable def firstFormF (φ lam : ℝ) : ℝ :=
-  inner (deriv (fun φ => E.ellipsoidPoint φ lam) φ) (deriv (fun lam => E.ellipsoidPoint φ lam) lam)
+  inner ℝ (deriv (fun φ => E.ellipsoidPoint φ lam) φ) (deriv (fun lam => E.ellipsoidPoint φ lam) lam)
 
 /-- `G = ⟨∂r/∂λ, ∂r/∂λ⟩`. -/
 noncomputable def firstFormG (φ lam : ℝ) : ℝ :=
-  inner (deriv (fun lam => E.ellipsoidPoint φ lam) lam) (deriv (fun lam => E.ellipsoidPoint φ lam) lam)
+  inner ℝ (deriv (fun lam => E.ellipsoidPoint φ lam) lam) (deriv (fun lam => E.ellipsoidPoint φ lam) lam)
 
 theorem deriv_lat (φ lam : ℝ) :
     deriv (fun φ => E.ellipsoidPoint φ lam) φ = E.meridianTangent φ lam :=
@@ -193,9 +193,9 @@ noncomputable def dr (φ lam : ℝ) (v : ℝ × ℝ) : E3 :=
 
 /-- Inner products of tangent vectors are given by the metric. -/
 theorem inner_dr (φ lam : ℝ) (u v : ℝ × ℝ) :
-    inner (E.dr φ lam u) (E.dr φ lam v) = E.metric φ u v := by
+    inner ℝ (E.dr φ lam u) (E.dr φ lam v) = E.metric φ u v := by
   have h0 := E.inner_meridianTangent_parallelTangent φ lam
-  have h0' : (inner (E.parallelTangent φ lam) (E.meridianTangent φ lam) : ℝ) = 0 := by
+  have h0' : (inner ℝ (E.parallelTangent φ lam) (E.meridianTangent φ lam) : ℝ) = 0 := by
     rw [real_inner_comm]; exact h0
   rw [dr, dr, inner_add_left, inner_add_right, inner_add_right, real_inner_smul_left,
     real_inner_smul_left, real_inner_smul_left, real_inner_smul_left, real_inner_smul_right,
@@ -245,7 +245,7 @@ theorem cos_angle_dr (φ lam : ℝ) (u v : ℝ × ℝ) :
 
 /-- Two tangent vectors are perpendicular exactly when the metric pairs them to zero. -/
 theorem metric_eq_zero_iff (φ lam : ℝ) (u v : ℝ × ℝ) :
-    E.metric φ u v = 0 ↔ (inner (E.dr φ lam u) (E.dr φ lam v) : ℝ) = 0 := by
+    E.metric φ u v = 0 ↔ (inner ℝ (E.dr φ lam u) (E.dr φ lam v) : ℝ) = 0 := by
   rw [inner_dr]
 
 /-! ## Derivatives of the coefficients -/

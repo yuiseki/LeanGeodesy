@@ -68,8 +68,8 @@ theorem aeqd_preimage (hR : 0 < R) {q : E2} (hq : ‖q‖ < π * R) :
     aeqd R (π / 2 - ‖q‖ / R, Complex.arg ⟨q 0, q 1⟩) = q ∧
       π / 2 - ‖q‖ / R ∈ Set.Icc (-(π / 2)) (π / 2) := by
   have hn := norm_nonneg q
-  have habs : Complex.abs ⟨q 0, q 1⟩ = ‖q‖ := by
-    rw [Complex.abs_apply, Complex.normSq_mk, ← sqrt_sq hn, ← vec2_eta' q, norm_vec2_sq]
+  have habs : ‖(⟨q 0, q 1⟩ : ℂ)‖ = ‖q‖ := by
+    rw [Complex.norm_def, Complex.normSq_mk, ← sqrt_sq hn, ← vec2_eta' q, norm_vec2_sq]
     simp only [vec2_0, vec2_1]
     congr 1
     ring
@@ -77,7 +77,7 @@ theorem aeqd_preimage (hR : 0 < R) {q : E2} (hq : ‖q‖ < π * R) :
   · rw [aeqd, azimuthalEquidistant]
     simp only [sub_sub_cancel, mul_div_cancel₀ _ hR.ne']
     conv_rhs => rw [← vec2_eta' q]
-    rw [← habs, Complex.abs_mul_cos_arg, Complex.abs_mul_sin_arg]
+    rw [← habs, Complex.norm_mul_cos_arg, Complex.norm_mul_sin_arg]
   · have h1 : ‖q‖ / R < π := by rw [div_lt_iff₀ hR]; linarith
     have h0 : 0 ≤ ‖q‖ / R := div_nonneg hn hR.le
     constructor <;> linarith

@@ -65,7 +65,7 @@ theorem arcNormal_northPole {φ : ℝ} (hφ : φ ∈ Set.Ioo (-(π / 2)) (π / 2
     arcNormal northPole (direction φ lam) = vec3 (cos lam) (sin lam) 0 := by
   have hc : 0 < cos φ := cos_pos_of_mem_Ioo hφ
   rw [arcNormal, angle_northPole ⟨hφ.1.le, hφ.2.le⟩, sin_pi_div_two_sub]
-  have hi : (inner (direction φ lam) northPole : ℝ) = sin φ := by
+  have hi : (inner ℝ (direction φ lam) northPole : ℝ) = sin φ := by
     rw [northPole, direction, direction, inner_vec3, cos_pi_div_two, sin_pi_div_two]
     ring
   have hsub : direction φ lam - sin φ • northPole = cos φ • vec3 (cos lam) (sin lam) 0 := by
@@ -150,7 +150,7 @@ variable (hR : 0 < R) (hc : 0 < cos φ) (lam : ℝ)
 include hR hc
 
 theorem azimuthalEquidistant_orthogonal :
-    (inner (azimuthalEquidistantDistortion hR hc lam).dLat
+    (inner ℝ (azimuthalEquidistantDistortion hR hc lam).dLat
       (azimuthalEquidistantDistortion hR hc lam).dLon : ℝ) = 0 := by
   simp only [azimuthalEquidistantDistortion, inner_vec2]
   ring
@@ -201,7 +201,7 @@ end Distortion
 /-! ## Mercator does not keep azimuths -/
 
 theorem inner_direction_45 :
-    (inner (direction (π / 4) 0) (direction (π / 4) (π / 2)) : ℝ) = 1 / 2 := by
+    (inner ℝ (direction (π / 4) 0) (direction (π / 4) (π / 2)) : ℝ) = 1 / 2 := by
   rw [inner_direction, sub_eq_add_neg, zero_add, cos_neg, cos_pi_div_two, cos_pi_div_four,
     sin_pi_div_four]
   have h2 : √2 ^ 2 = 2 := sq_sqrt (by norm_num)
@@ -217,7 +217,7 @@ direction has positive inner product with the unit northward tangent. -/
 theorem mercator_not_preserves_azimuth (hR : 0 < R) :
     (mercator R (π / 4) (π / 2) - mercator R (π / 4) 0) 1 = 0 ∧
       0 < (mercator R (π / 4) (π / 2) - mercator R (π / 4) 0) 0 ∧
-      0 < (inner (arcNormal (direction (π / 4) 0) (direction (π / 4) (π / 2)))
+      0 < (inner ℝ (arcNormal (direction (π / 4) 0) (direction (π / 4) (π / 2)))
         (meridianTangent 1 (π / 4) 0) : ℝ) := by
   have hpi := pi_pos
   refine ⟨by simp [mercator], by simp [mercator]; positivity, ?_⟩
@@ -235,7 +235,7 @@ of radius `a`. -/
 theorem webMercator_not_preserves_azimuth :
     (mercator webMercatorRadius (π / 4) (π / 2) - mercator webMercatorRadius (π / 4) 0) 1 = 0 ∧
       0 < (mercator webMercatorRadius (π / 4) (π / 2) - mercator webMercatorRadius (π / 4) 0) 0 ∧
-      0 < (inner (arcNormal (direction (π / 4) 0) (direction (π / 4) (π / 2)))
+      0 < (inner ℝ (arcNormal (direction (π / 4) 0) (direction (π / 4) (π / 2)))
         (meridianTangent 1 (π / 4) 0) : ℝ) :=
   mercator_not_preserves_azimuth webMercatorRadius_pos
 

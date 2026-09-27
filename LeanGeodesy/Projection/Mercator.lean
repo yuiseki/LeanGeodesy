@@ -158,8 +158,9 @@ theorem norm_vec2_sq (x y : ℝ) : ‖vec2 x y‖ ^ 2 = x ^ 2 + y ^ 2 := by
     Fin.sum_univ_two]
   simp only [vec2_0, vec2_1, Real.norm_eq_abs, sq_abs]
 
-theorem inner_vec2 (x y x' y' : ℝ) : inner (vec2 x y) (vec2 x' y') = x * x' + y * y' := by
+theorem inner_vec2 (x y x' y' : ℝ) : inner ℝ (vec2 x y) (vec2 x' y') = x * x' + y * y' := by
   simp [vec2, PiLp.inner_apply, Fin.sum_univ_two]
+  ring
 
 /-- A curve in the plane is differentiated coordinate by coordinate. -/
 theorem hasDerivAt_vec2 {f g : ℝ → ℝ} {f' g' t : ℝ} (hf : HasDerivAt f f' t)
@@ -227,7 +228,7 @@ theorem norm_parallelTangent_sq (φ lam : ℝ) : ‖parallelTangent R φ lam‖ 
 
 /-- Meridians and parallels cross at right angles. -/
 theorem inner_meridianTangent_parallelTangent (φ lam : ℝ) :
-    inner (meridianTangent R φ lam) (parallelTangent R φ lam) = (0 : ℝ) := by
+    inner ℝ (meridianTangent R φ lam) (parallelTangent R φ lam) = (0 : ℝ) := by
   rw [meridianTangent, parallelTangent, inner_vec3]
   ring
 

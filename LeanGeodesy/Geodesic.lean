@@ -69,24 +69,24 @@ theorem arccos_le_arccos_of_le {x y : ℝ} (h : x ≤ y) : arccos y ≤ arccos x
 
 /-- For unit vectors the angle is the arccosine of the inner product. -/
 theorem angle_eq_arccos_inner {u w : V} (hu : ‖u‖ = 1) (hw : ‖w‖ = 1) :
-    angle u w = arccos (inner u w) := by
+    angle u w = arccos (inner ℝ u w) := by
   rw [angle, hu, hw, mul_one, div_one]
 
 /-- The part of `u` perpendicular to the unit vector `v` has length
 `sin (angle u v)`. -/
 theorem norm_sub_inner_smul {u v : V} (hu : ‖u‖ = 1) (hv : ‖v‖ = 1) :
-    ‖u - (inner u v : ℝ) • v‖ = sin (angle u v) := by
-  have hc : cos (angle u v) = inner u v := by
+    ‖u - (inner ℝ u v : ℝ) • v‖ = sin (angle u v) := by
+  have hc : cos (angle u v) = inner ℝ u v := by
     rw [cos_angle, hu, hv, mul_one, div_one]
-  have hvv : (inner v v : ℝ) = 1 := by rw [real_inner_self_eq_norm_sq, hv, one_pow]
-  have huu : (inner u u : ℝ) = 1 := by rw [real_inner_self_eq_norm_sq, hu, one_pow]
-  have hsq : ‖u - (inner u v : ℝ) • v‖ ^ 2 = sin (angle u v) ^ 2 := by
+  have hvv : (inner ℝ v v : ℝ) = 1 := by rw [real_inner_self_eq_norm_sq, hv, one_pow]
+  have huu : (inner ℝ u u : ℝ) = 1 := by rw [real_inner_self_eq_norm_sq, hu, one_pow]
+  have hsq : ‖u - (inner ℝ u v : ℝ) • v‖ ^ 2 = sin (angle u v) ^ 2 := by
     rw [← real_inner_self_eq_norm_sq, inner_sub_left, inner_sub_right, inner_sub_right,
       real_inner_smul_left, real_inner_smul_right, real_inner_smul_left,
       real_inner_smul_right, real_inner_comm u v, hvv, huu, sin_sq, hc]
     ring
   have hs : 0 ≤ sin (angle u v) := sin_nonneg_of_nonneg_of_le_pi (angle_nonneg u v) (angle_le_pi u v)
-  nlinarith [norm_nonneg (u - (inner u v : ℝ) • v)]
+  nlinarith [norm_nonneg (u - (inner ℝ u v : ℝ) • v)]
 
 /-- The triangle inequality for angles between unit vectors. -/
 theorem angle_le_angle_add_angle {u v w : V} (hu : ‖u‖ = 1) (hv : ‖v‖ = 1) (hw : ‖w‖ = 1) :
@@ -97,25 +97,25 @@ theorem angle_le_angle_add_angle {u v w : V} (hu : ‖u‖ = 1) (hv : ‖v‖ = 
   swap
   · exact (angle_le_pi u w).trans (le_of_lt (not_le.mp hab))
   -- `⟪u, w⟫ = cos α cos β + ⟪a, b⟫` with `a`, `b` the perpendicular parts.
-  have hcα : cos α = inner u v := by rw [hα, cos_angle, hu, hv, mul_one, div_one]
-  have hcβ : cos β = inner v w := by rw [hβ, cos_angle, hv, hw, mul_one, div_one]
-  have hvv : (inner v v : ℝ) = 1 := by rw [real_inner_self_eq_norm_sq, hv, one_pow]
-  have hsplit : (inner u w : ℝ) =
-      inner u v * inner v w + inner (u - (inner u v : ℝ) • v) (w - (inner w v : ℝ) • v) := by
+  have hcα : cos α = inner ℝ u v := by rw [hα, cos_angle, hu, hv, mul_one, div_one]
+  have hcβ : cos β = inner ℝ v w := by rw [hβ, cos_angle, hv, hw, mul_one, div_one]
+  have hvv : (inner ℝ v v : ℝ) = 1 := by rw [real_inner_self_eq_norm_sq, hv, one_pow]
+  have hsplit : (inner ℝ u w : ℝ) =
+      inner ℝ u v * inner ℝ v w + inner ℝ (u - (inner ℝ u v : ℝ) • v) (w - (inner ℝ w v : ℝ) • v) := by
     rw [inner_sub_left, inner_sub_right, inner_sub_right, real_inner_smul_left,
       real_inner_smul_right, real_inner_smul_left, real_inner_smul_right, hvv,
       real_inner_comm w v]
     ring
   have hna := norm_sub_inner_smul hu hv
-  have hnb : ‖w - (inner w v : ℝ) • v‖ = sin β := by
+  have hnb : ‖w - (inner ℝ w v : ℝ) • v‖ = sin β := by
     rw [norm_sub_inner_smul hw hv, hβ, angle_comm]
   have hcs := neg_le_of_abs_le
-    (abs_real_inner_le_norm (u - (inner u v : ℝ) • v) (w - (inner w v : ℝ) • v))
+    (abs_real_inner_le_norm (u - (inner ℝ u v : ℝ) • v) (w - (inner ℝ w v : ℝ) • v))
   rw [hna, ← hα, hnb] at hcs
-  have hkey : cos (α + β) ≤ inner u w := by
+  have hkey : cos (α + β) ≤ inner ℝ u w := by
     rw [cos_add, hsplit, hcα, hcβ]
     linarith
-  calc angle u w = arccos (inner u w) := angle_eq_arccos_inner hu hw
+  calc angle u w = arccos (inner ℝ u w) := angle_eq_arccos_inner hu hw
     _ ≤ arccos (cos (α + β)) := arccos_le_arccos_of_le hkey
     _ = α + β := arccos_cos (add_nonneg (angle_nonneg u v) (angle_nonneg v w)) hab
 
@@ -143,13 +143,13 @@ variable {u w : V}
 
 /-- The unit vector perpendicular to `u` in the plane of `u` and `w`, pointing
 towards `w`. -/
-noncomputable def arcNormal (u w : V) : V := (sin (angle u w))⁻¹ • (w - (inner w u : ℝ) • u)
+noncomputable def arcNormal (u w : V) : V := (sin (angle u w))⁻¹ • (w - (inner ℝ w u : ℝ) • u)
 
 /-- The great-circle arc from `u` to `w`, at the fraction `t` of the way. -/
 noncomputable def greatArc (u w : V) (t : ℝ) : V :=
   cos (t * angle u w) • u + sin (t * angle u w) • arcNormal u w
 
-theorem inner_self_of_norm_one {v : V} (hv : ‖v‖ = 1) : (inner v v : ℝ) = 1 := by
+theorem inner_self_of_norm_one {v : V} (hv : ‖v‖ = 1) : (inner ℝ v v : ℝ) = 1 := by
   rw [real_inner_self_eq_norm_sq, hv, one_pow]
 
 theorem greatArc_zero : greatArc u w 0 = u := by simp [greatArc]
@@ -160,13 +160,13 @@ variable (hu : ‖u‖ = 1) (hw : ‖w‖ = 1) (hs : 0 < sin (angle u w))
 include hu hw hs
 
 omit hw hs in
-theorem inner_u_arcNormal : (inner u (arcNormal u w) : ℝ) = 0 := by
+theorem inner_u_arcNormal : (inner ℝ u (arcNormal u w) : ℝ) = 0 := by
   rw [arcNormal, real_inner_smul_right, inner_sub_right, real_inner_smul_right,
     inner_self_of_norm_one hu, real_inner_comm w u]
   ring
 
-theorem inner_arcNormal_self : (inner (arcNormal u w) (arcNormal u w) : ℝ) = 1 := by
-  have hn : ‖w - (inner w u : ℝ) • u‖ = sin (angle u w) := by
+theorem inner_arcNormal_self : (inner ℝ (arcNormal u w) (arcNormal u w) : ℝ) = 1 := by
+  have hn : ‖w - (inner ℝ w u : ℝ) • u‖ = sin (angle u w) := by
     rw [norm_sub_inner_smul hw hu, angle_comm]
   rw [arcNormal, real_inner_smul_left, real_inner_smul_right, real_inner_self_eq_norm_sq, hn]
   field_simp
@@ -174,11 +174,11 @@ theorem inner_arcNormal_self : (inner (arcNormal u w) (arcNormal u w) : ℝ) = 1
 
 /-- Points of the arc are the cosine of the angle apart. -/
 theorem inner_greatArc (s t : ℝ) :
-    (inner (greatArc u w s) (greatArc u w t) : ℝ) = cos ((s - t) * angle u w) := by
+    (inner ℝ (greatArc u w s) (greatArc u w t) : ℝ) = cos ((s - t) * angle u w) := by
   have h1 := inner_u_arcNormal (w := w) hu
   have h2 := inner_arcNormal_self hu hw hs
   have h0 := inner_self_of_norm_one hu
-  have h1' : (inner (arcNormal u w) u : ℝ) = 0 := by rw [real_inner_comm]; exact h1
+  have h1' : (inner ℝ (arcNormal u w) u : ℝ) = 0 := by rw [real_inner_comm]; exact h1
   simp only [greatArc, inner_add_left, inner_add_right, real_inner_smul_left,
     real_inner_smul_right, h0, h1, h1', h2]
   rw [sub_mul, cos_sub]
@@ -191,7 +191,7 @@ theorem norm_greatArc (t : ℝ) : ‖greatArc u w t‖ = 1 := by
   nlinarith [norm_nonneg (greatArc u w t)]
 
 theorem greatArc_one : greatArc u w 1 = w := by
-  have hc : cos (angle u w) = inner w u := by
+  have hc : cos (angle u w) = inner ℝ w u := by
     rw [cos_angle, hu, hw, mul_one, div_one, real_inner_comm]
   rw [greatArc, one_mul, arcNormal, smul_smul, mul_inv_cancel₀ hs.ne', one_smul, hc]
   abel
@@ -248,22 +248,22 @@ theorem eq_greatArc_of_angle_add_angle {p : V} (hp : ‖p‖ = 1)
   have hαθ : α ≤ θ := by linarith [angle_nonneg p w]
   have hα0 : 0 ≤ α := angle_nonneg u p
   have huu := inner_self_of_norm_one hu
-  have hun : (inner u n : ℝ) = 0 := inner_u_arcNormal (w := w) hu
-  have hnn : (inner n n : ℝ) = 1 := inner_arcNormal_self hu hw hs
-  have hnu : (inner n u : ℝ) = 0 := by rw [real_inner_comm]; exact hun
+  have hun : (inner ℝ u n : ℝ) = 0 := inner_u_arcNormal (w := w) hu
+  have hnn : (inner ℝ n n : ℝ) = 1 := inner_arcNormal_self hu hw hs
+  have hnu : (inner ℝ n u : ℝ) = 0 := by rw [real_inner_comm]; exact hun
   -- `w = cos θ u + sin θ n`.
   have hw' : w = cos θ • u + sin θ • n := by
     have := greatArc_one hu hw hs
     rw [greatArc, one_mul] at this
     exact this.symm
   -- The components of `p` along `u` and `n`.
-  set a := (inner p u : ℝ) with ha
-  set b := (inner p n : ℝ) with hb
+  set a := (inner ℝ p u : ℝ) with ha
+  set b := (inner ℝ p n : ℝ) with hb
   have ha' : a = cos α := by rw [ha, hα, cos_angle, hu, hp, one_mul, div_one, real_inner_comm]
-  have hpw : (inner p w : ℝ) = cos (θ - α) := by
+  have hpw : (inner ℝ p w : ℝ) = cos (θ - α) := by
     rw [show θ - α = angle p w by linarith, cos_angle, hp, hw, one_mul, div_one]
   have hb' : b = sin α := by
-    have e : (inner p w : ℝ) = a * cos θ + b * sin θ := by
+    have e : (inner ℝ p w : ℝ) = a * cos θ + b * sin θ := by
       rw [hw', inner_add_right, real_inner_smul_right, real_inner_smul_right]
       ring
     rw [hpw, cos_sub, ha'] at e
@@ -273,10 +273,10 @@ theorem eq_greatArc_of_angle_add_angle {p : V} (hp : ‖p‖ = 1)
     · linarith
   -- The rest of `p` is perpendicular to `u` and `n`, and has length zero.
   set r := p - a • u - b • n with hr
-  have hrr : (inner r r : ℝ) = 1 - a ^ 2 - b ^ 2 := by
+  have hrr : (inner ℝ r r : ℝ) = 1 - a ^ 2 - b ^ 2 := by
     have hpp := inner_self_of_norm_one hp
-    have hup : (inner u p : ℝ) = a := by rw [ha, real_inner_comm]
-    have hnp : (inner n p : ℝ) = b := by rw [hb, real_inner_comm]
+    have hup : (inner ℝ u p : ℝ) = a := by rw [ha, real_inner_comm]
+    have hnp : (inner ℝ n p : ℝ) = b := by rw [hb, real_inner_comm]
     simp only [hr, inner_sub_left, inner_sub_right, real_inner_smul_left, real_inner_smul_right,
       hpp, huu, hun, hnu, hnn, hup, hnp, ← ha, ← hb]
     ring
@@ -402,7 +402,7 @@ theorem spherePoint_eq_smul (R φ lam : ℝ) :
   refine vec3_congr ?_ ?_ ?_ <;> ring
 
 theorem inner_direction (φ₁ lam₁ φ₂ lam₂ : ℝ) :
-    inner (direction φ₁ lam₁) (direction φ₂ lam₂) =
+    inner ℝ (direction φ₁ lam₁) (direction φ₂ lam₂) =
       sin φ₁ * sin φ₂ + cos φ₁ * cos φ₂ * cos (lam₁ - lam₂) := by
   rw [direction, direction, inner_vec3, cos_sub]
   ring

@@ -59,7 +59,7 @@ noncomputable def areaScale : ℝ := |det2 D.dLat D.dLon| / (D.meridianLength * 
 steps north and `β` steps east. -/
 theorem norm_image_sq (α β : ℝ) :
     ‖α • D.dLat + β • D.dLon‖ ^ 2 =
-      α ^ 2 * ‖D.dLat‖ ^ 2 + 2 * α * β * inner D.dLat D.dLon + β ^ 2 * ‖D.dLon‖ ^ 2 := by
+      α ^ 2 * ‖D.dLat‖ ^ 2 + 2 * α * β * inner ℝ D.dLat D.dLon + β ^ 2 * ‖D.dLon‖ ^ 2 := by
   rw [← real_inner_self_eq_norm_sq, inner_add_left, inner_add_right, inner_add_right,
     real_inner_smul_left, real_inner_smul_left, real_inner_smul_left, real_inner_smul_left,
     real_inner_smul_right, real_inner_smul_right, real_inner_smul_right, real_inner_smul_right,
@@ -70,7 +70,7 @@ theorem norm_image_sq (α β : ℝ) :
 the ground step `(α M, β P)` becomes a map step of squared length
 `(h α M)² + (k β P)²`, so the unit circle becomes an ellipse with semi-axes
 `h` and `k`. -/
-theorem tissot (horth : (inner D.dLat D.dLon : ℝ) = 0) (α β : ℝ) :
+theorem tissot (horth : (inner ℝ D.dLat D.dLon : ℝ) = 0) (α β : ℝ) :
     ‖α • D.dLat + β • D.dLon‖ ^ 2 =
       (D.h * (α * D.meridianLength)) ^ 2 + (D.k * (β * D.parallelLength)) ^ 2 := by
   have hM := D.meridianLength_pos.ne'
@@ -92,7 +92,7 @@ theorem abs_det2_le (u v : E2) : |det2 u v| ≤ ‖u‖ * ‖v‖ := by
   constructor <;> unfold det2 <;> linarith [abs_le.mp hs]
 
 /-- For perpendicular images, the parallelogram is a rectangle. -/
-theorem abs_det2_of_orthogonal {u v : E2} (horth : (inner u v : ℝ) = 0) :
+theorem abs_det2_of_orthogonal {u v : E2} (horth : (inner ℝ u v : ℝ) = 0) :
     |det2 u v| = ‖u‖ * ‖v‖ := by
   have hu := EuclideanSpace.norm_eq u
   have hv := EuclideanSpace.norm_eq v
@@ -108,13 +108,13 @@ theorem abs_det2_of_orthogonal {u v : E2} (horth : (inner u v : ℝ) = 0) :
   nlinarith [hi]
 
 /-- For perpendicular images the area scale is `h k`. -/
-theorem areaScale_of_orthogonal (horth : (inner D.dLat D.dLon : ℝ) = 0) :
+theorem areaScale_of_orthogonal (horth : (inner ℝ D.dLat D.dLon : ℝ) = 0) :
     D.areaScale = D.h * D.k := by
   rw [areaScale, abs_det2_of_orthogonal horth, h, k]
   field_simp
 
 /-- A conformal projection stretches every direction by the same factor. -/
-def IsConformal : Prop := (inner D.dLat D.dLon : ℝ) = 0 ∧ D.h = D.k
+def IsConformal : Prop := (inner ℝ D.dLat D.dLon : ℝ) = 0 ∧ D.h = D.k
 
 /-- An equal-area projection keeps areas. -/
 def IsEqualArea : Prop := D.areaScale = 1
@@ -140,7 +140,7 @@ theorem isConformal_iff :
       simpa [zero_pow two_ne_zero] using h10
     have hdLon : ‖D.dLon‖ ^ 2 = D.h ^ 2 * D.parallelLength ^ 2 := by
       simpa [zero_pow two_ne_zero] using h01
-    have horth : (inner D.dLat D.dLon : ℝ) = 0 := by nlinarith
+    have horth : (inner ℝ D.dLat D.dLon : ℝ) = 0 := by nlinarith
     refine ⟨horth, ?_⟩
     have hk2 : D.k ^ 2 = D.h ^ 2 := by
       rw [k, div_pow, hdLon]

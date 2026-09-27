@@ -106,7 +106,7 @@ Mercator formulas with radius `a`) enlarges areas at every latitude between
 the poles. -/
 theorem webMercator_areaScale_gt_one (E : ReferenceEllipsoid) (hf : 0 < E.f) (he : E.e2 ≤ 1 / 3)
     {φ : ℝ} (hc : 0 < cos φ) : 1 < (ellipsoidalMercatorDistortion E E.a hc).areaScale := by
-  have horth : (inner (ellipsoidalMercatorDistortion E E.a hc).dLat
+  have horth : (inner ℝ (ellipsoidalMercatorDistortion E E.a hc).dLat
       (ellipsoidalMercatorDistortion E E.a hc).dLon : ℝ) = 0 := by
     simp [ellipsoidalMercatorDistortion, inner_vec2]
   rw [LocalDistortion.areaScale_of_orthogonal _ horth, ellipsoidalMercator_h E E.a_pos hc,

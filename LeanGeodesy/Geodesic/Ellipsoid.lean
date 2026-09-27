@@ -123,11 +123,11 @@ noncomputable def rLon (t : ℝ) : E3 := E.parallelTangent (γ.lat t) (γ.lon t)
 has no component along the surface, so it is normal to the surface. A
 reparametrisation at non-constant speed of such a curve is not `IsGeodesic`. -/
 def IsGeodesic : Prop :=
-  ∀ t, (inner (γ.acc t) (γ.rLat t) : ℝ) = 0 ∧ (inner (γ.acc t) (γ.rLon t) : ℝ) = 0
+  ∀ t, (inner ℝ (γ.acc t) (γ.rLat t) : ℝ) = 0 ∧ (inner ℝ (γ.acc t) (γ.rLon t) : ℝ) = 0
 
 /-- `⟨r', ∂r/∂λ⟩ = G λ'`, from the first fundamental form. -/
 theorem inner_vel_rLon (t : ℝ) :
-    (inner (γ.vel t) (γ.rLon t) : ℝ) = (E.primeVerticalRadius (γ.lat t) * cos (γ.lat t)) ^ 2 * γ.lon' t := by
+    (inner ℝ (γ.vel t) (γ.rLon t) : ℝ) = (E.primeVerticalRadius (γ.lat t) * cos (γ.lat t)) ^ 2 * γ.lon' t := by
   have h : γ.rLon t = E.dr (γ.lat t) (γ.lon t) (0, 1) := by simp [rLon, dr]
   rw [vel, h, inner_dr, metric]
   ring
@@ -156,7 +156,7 @@ theorem hasDerivAt_rLon (t : ℝ) : HasDerivAt γ.rLon (γ.rLon' t) t := by
 
 /-- The rotational symmetry: the velocity is perpendicular to the rate of change
 of `∂r/∂λ`. -/
-theorem inner_velocity_deriv_parallelTangent (t : ℝ) : (inner (γ.vel t) (γ.rLon' t) : ℝ) = 0 := by
+theorem inner_velocity_deriv_parallelTangent (t : ℝ) : (inner ℝ (γ.vel t) (γ.rLon' t) : ℝ) = 0 := by
   simp only [vel, dr, rLon', meridianTangent, parallelTangent, vec3_smul, vec3_add, inner_vec3]
   ring
 
@@ -164,15 +164,15 @@ theorem inner_velocity_deriv_parallelTangent (t : ℝ) : (inner (γ.vel t) (γ.r
 derivative of `(N cos φ)² λ'`. -/
 theorem hasDerivAt_G_mul_lon' (t : ℝ) :
     HasDerivAt (fun s => (E.primeVerticalRadius (γ.lat s) * cos (γ.lat s)) ^ 2 * γ.lon' s)
-      (inner (γ.acc t) (γ.rLon t)) t := by
+      (inner ℝ (γ.acc t) (γ.rLon t)) t := by
   have h := HasDerivAt.inner ℝ (γ.hasDerivAt_vel t) (γ.hasDerivAt_rLon t)
   have hfun : (fun s => (E.primeVerticalRadius (γ.lat s) * cos (γ.lat s)) ^ 2 * γ.lon' s) =
-      fun s => (inner (γ.vel s) (γ.rLon s) : ℝ) := by
+      fun s => (inner ℝ (γ.vel s) (γ.rLon s) : ℝ) := by
     funext s; rw [inner_vel_rLon]
   rw [hfun]
   convert h using 1
-  rw [show (inner (E.dr (γ.lat t) (γ.lon t) (γ.lat' t, γ.lon' t)) (γ.rLon' t) : ℝ) =
-    inner (γ.vel t) (γ.rLon' t) from rfl, inner_velocity_deriv_parallelTangent, zero_add]
+  rw [show (inner ℝ (E.dr (γ.lat t) (γ.lon t) (γ.lat' t, γ.lon' t)) (γ.rLon' t) : ℝ) =
+    inner ℝ (γ.vel t) (γ.rLon' t) from rfl, inner_velocity_deriv_parallelTangent, zero_add]
 
 /-- Clairaut's relation: along a geodesic `(N cos φ)² λ'` is constant. -/
 theorem clairaut_G_mul_lon' (hg : γ.IsGeodesic) (s t : ℝ) :
@@ -186,18 +186,18 @@ theorem clairaut_G_mul_lon' (hg : γ.IsGeodesic) (s t : ℝ) :
 
 /-- `⟨r'', r'⟩ = φ' ⟨r'', ∂r/∂φ⟩ + λ' ⟨r'', ∂r/∂λ⟩`. -/
 theorem inner_acc_vel (t : ℝ) :
-    (inner (γ.acc t) (γ.vel t) : ℝ) =
-      γ.lat' t * inner (γ.acc t) (γ.rLat t) + γ.lon' t * inner (γ.acc t) (γ.rLon t) := by
+    (inner ℝ (γ.acc t) (γ.vel t) : ℝ) =
+      γ.lat' t * inner ℝ (γ.acc t) (γ.rLat t) + γ.lon' t * inner ℝ (γ.acc t) (γ.rLon t) := by
   rw [vel, dr, inner_add_right, real_inner_smul_right, real_inner_smul_right]
   rfl
 
 /-- Geodesics have constant speed. -/
 theorem geodesic_speed_const (hg : γ.IsGeodesic) (s t : ℝ) : ‖γ.vel s‖ = ‖γ.vel t‖ := by
-  have hd : ∀ x, HasDerivAt (fun s => (inner (γ.vel s) (γ.vel s) : ℝ)) 0 x := fun x => by
+  have hd : ∀ x, HasDerivAt (fun s => (inner ℝ (γ.vel s) (γ.vel s) : ℝ)) 0 x := fun x => by
     have h := HasDerivAt.inner ℝ (γ.hasDerivAt_vel x) (γ.hasDerivAt_vel x)
-    have e : (inner (γ.acc x) (γ.vel x) : ℝ) = 0 := by rw [inner_acc_vel, (hg x).1, (hg x).2]; ring
+    have e : (inner ℝ (γ.acc x) (γ.vel x) : ℝ) = 0 := by rw [inner_acc_vel, (hg x).1, (hg x).2]; ring
     convert h using 1
-    have e' : (inner (γ.acc x) (E.dr (γ.lat x) (γ.lon x) (γ.lat' x, γ.lon' x)) : ℝ) = 0 := e
+    have e' : (inner ℝ (γ.acc x) (E.dr (γ.lat x) (γ.lon x) (γ.lat' x, γ.lon' x)) : ℝ) = 0 := e
     rw [real_inner_comm, e']
     ring
   have hc := is_const_of_deriv_eq_zero (fun x => (hd x).differentiableAt) (fun x => (hd x).deriv) s t
@@ -205,7 +205,7 @@ theorem geodesic_speed_const (hg : γ.IsGeodesic) (s t : ℝ) : ‖γ.vel s‖ =
   rw [← sqrt_sq (norm_nonneg (γ.vel s)), hc, sqrt_sq (norm_nonneg _)]
 
 /-- The sine of the azimuth: the eastward component of the velocity over the speed. -/
-noncomputable def sinAzimuth (t : ℝ) : ℝ := inner (γ.vel t) (γ.rLon t) / (‖γ.rLon t‖ * ‖γ.vel t‖)
+noncomputable def sinAzimuth (t : ℝ) : ℝ := inner ℝ (γ.vel t) (γ.rLon t) / (‖γ.rLon t‖ * ‖γ.vel t‖)
 
 /-- `sin A = p λ' / ‖r'‖` with `p = N cos φ`. -/
 theorem sinAzimuth_eq {t : ℝ} (hc : 0 < cos (γ.lat t)) :
@@ -239,27 +239,27 @@ theorem isGeodesicAt_of_conserved
     (hc : ∀ s t, (E.primeVerticalRadius (γ.lat s) * cos (γ.lat s)) ^ 2 * γ.lon' s =
       (E.primeVerticalRadius (γ.lat t) * cos (γ.lat t)) ^ 2 * γ.lon' t)
     (hv : ∀ s t, ‖γ.vel s‖ = ‖γ.vel t‖) {t : ℝ} (hlat : γ.lat' t ≠ 0) :
-    (inner (γ.acc t) (γ.rLat t) : ℝ) = 0 ∧ (inner (γ.acc t) (γ.rLon t) : ℝ) = 0 := by
-  have hlon : (inner (γ.acc t) (γ.rLon t) : ℝ) = 0 := by
+    (inner ℝ (γ.acc t) (γ.rLat t) : ℝ) = 0 ∧ (inner ℝ (γ.acc t) (γ.rLon t) : ℝ) = 0 := by
+  have hlon : (inner ℝ (γ.acc t) (γ.rLon t) : ℝ) = 0 := by
     have h := γ.hasDerivAt_G_mul_lon' t
     have hfun : (fun s => (E.primeVerticalRadius (γ.lat s) * cos (γ.lat s)) ^ 2 * γ.lon' s) =
         fun _ => (E.primeVerticalRadius (γ.lat t) * cos (γ.lat t)) ^ 2 * γ.lon' t := by
       funext s; exact hc s t
     rw [hfun] at h
     exact h.unique (hasDerivAt_const t _)
-  have hvel : (inner (γ.acc t) (γ.vel t) : ℝ) = 0 := by
+  have hvel : (inner ℝ (γ.acc t) (γ.vel t) : ℝ) = 0 := by
     have h := HasDerivAt.inner ℝ (γ.hasDerivAt_vel t) (γ.hasDerivAt_vel t)
-    have hfun : (fun s => (inner (E.dr (γ.lat s) (γ.lon s) (γ.lat' s, γ.lon' s))
+    have hfun : (fun s => (inner ℝ (E.dr (γ.lat s) (γ.lon s) (γ.lat' s, γ.lon' s))
         (E.dr (γ.lat s) (γ.lon s) (γ.lat' s, γ.lon' s)) : ℝ)) = fun _ => ‖γ.vel t‖ ^ 2 := by
       funext s
       rw [real_inner_self_eq_norm_sq]
       exact congrArg (· ^ 2) (hv s t)
     rw [hfun] at h
     have h0 := h.unique (hasDerivAt_const t _)
-    have e : (inner (E.dr (γ.lat t) (γ.lon t) (γ.lat' t, γ.lon' t)) (γ.acc t) : ℝ) =
-        inner (γ.acc t) (γ.vel t) := real_inner_comm _ _
-    have e2 : (inner (γ.acc t) (E.dr (γ.lat t) (γ.lon t) (γ.lat' t, γ.lon' t)) : ℝ) =
-        inner (γ.acc t) (γ.vel t) := rfl
+    have e : (inner ℝ (E.dr (γ.lat t) (γ.lon t) (γ.lat' t, γ.lon' t)) (γ.acc t) : ℝ) =
+        inner ℝ (γ.acc t) (γ.vel t) := real_inner_comm _ _
+    have e2 : (inner ℝ (γ.acc t) (E.dr (γ.lat t) (γ.lon t) (γ.lat' t, γ.lon' t)) : ℝ) =
+        inner ℝ (γ.acc t) (γ.vel t) := rfl
     rw [e, e2] at h0
     linarith
   refine ⟨?_, hlon⟩
@@ -302,14 +302,14 @@ theorem hasDerivAt_rLat (t : ℝ) : HasDerivAt γ.rLat (γ.rLat' t) t := by
 
 /-- `⟨r', ∂r/∂φ⟩ = E φ'`, from the first fundamental form. -/
 theorem inner_vel_rLat (t : ℝ) :
-    (inner (γ.vel t) (γ.rLat t) : ℝ) = E.meridianRadius (γ.lat t) ^ 2 * γ.lat' t := by
+    (inner ℝ (γ.vel t) (γ.rLat t) : ℝ) = E.meridianRadius (γ.lat t) ^ 2 * γ.lat' t := by
   have h : γ.rLat t = E.dr (γ.lat t) (γ.lon t) (1, 0) := by simp [rLat, dr]
   rw [vel, h, inner_dr, metric]
   ring
 
 /-- `⟨r', d/dt ∂r/∂φ⟩ = ½ E' φ'² + ½ G' λ'²`. -/
 theorem inner_vel_rLat' (t : ℝ) :
-    (inner (γ.vel t) (γ.rLat' t) : ℝ) =
+    (inner ℝ (γ.vel t) (γ.rLat' t) : ℝ) =
       E.firstFormE' (γ.lat t) / 2 * γ.lat' t ^ 2 + E.firstFormG' (γ.lat t) / 2 * γ.lon' t ^ 2 := by
   simp only [vel, dr, rLat', meridianTangent, parallelTangent, vec3_smul, vec3_add, inner_vec3,
     firstFormE', firstFormG']
@@ -328,7 +328,7 @@ theorem inner_vel_rLat' (t : ℝ) :
 `⟨r'', ∂r/∂φ⟩ = E φ'' + ½ E' φ'² - ½ G' λ'²`, for a curve whose `φ'` has
 derivative `φ''`. -/
 theorem inner_acc_rLat {t lat'' : ℝ} (h2 : HasDerivAt γ.lat' lat'' t) :
-    (inner (γ.acc t) (γ.rLat t) : ℝ) =
+    (inner ℝ (γ.acc t) (γ.rLat t) : ℝ) =
       E.meridianRadius (γ.lat t) ^ 2 * lat'' + E.firstFormE' (γ.lat t) / 2 * γ.lat' t ^ 2 -
         E.firstFormG' (γ.lat t) / 2 * γ.lon' t ^ 2 := by
   have hinner := HasDerivAt.inner ℝ (γ.hasDerivAt_vel t) (γ.hasDerivAt_rLat t)
@@ -339,13 +339,13 @@ theorem inner_acc_rLat {t lat'' : ℝ} (h2 : HasDerivAt γ.lat' lat'' t) :
     push_cast
     ring
   have hprod := hE.mul h2
-  have hfun : (fun s => (inner (E.dr (γ.lat s) (γ.lon s) (γ.lat' s, γ.lon' s)) (γ.rLat s) : ℝ)) =
+  have hfun : (fun s => (inner ℝ (E.dr (γ.lat s) (γ.lon s) (γ.lat' s, γ.lon' s)) (γ.rLat s) : ℝ)) =
       fun s => E.meridianRadius (γ.lat s) ^ 2 * γ.lat' s := by
     funext s; exact γ.inner_vel_rLat s
   rw [hfun] at hinner
   have heq := hinner.unique hprod
-  have e1 : (inner (E.dr (γ.lat t) (γ.lon t) (γ.lat' t, γ.lon' t)) (γ.rLat' t) : ℝ) =
-      inner (γ.vel t) (γ.rLat' t) := rfl
+  have e1 : (inner ℝ (E.dr (γ.lat t) (γ.lon t) (γ.lat' t, γ.lon' t)) (γ.rLat' t) : ℝ) =
+      inner ℝ (γ.vel t) (γ.rLat' t) := rfl
   rw [e1, inner_vel_rLat'] at heq
   linarith
 
@@ -392,7 +392,7 @@ theorem geodesic_latitude_equation_christoffel (hg : γ.IsGeodesic) {t lat'' : �
 
 /-- `⟨r'', ∂r/∂λ⟩ = G λ'' + G' φ' λ'`, for a curve whose `λ'` has derivative `λ''`. -/
 theorem inner_acc_rLon {t lon'' : ℝ} (h3 : HasDerivAt γ.lon' lon'' t) :
-    (inner (γ.acc t) (γ.rLon t) : ℝ) =
+    (inner ℝ (γ.acc t) (γ.rLon t) : ℝ) =
       (E.primeVerticalRadius (γ.lat t) * cos (γ.lat t)) ^ 2 * lon'' +
         E.firstFormG' (γ.lat t) * γ.lat' t * γ.lon' t := by
   have hG : HasDerivAt (fun s => (E.primeVerticalRadius (γ.lat s) * cos (γ.lat s)) ^ 2)
@@ -409,7 +409,7 @@ acceleration along the surface) exactly when both coordinate equations hold:
 `E φ'' + ½ E' φ'² - ½ G' λ'² = 0` and `G λ'' + G' φ' λ' = 0`. -/
 theorem isGeodesicAt_iff_equations {t lat'' lon'' : ℝ} (h2 : HasDerivAt γ.lat' lat'' t)
     (h3 : HasDerivAt γ.lon' lon'' t) :
-    ((inner (γ.acc t) (γ.rLat t) : ℝ) = 0 ∧ (inner (γ.acc t) (γ.rLon t) : ℝ) = 0) ↔
+    ((inner ℝ (γ.acc t) (γ.rLat t) : ℝ) = 0 ∧ (inner ℝ (γ.acc t) (γ.rLon t) : ℝ) = 0) ↔
       (E.meridianRadius (γ.lat t) ^ 2 * lat'' + E.firstFormE' (γ.lat t) / 2 * γ.lat' t ^ 2 -
           E.firstFormG' (γ.lat t) / 2 * γ.lon' t ^ 2 = 0 ∧
         (E.primeVerticalRadius (γ.lat t) * cos (γ.lat t)) ^ 2 * lon'' +
@@ -457,12 +457,12 @@ equator: otherwise its acceleration, pointing at the axis, has a component
 `N cos φ₀ · M sin φ₀` along the meridian. -/
 theorem parallelCurve_isGeodesic_iff {φ₀ : ℝ} (hc : 0 < cos φ₀) :
     (E.parallelCurve φ₀).IsGeodesic ↔ sin φ₀ = 0 := by
-  have hlat : ∀ t, (inner ((E.parallelCurve φ₀).acc t) ((E.parallelCurve φ₀).rLat t) : ℝ) =
+  have hlat : ∀ t, (inner ℝ ((E.parallelCurve φ₀).acc t) ((E.parallelCurve φ₀).rLat t) : ℝ) =
       E.primeVerticalRadius φ₀ * cos φ₀ * (E.meridianRadius φ₀ * sin φ₀) := fun t => by
     simp only [parallelCurve, EllipsoidCurve.rLat, meridianTangent, inner_vec3, id]
     have := sin_sq_add_cos_sq t
     linear_combination (E.primeVerticalRadius φ₀ * cos φ₀ * (E.meridianRadius φ₀ * sin φ₀)) * this
-  have hlon : ∀ t, (inner ((E.parallelCurve φ₀).acc t) ((E.parallelCurve φ₀).rLon t) : ℝ) = 0 :=
+  have hlon : ∀ t, (inner ℝ ((E.parallelCurve φ₀).acc t) ((E.parallelCurve φ₀).rLon t) : ℝ) = 0 :=
     fun t => by
       simp only [parallelCurve, EllipsoidCurve.rLon, parallelTangent, inner_vec3, id]
       ring

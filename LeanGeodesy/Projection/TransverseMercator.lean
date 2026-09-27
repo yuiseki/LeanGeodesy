@@ -179,7 +179,7 @@ variable {R} (hR : 0 < R) (hφ : 0 < cos φ) (hl : 0 < cos lam)
 include hR hφ hl
 
 theorem tm_orthogonal :
-    (inner (tmDistortion R hR hφ hl).dLat (tmDistortion R hR hφ hl).dLon : ℝ) = 0 := by
+    (inner ℝ (tmDistortion R hR hφ hl).dLat (tmDistortion R hR hφ hl).dLon : ℝ) = 0 := by
   simp only [tmDistortion, inner_vec2]
   ring
 

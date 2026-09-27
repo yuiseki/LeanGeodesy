@@ -1,6 +1,6 @@
 import LeanGeodesy.Projection.Rhumb
 import LeanGeodesy.Projection.Azimuthal
-import Mathlib.MeasureTheory.Integral.FundThmCalculus
+import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 
 /-!
 # Great circle versus rhumb line

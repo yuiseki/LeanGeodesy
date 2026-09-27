@@ -112,8 +112,9 @@ theorem norm_vec3_sq (x y z : ℝ) : ‖vec3 x y z‖ ^ 2 = x ^ 2 + y ^ 2 + z ^ 
   simp
 
 theorem inner_vec3 (x y z x' y' z' : ℝ) :
-    inner (vec3 x y z) (vec3 x' y' z') = x * x' + y * y' + z * z' := by
+    inner ℝ (vec3 x y z) (vec3 x' y' z') = x * x' + y * y' + z * z' := by
   simp [vec3, PiLp.inner_apply, Fin.sum_univ_three]
+  ring
 
 /-- A curve in space is differentiated coordinate by coordinate. -/
 theorem hasDerivAt_vec3 {f g h : ℝ → ℝ} {f' g' h' t : ℝ} (hf : HasDerivAt f f' t)

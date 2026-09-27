@@ -107,7 +107,7 @@ theorem tileX_halfExtent (z : ℕ) : tileX z halfExtent = 2 ^ z := by
 /-- Doubling a pixel coordinate and halving the tile index gives the tile index back. -/
 theorem tileIndex_two_mul_div_two (p : ℝ) : tileIndex (2 * p) / 2 = tileIndex p := by
   unfold tileIndex
-  rw [← Nat.floor_div_nat]
+  rw [← Nat.floor_div_natCast]
   congr 1
   push_cast
   ring

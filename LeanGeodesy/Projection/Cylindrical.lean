@@ -115,7 +115,7 @@ variable {R : ℝ} (hR : 0 < R) (g' : ℝ) {φ : ℝ} (hc : 0 < cos φ)
 include hR hc
 
 theorem cylindrical_orthogonal :
-    (inner (cylindricalDistortion hR g' hc).dLat (cylindricalDistortion hR g' hc).dLon : ℝ) = 0 := by
+    (inner ℝ (cylindricalDistortion hR g' hc).dLat (cylindricalDistortion hR g' hc).dLon : ℝ) = 0 := by
   simp [cylindricalDistortion, inner_vec2]
 
 /-- The scale along the meridian is `|g'|`. -/

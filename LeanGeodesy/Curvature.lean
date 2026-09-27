@@ -170,7 +170,7 @@ theorem norm_parallelTangent_sq (φ lam : ℝ) :
 
 /-- Meridians and parallels of the ellipsoid cross at right angles. -/
 theorem inner_meridianTangent_parallelTangent (φ lam : ℝ) :
-    inner (meridianTangent E φ lam) (parallelTangent E φ lam) = (0 : ℝ) := by
+    inner ℝ (meridianTangent E φ lam) (parallelTangent E φ lam) = (0 : ℝ) := by
   rw [meridianTangent, parallelTangent, inner_vec3]
   ring
 
