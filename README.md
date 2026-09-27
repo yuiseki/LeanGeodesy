@@ -145,6 +145,19 @@ lake build
 
 Lean `v4.16.0`, Mathlib `v4.16.0`.
 
+API documentation is generated with [doc-gen4](https://github.com/leanprover/doc-gen4)
+from the nested project in `docbuild/`, which keeps doc-gen4 out of the
+library's own dependencies:
+
+```
+cd docbuild
+lake build LeanGeodesy:docs
+```
+
+The site is written to `docbuild/.lake/build/doc/`; serve it over HTTP (for
+example `python3 -m http.server` in that directory) rather than opening the
+files directly.
+
 ## Axiom audit
 
 `LeanGeodesy/Axioms.lean` pins the main theorems to Lean's three standard
