@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 330" width="540" height="330" role="img">
+<title>地表の小さな円が地図上で半軸 h と k の楕円になる様子</title>
+
+<style>
+  .body { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.5; }
+  .aux { fill: none; stroke: #6b7280; stroke-width: 1.2; stroke-dasharray: 5 4; }
+  .ink { fill: none; stroke: #1f2937; stroke-width: 1.6; }
+  .blue { fill: none; stroke: #1d4ed8; stroke-width: 2.4; }
+  .orange { fill: none; stroke: #c2410c; stroke-width: 2.4; stroke-dasharray: 8 5; }
+  .dot { fill: #1f2937; }
+  .math { font-family: "Times New Roman", "STIX Two Text", "Cambria Math", serif; font-style: italic; font-size: 20px; fill: #1f2937; }
+  .math.blue-t { fill: #1d4ed8; }
+  .math.orange-t { fill: #c2410c; }
+  .up { font-style: normal; }
+  .ja { font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", "Noto Sans CJK JP", sans-serif; font-size: 15px; font-style: normal; fill: #1f2937; }
+  .ja.muted { fill: #6b7280; font-size: 13px; }
+  .ja.blue-t { fill: #1d4ed8; }
+  .ja.orange-t { fill: #c2410c; }
+</style>
+
+<defs>
+<marker id="arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f2937"/></marker>
+<marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1d4ed8"/></marker>
+<marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>
+<marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6b7280"/></marker>
+</defs>
+<circle cx="110" cy="170" r="70" class="body"/>
+<line x1="110.0" y1="170.0" x2="110.0" y2="100.0" class="blue" marker-end="url(#arrow-blue)"/>
+<line x1="110.0" y1="170.0" x2="180.0" y2="170.0" class="orange" marker-end="url(#arrow-orange)"/>
+<text x="100.0" y="141.0" class="math up" text-anchor="end">1</text>
+<text x="145.0" y="192.0" class="math up" text-anchor="middle">1</text>
+<text x="110.0" y="284.0" class="ja" text-anchor="middle">地表の小さな円</text>
+<line x1="200.0" y1="170.0" x2="280.0" y2="170.0" class="ink" marker-end="url(#arrow-ink)"/>
+<text x="240.0" y="158.0" class="ja" text-anchor="middle">地図投影</text>
+<ellipse cx="380" cy="170" rx="62" ry="105" class="body"/>
+<line x1="380.0" y1="170.0" x2="380.0" y2="65.0" class="blue" marker-end="url(#arrow-blue)"/>
+<line x1="380.0" y1="170.0" x2="442.0" y2="170.0" class="orange" marker-end="url(#arrow-orange)"/>
+<text x="370.0" y="123.5" class="math blue-t" text-anchor="end">h</text>
+<text x="411.0" y="192.0" class="math orange-t" text-anchor="middle">k</text>
+<text x="380.0" y="305.0" class="ja" text-anchor="middle">地図上の楕円</text>
+<text x="458.0" y="83.0" class="ja blue-t" text-anchor="start">子午線方向</text>
+<text x="458.0" y="162.0" class="ja orange-t" text-anchor="start">緯線方向</text>
+</svg>

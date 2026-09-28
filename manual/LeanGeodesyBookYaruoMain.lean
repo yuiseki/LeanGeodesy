@@ -35,4 +35,20 @@ def dialogueStyle : Verso.Output.Html := {{
   </style>
 }}
 
-def main := manualMain (%doc LeanGeodesyBookYaruo) (config := { extraHead := #[japaneseFonts, dialogueStyle] })
+/-- Figures (`LeanGeodesyBookYaruo.Figure`): centred, never wider than the text.
+Wide display formulas scroll within themselves on narrow screens. -/
+def figureStyle : Verso.Output.Html := {{
+  <style>
+    ".yaruo-figure { margin: 1.4em auto; text-align: center; }
+     .yaruo-figure img { display: block; width: 100%; height: auto; margin: 0 auto; }
+     .yaruo-figure figcaption { margin-top: 0.4em; font-size: 0.9em; color: #4b5563; }
+     .yaruo-figure figcaption p { margin: 0; }
+     code.math.display { display: block; max-width: 100%; overflow-x: auto; overflow-y: hidden; }"
+  </style>
+}}
+
+def main := manualMain (%doc LeanGeodesyBookYaruo)
+  (config := {
+    extraHead := #[japaneseFonts, dialogueStyle, figureStyle]
+    -- The figures are copied next to the pages, under figures/.
+    extraFilesHtml := [("LeanGeodesyBookYaruo/figures", "figures")] })

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 490" width="440" height="490" role="img">
+<title>同じ点 P で南北方向と東西方向に最もよく合う円の半径 M と N</title>
+
+<style>
+  .body { fill: #f3f4f6; stroke: #9ca3af; stroke-width: 1.5; }
+  .aux { fill: none; stroke: #6b7280; stroke-width: 1.2; stroke-dasharray: 5 4; }
+  .ink { fill: none; stroke: #1f2937; stroke-width: 1.6; }
+  .blue { fill: none; stroke: #1d4ed8; stroke-width: 2.4; }
+  .orange { fill: none; stroke: #c2410c; stroke-width: 2.4; stroke-dasharray: 8 5; }
+  .dot { fill: #1f2937; }
+  .math { font-family: "Times New Roman", "STIX Two Text", "Cambria Math", serif; font-style: italic; font-size: 20px; fill: #1f2937; }
+  .math.blue-t { fill: #1d4ed8; }
+  .math.orange-t { fill: #c2410c; }
+  .up { font-style: normal; }
+  .ja { font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", "Noto Sans CJK JP", sans-serif; font-size: 15px; font-style: normal; fill: #1f2937; }
+  .ja.muted { fill: #6b7280; font-size: 13px; }
+  .ja.blue-t { fill: #1d4ed8; }
+  .ja.orange-t { fill: #c2410c; }
+</style>
+
+<defs>
+<marker id="arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1f2937"/></marker>
+<marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1d4ed8"/></marker>
+<marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>
+<marker id="arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6b7280"/></marker>
+</defs>
+<line x1="205.0" y1="80.0" x2="205.0" y2="390.0" class="aux"/>
+<line x1="25.0" y1="240.0" x2="395.0" y2="240.0" class="aux"/>
+<ellipse cx="205" cy="240" rx="170" ry="120" class="body"/>
+<path d="M381.2,247.3 A130.6,130.6 0 0 0 267.4,133.5" class="blue"/>
+<line x1="205.0" y1="309.7" x2="343.9" y2="170.8" class="aux"/>
+<circle cx="251.5" cy="263.2" r="3.5" fill="#1d4ed8"/>
+<line x1="262.8" y1="274.5" x2="355.2" y2="182.1" class="blue" marker-end="url(#arrow-blue)" marker-start="url(#arrow-blue)"/>
+<text x="318.9" y="244.2" class="math blue-t" text-anchor="middle">M</text>
+<path d="M388.4,239.3 A196.4,196.4 0 0 0 275.4,126.3" class="orange"/>
+<circle cx="205.0" cy="309.7" r="3.5" fill="#c2410c"/>
+<line x1="193.7" y1="298.4" x2="332.6" y2="159.5" class="orange" marker-end="url(#arrow-orange)" marker-start="url(#arrow-orange)"/>
+<text x="253.2" y="225.0" class="math orange-t" text-anchor="middle">N</text>
+<circle cx="343.9" cy="170.8" r="4" class="dot"/>
+<text x="353.9" y="162.8" class="math" text-anchor="start">P</text>
+<text x="40.0" y="420.0" class="ja" text-anchor="start"><tspan class="ja blue-t">実線：南北方向に最もよく合う円、半径 </tspan><tspan class="math blue-t">M</tspan></text>
+<text x="40.0" y="448.0" class="ja" text-anchor="start"><tspan class="ja orange-t">破線：東西方向に最もよく合う円、半径 </tspan><tspan class="math orange-t">N</tspan></text>
+<text x="40.0" y="472.0" class="ja muted" text-anchor="start">（東西の円の中心は地軸上。扁平率は誇張）</text>
+</svg>

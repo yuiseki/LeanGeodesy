@@ -2,6 +2,7 @@ import VersoManual
 import LeanGeodesy
 import LeanGeodesyManualJa.LeanDecl
 import LeanGeodesyBookYaruo.Dialogue
+import LeanGeodesyBookYaruo.Figure
 
 open Verso.Genre Manual
 open LeanGeodesyManualJa LeanGeodesyBookYaruo
@@ -154,6 +155,10 @@ $`h` と $`k` があるのは分かったお。でも数字が二つあるだけ
 
 :::yaruo
 $`h` と $`k` が違うなら、縦と横で伸び方が違うから……楕円だお。
+:::
+
+:::figure (src := "figures/tissot.svg") (alt := "左に地表の小さな円（北向き・東向きの半径 1）、右に地図投影後の楕円（子午線方向の半軸 h、緯線方向の半軸 k）。") (width := "520px")
+局所歪みとは、地表の小さな円が地図上でどんな楕円になるかを見ること：子午線方向に $`h` 倍、緯線方向に $`k` 倍
 :::
 
 :::yaranaio
