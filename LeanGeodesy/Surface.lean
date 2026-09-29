@@ -19,6 +19,11 @@ In coordinates:
 ```
 
 With `a = b` this is the sphere of radius `a` (`ellipsoid_self`).
+
+Space is Mathlib's `EuclideanSpace ℝ (Fin 3)` (`E3`), and the plane that map
+projections draw on is Mathlib's `EuclideanSpace ℝ (Fin 2)` (`E2`). Both are
+reducible abbreviations, so they are the same types Mathlib and any other
+library built on it use; LeanGeospatial's `Point2D` is this same plane.
 -/
 
 namespace Geodesy
@@ -27,6 +32,9 @@ open Real
 
 /-- Three-dimensional Euclidean space. -/
 abbrev E3 := EuclideanSpace ℝ (Fin 3)
+
+/-- The Euclidean plane: Mathlib's `EuclideanSpace ℝ (Fin 2)`. -/
+abbrev E2 := EuclideanSpace ℝ (Fin 2)
 
 /-- A vector from its three coordinates. -/
 noncomputable def vec3 (x y z : ℝ) : E3 := (WithLp.equiv 2 (Fin 3 → ℝ)).symm ![x, y, z]

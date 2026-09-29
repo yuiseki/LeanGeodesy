@@ -136,9 +136,6 @@ theorem mercatorY_eq_log_tan {φ : ℝ} (h : φ ∈ Set.Ioo (-(π / 2)) (π / 2)
 
 /-! ## Vectors in the plane -/
 
-/-- The Euclidean plane. -/
-abbrev E2 := EuclideanSpace ℝ (Fin 2)
-
 /-- The plane vector with coordinates `x, y`. -/
 noncomputable def vec2 (x y : ℝ) : E2 := (WithLp.equiv 2 (Fin 2 → ℝ)).symm ![x, y]
 

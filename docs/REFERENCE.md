@@ -50,7 +50,9 @@ into one degree and 60 seconds into one minute.
 
 ### Sphere and ellipsoid
 
-Space is `EuclideanSpace ℝ (Fin 3)`, with `vec3 x y z` for a point. A sphere
+Space is `EuclideanSpace ℝ (Fin 3)` (`E3`), with `vec3 x y z` for a point, and the
+plane that projections draw on is `EuclideanSpace ℝ (Fin 2)` (`E2`), the same type as
+LeanGeospatial's `Point2D`. A sphere
 of radius `R` is the set of points at distance `R` from the centre. An
 ellipsoid of revolution with equatorial radius `a` and polar radius `b` is
 
