@@ -76,7 +76,8 @@ def yaranaio : DirectiveExpanderOf Unit
     let args ← stxs.mapM elabBlock
     ``(Verso.Doc.Block.other (Block.speech "yaranaio") #[ $[ $args ],* ])
 
-/-- The scholar, who appears only when geodesy becomes beautiful. -/
+/-- The scholar, who appears only when geodesy becomes beautiful, or when it
+turns out otherwise than expected. -/
 @[directive]
 def kimatta : DirectiveExpanderOf Unit
   | (), stxs => do

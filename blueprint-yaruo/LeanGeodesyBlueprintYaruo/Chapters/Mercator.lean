@@ -195,6 +195,12 @@ $`h > k`。地図の上で、すべての地点が南北方向にわずかに引
 世界で一番使われてる地図が、名前どおりの性質を持ってなかったお……。
 :::
 
+:::kimatta
+つまり、*Web Mercator は等角のはずなのに、つぶれた地球の上では南北に 1.00674 倍伸びる*……
+
+実に興味深い……！！
+:::
+
 :::theorem "web_mercator" (lean := "Geodesy.Projection.ellipsoidalMercator_not_isConformal, Geodesy.Projection.wgs84_equator_scale_ratio")
 球の Mercator の式を楕円体の緯度経度に適用する *Web Mercator* は、楕円体の上で測ると子午線方向と緯線方向の縮尺の比が $`N/M` になり、扁平な楕円体では等角でない。WGS 84 ではこの比は赤道で約 1.00674 である。これは {uses "mercator"}[] の式に {uses "radii"}[] の比が入り込んだ結果である。
 :::
