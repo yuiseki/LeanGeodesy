@@ -19,7 +19,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      # One cache for the library and every nested project, saved at the end
+      # of the job so that it holds the Verso, VersoBlueprint and lean-atlas
+      # builds too. lean-action's own cache is saved right after the library
+      # builds, before any of those, and is keyed on the commit, so it would
+      # store a new copy of the library on every push without them.
+      # The key changes only when a toolchain or a manifest does; the
+      # projects' own modules are rebuilt from the cached state as needed.
+      - uses: actions/cache@v5
+        with:
+          path: |
+            .lake
+            manual/.lake
+            blueprint/.lake
+            blueprint-yaruo/.lake
+            atlas/.lake
+          key: pages-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', '*/lean-toolchain', '*/lake-manifest.json') }}
       - uses: leanprover/lean-action@v1
+        with:
+          use-github-cache: false
       - name: Build the Verso book
         working-directory: manual
         run: |
