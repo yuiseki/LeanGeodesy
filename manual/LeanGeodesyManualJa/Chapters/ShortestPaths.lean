@@ -64,8 +64,6 @@ tag := "great-circle-shortest"
 
 {leanDecl Geodesy.Geodesic.mem_greatArc_of_angularLength_eq}
 
-[依存関係を Lean Atlas で見る](https://yuiseki.github.io/LeanGeodesy/atlas/)（主定理「Great circles are shortest」）
-
 東京からサンフランシスコへの航路が北へ膨らんで見えるのは、大円を Mercator の地図に描いたからです。膨らんでいるのは地図のほうで、地表の上ではそれが最短の道です。
 
 # 楕円体の上の曲線の長さ
@@ -93,8 +91,6 @@ tag := "meridian-arc"
 {leanDecl Geodesy.Projection.norm_deriv_meridian}
 
 {leanDecl Geodesy.Projection.meridianArc_eq_curveLength}
-
-この定理は、lean-atlas の現在の版では依存グラフに表示されません。lean-atlas が名前に `_eq_` を含む定数をまとめて除外しているためです。
 
 子午線曲率半径 $`M` は赤道で最も小さく（$`b^2/a`）、極で最も大きく（$`a^2/b`）なり、その間で単調に増えます。そのため緯度 1° に当たる子午線の長さは、赤道付近より極付近のほうが長くなります。18 世紀に、ラップランドとペルーで緯度 1° の長さを測り比べて、地球が極方向につぶれていることが確かめられました。LeanGeodesy は、WGS 84 について最初の 1° が最後の 1° より短いことを証明しています。
 

@@ -113,6 +113,4 @@ tag := "length-angle-area"
 
 冒頭の問いにも答えられます。緯度を $`d\varphi` だけ動かすと $`M\, d\varphi`、経度を $`d\lambda` だけ動かすと $`N \cos \varphi\, d\lambda` だけ進みます。0.001° の長さが場所によって違うのは、$`M` と $`N \cos \varphi` が緯度によって変わるからです。
 
-[依存関係を Lean Atlas で見る](https://yuiseki.github.io/LeanGeodesy/atlas/)（主定理「First fundamental form: E = M²」を選ぶと、この章の概念が依存関係として並びます）
-
 これで地表側の長さを測れるようになりました。しかし地図投影の歪みを測るには、今度は地図側の小さな一歩と比較しなければなりません。

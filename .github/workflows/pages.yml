@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       # One cache for the library and every nested project, saved at the end
-      # of the job so that it holds the Verso, VersoBlueprint and lean-atlas
+      # of the job so that it holds the Verso and VersoBlueprint
       # builds too. lean-action's own cache is saved right after the library
       # builds, before any of those, and is keyed on the commit, so it would
       # store a new copy of the library on every push without them.
@@ -33,7 +33,6 @@ jobs:
             manual/.lake
             blueprint/.lake
             blueprint-yaruo/.lake
-            atlas/.lake
           key: pages-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', '*/lean-toolchain', '*/lake-manifest.json') }}
       - uses: leanprover/lean-action@v1
         with:
@@ -51,21 +50,9 @@ jobs:
       - name: Build the dialogue Blueprint
         working-directory: blueprint-yaruo
         run: lake exe vbp build
-      - name: Generate the Lean Atlas graph
-        working-directory: atlas
-        run: |
-          lake build LeanGeodesyAtlas atlas-graph
-          lake exe atlas-graph graph.json
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      - name: Build the Lean Atlas viewer
-        run: atlas/build-pages.sh site/atlas "/${{ github.event.repository.name }}/atlas"
       - name: Assemble the site
         run: |
+          mkdir -p site
           cp -r manual/_out/html-multi site/manual
           cp -r manual/_out-ja/html-multi site/manual-ja
           cp -r manual/_out-yaruo/html-multi site/book-yaruo

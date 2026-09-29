@@ -59,8 +59,6 @@ Mercator では、赤道より北にあるすべてのセルが、地図上で�
 
 {leanDecl Geodesy.Projection.mercator_enlarges_cellArea}
 
-[依存関係を Lean Atlas で見る](https://yuiseki.github.io/LeanGeodesy/atlas/)（主定理「Lambert keeps cell areas」）
-
 # Web Mercator は赤道でも面積を守らない
 %%%
 tag := "web-mercator-area"
@@ -76,8 +74,6 @@ tag := "web-mercator-area"
 
 実装上の教訓ははっきりしています。EPSG:3857 の平面座標でポリゴンの面積を計算すると、高緯度で大きく外れるだけでなく、赤道付近でもわずかに過大になります。面積が必要なら、楕円体上で面積要素を積分するか、正積図法に投影してから測る必要があります。
 
-[依存関係を Lean Atlas で見る](https://yuiseki.github.io/LeanGeodesy/atlas/)（主定理「Web Mercator is not equal-area」）
-
 # 角度と面積は両立しない
 %%%
 tag := "no-free-lunch"
@@ -90,7 +86,5 @@ Lambert の図法は面積を守りますが、赤道を離れると角度を守
 これは Lambert の図法の欠点というより、円筒図法全体の宿命です。等角には $`\lvert g' \rvert = \sec \varphi`、正積には $`\lvert g' \rvert = \cos \varphi` が必要で、$`\sec \varphi = \cos \varphi` となるのは赤道だけです。赤道を離れると、どんな円筒図法も角度と面積の両方を守ることはできません。
 
 {leanDecl Geodesy.Projection.eq_zero_of_isConformal_of_isEqualArea}
-
-[依存関係を Lean Atlas で見る](https://yuiseki.github.io/LeanGeodesy/atlas/)（主定理「No cylindrical projection is conformal and equal-area」）
 
 角度か面積か、円筒図法ではどちらかを選ぶしかありませんでした。では、角度でも面積でもなく、ある一点から見た距離を守ることはできるでしょうか。

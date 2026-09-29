@@ -80,8 +80,6 @@ Hilbert 順序はこの性質を持ち、Morton 順序は持ちません。
 
 {leanDecl Geodesy.Tiles.mortonOrder_not_isAdjacentOrder}
 
-[依存関係を Lean Atlas で見る](https://yuiseki.github.io/LeanGeodesy/atlas/)（おまけ：主定理「Hilbert order is adjacent」「Morton order is not adjacent」）
-
 実装での使い分けもここから見えてきます。部分木の検索だけが目的なら、計算が単純な Morton 符号で十分です。地図の上で近いタイルが番号の上でも近いことが効く場面、たとえば連続した範囲を読むときにディスク上の局所性を高めたい場合には、Hilbert 順序が有利です。ただし Hilbert でも、地図上で隣り合う二枚のタイルが番号の上で近いとは限りません。保証されているのは、番号が隣なら地図でも隣、という向きだけです。
 
 # 第II部のまとめと次へ

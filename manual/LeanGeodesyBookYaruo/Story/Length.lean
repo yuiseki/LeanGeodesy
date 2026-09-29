@@ -383,8 +383,6 @@ $$`ds^2 = M^2\,d\varphi^2 + (N \cos \varphi)^2\,d\lambda^2`
 
 {leanDecl Geodesy.ReferenceEllipsoid.norm_dr_sq}
 
-[依存関係を Lean Atlas で見る](https://yuiseki.github.io/LeanGeodesy/atlas/)（主定理「First fundamental form: E = M²」）
-
 :::yaruo
 で、最初の質問に戻るお。緯度経度が分かれば、二点間の距離は出せるのかお。
 :::

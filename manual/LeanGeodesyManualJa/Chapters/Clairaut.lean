@@ -32,8 +32,6 @@ $$`E \varphi'' + \tfrac{1}{2} E' \varphi'^2 - \tfrac{1}{2} G' \lambda'^2 = 0, \q
 
 {leanDecl Geodesy.ReferenceEllipsoid.EllipsoidCurve.isGeodesic_iff_equations}
 
-[依存関係を Lean Atlas で見る](https://yuiseki.github.io/LeanGeodesy/atlas/)（主定理「Geodesic equations」）
-
 微分幾何の教科書では、緯度の方程式を $`E` で割った形がクリストッフェル記号 $`\Gamma^\varphi_{\varphi\varphi} = E'/2E`、$`\Gamma^\varphi_{\lambda\lambda} = -G'/2E` を使って書かれます。見慣れない記号ですが、中身は第一基本形式の係数とその微分にすぎません。
 
 {leanDecl Geodesy.ReferenceEllipsoid.EllipsoidCurve.geodesic_latitude_equation_christoffel}
@@ -67,8 +65,6 @@ $$`p \sin A = \text{一定}`
 {leanDecl Geodesy.ReferenceEllipsoid.EllipsoidCurve.sinAzimuth_eq}
 
 {leanDecl Geodesy.ReferenceEllipsoid.EllipsoidCurve.clairaut}
-
-[依存関係を Lean Atlas で見る](https://yuiseki.github.io/LeanGeodesy/atlas/)（主定理「Clairaut's relation」）
 
 この関係から、測地線の振る舞いがかなりの程度まで読めます。$`\lvert \sin A \rvert \le 1` なので、$`p` はこの一定値より小さくなれません。極へ近づくと $`p` は小さくなるので、測地線は、ある緯度より高くは上がれないのです。その最高緯度で $`\lvert \sin A \rvert = 1`、つまり測地線は真東か真西を向き、そこから引き返します。冒頭の「北東へ出発した測地線が、やがて真東を向き、南東へ向きを変える」振る舞いは、この関係の帰結です。測地線を計算するソフトウェアは、この一定値を出発点での方位と緯度から求めて利用します。
 

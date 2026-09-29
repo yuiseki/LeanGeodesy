@@ -43,8 +43,6 @@ $`R(\pi/2 - \varphi)` は、北極からその地点までの大円距離その�
 
 {leanDecl Geodesy.Projection.azimuthalEquidistant_preserves_azimuth}
 
-[依存関係を Lean Atlas で見る](https://yuiseki.github.io/LeanGeodesy/atlas/)（主定理「Azimuthal equidistant keeps distances」）
-
 1.2 章の局所歪みで測ると、子午線方向の縮尺は $`h = 1` で、緯線方向の縮尺は $`k = (\pi/2 - \varphi)/\cos \varphi` です。極以外では $`k > 1` なので、この図法は等角でも正積でもありません。守っているのは、あくまで中心から見た距離と方位だけです。
 
 {leanDecl Geodesy.Projection.one_lt_azimuthalEquidistant_k}

@@ -71,8 +71,6 @@ $$`(\text{地図上の長さ})^2 = h^2 \times (\text{第一基本形式で測っ
 
 {leanDecl Geodesy.Projection.isConformal_iff_firstForm}
 
-[依存関係を Lean Atlas で見る](https://yuiseki.github.io/LeanGeodesy/atlas/)（主定理「Conformal iff it scales the first fundamental form」）
-
 等角かどうかを確かめる手順は、これで決まりました。偏微分を計算し、直交と $`h = k` を確かめればよいのです。では、等角な図法を実際に作るにはどうすればよいでしょうか。
 
 # Mercator は「等角にしたい」から導ける
@@ -103,8 +101,6 @@ $$`g(\varphi) = \operatorname{arsinh}(\tan \varphi) = \ln \tan\left(\frac{\pi}{4
 逆向きの主張も証明されています。北を上にして赤道を $`x` 軸に置いた円筒図法のうち、すべての緯度で等角なものは Mercator しかありません。等角という条件が、図法を一つに決めてしまいます。
 
 {leanDecl Geodesy.Projection.eq_mercatorY_of_isConformal}
-
-[依存関係を Lean Atlas で見る](https://yuiseki.github.io/LeanGeodesy/atlas/)（主定理「Mercator is conformal」「Conformal cylindrical projections are Mercator」）
 
 角度を守る代わりに、縮尺 $`\sec \varphi` は緯度とともに大きくなります。北緯 60° では距離が 2 倍、面積が 4 倍に描かれます。グリーンランドがアフリカほどに大きく見えるのはこのためです。
 

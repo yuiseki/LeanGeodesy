@@ -227,8 +227,6 @@ $$`(\text{地図上の長さ})^2 = h^2 \times (\text{第一基本形式で測っ
 
 {leanDecl Geodesy.Projection.isConformal_iff_firstForm}
 
-[依存関係を Lean Atlas で見る](https://yuiseki.github.io/LeanGeodesy/atlas/)（主定理「Conformal iff it scales the first fundamental form」）
-
 # 何かを守れば、何かが壊れる
 %%%
 file := "tradeoff"

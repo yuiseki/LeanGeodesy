@@ -171,7 +171,8 @@ lake exe atlas-graph .lake/packages/lean-atlas/web/public/data/graph.json
 lake exe atlas serve --no-generate --atlas-root ../.lake/packages/lean-atlas
 ```
 
-The viewer runs at `http://localhost:5326`. `LeanGeodesy.lean` and
+The viewer runs at `http://localhost:5326`; it is a local tool and is not
+published. `LeanGeodesy.lean` and
 `LeanGeodesy/` in `atlas/` are links to the library, because lean-atlas finds
 modules and sources relative to the working directory.
 
@@ -226,10 +227,9 @@ Clairaut's relation as a Japanese dialogue, with fourteen nodes; it pins the
 same shared packages and is built the same way.
 
 The book, its Japanese companions (`/manual-ja/`, `/book-yaruo/`), the
-blueprints (`/blueprint/`, `/blueprint-yaruo/`) and the atlas are published at
+blueprints (`/blueprint/`, `/blueprint-yaruo/`) are published at
 <https://yuiseki.github.io/LeanGeodesy/> by `.github/workflows/pages.yml` on
-every push to `main`. `atlas/build-pages.sh` builds the viewer as a static
-site: without a server, it reads the sources as files.
+every push to `main`.
 
 ## Axiom audit
 

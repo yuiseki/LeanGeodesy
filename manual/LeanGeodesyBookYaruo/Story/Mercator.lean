@@ -140,8 +140,6 @@ Lean ではこう確かめられている。北距の関数の導関数が $`\se
 
 {leanDecl Geodesy.Projection.eq_mercatorY_of_isConformal}
 
-[依存関係を Lean Atlas で見る](https://yuiseki.github.io/LeanGeodesy/atlas/)（主定理「Mercator is conformal」「Conformal cylindrical projections are Mercator」）
-
 # 等角の代償
 %%%
 file := "cost"
