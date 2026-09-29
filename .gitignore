@@ -9,3 +9,5 @@ __pycache__/
 /manual/_out-yaruo
 /blueprint/.lake
 /blueprint/_out
+/blueprint-yaruo/.lake
+/blueprint-yaruo/_out

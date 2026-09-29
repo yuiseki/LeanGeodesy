@@ -220,10 +220,13 @@ cd blueprint
 lake exe vbp build
 ```
 
-The site is written to `blueprint/_out/site/html-multi/`.
+The site is written to `blueprint/_out/site/html-multi/`. A second blueprint
+in `blueprint-yaruo/` tells the story from the reference ellipsoid to
+Clairaut's relation as a Japanese dialogue, with fourteen nodes; it pins the
+same shared packages and is built the same way.
 
 The book, its Japanese companions (`/manual-ja/`, `/book-yaruo/`), the
-blueprint (`/blueprint/`) and the atlas are published at
+blueprints (`/blueprint/`, `/blueprint-yaruo/`) and the atlas are published at
 <https://yuiseki.github.io/LeanGeodesy/> by `.github/workflows/pages.yml` on
 every push to `main`. `atlas/build-pages.sh` builds the viewer as a static
 site: without a server, it reads the sources as files.

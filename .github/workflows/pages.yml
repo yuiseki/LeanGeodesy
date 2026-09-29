@@ -30,6 +30,9 @@ jobs:
       - name: Build the Verso Blueprint
         working-directory: blueprint
         run: lake exe vbp build
+      - name: Build the dialogue Blueprint
+        working-directory: blueprint-yaruo
+        run: lake exe vbp build
       - name: Generate the Lean Atlas graph
         working-directory: atlas
         run: |
@@ -49,6 +52,7 @@ jobs:
           cp -r manual/_out-ja/html-multi site/manual-ja
           cp -r manual/_out-yaruo/html-multi site/book-yaruo
           cp -r blueprint/_out/site/html-multi site/blueprint
+          cp -r blueprint-yaruo/_out/site/html-multi site/blueprint-yaruo
           cp pages/index.html site/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
