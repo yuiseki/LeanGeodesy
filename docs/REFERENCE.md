@@ -403,6 +403,33 @@ between 1.006739 and 1.006740 on the WGS 84 equator
 (`wgs84_equator_scale_ratio`). So a small circle on the Earth is drawn as an
 ellipse elongated north to south by about 0.67 %.
 
+### Projection.Homeomorph
+
+On the right domain a projection is a homeomorphism, a continuous bijection
+with a continuous inverse, so the map has the same topology as the region it
+draws.
+
+- `mercatorY` is a homeomorphism from the open latitudes `(-π/2, π/2)` onto
+  the line, with inverse `gd` (`mercatorYHomeomorph`).
+- Mercator's projection of the sphere of radius `R`, with the longitude
+  unwrapped to a real number, is a homeomorphism from
+  `(-π/2, π/2) × ℝ` onto the whole plane `E2` (`mercatorHomeomorph`).
+- Web Mercator is a homeomorphism from the chart cut along the antimeridian,
+  latitudes in `[-maxLatitude, maxLatitude]` and longitudes in `(-π, π)`
+  (`webMercatorChart`), onto the square without its left and right edges
+  (`webMercatorChartImage`): `webMercatorHomeomorph`. On a chart point it is
+  `webMercator` of that latitude and longitude
+  (`webMercatorHomeomorph_eq_webMercator`).
+- The cut is necessary. With the longitude as an angle, the easting jumps
+  from `π a` to `-π a` across the antimeridian
+  (`not_continuousAt_webMercatorX_antimeridian`), so the bijection
+  `webMercatorEquiv` is not a homeomorphism.
+
+The plane `E2` is LeanGeospatial's `Point2D`, so these homeomorphisms feed
+its theorems directly: two whole-plane homeomorphisms compose to a
+homeomorphism of the plane, which preserves every RCC8 relation and DE-9IM
+matrix (LeanGeospatial's `RCC8.Relation.holds_map_iff`, `DE9IM.matrix_map`).
+
 ### Projection.Distortion and Projection.Cylindrical
 
 A projection sends a ground step north, of length `M` per unit latitude,
@@ -758,6 +785,7 @@ other file refers to the labels.
 | `LeanGeodesy/QuarterMeridian.lean` | The WGS 84 quarter meridian is 10001960 m to 10001975 m |
 | `LeanGeodesy/Projection/Mercator.lean` | The Mercator function, its inverse, and conformality on the sphere |
 | `LeanGeodesy/Projection/WebMercator.lean` | EPSG:3857, the square world, tiles, and distortion on the ellipsoid |
+| `LeanGeodesy/Projection/Homeomorph.lean` | Mercator and Web Mercator as homeomorphisms on the right domains; why the antimeridian is cut |
 | `LeanGeodesy/Projection/CutoffLatitude.lean` | The cut-off latitude is between 85.05° and 85.06° |
 | `LeanGeodesy/Projection/Distortion.lean` | Scales, area scale, Tissot's indicatrix, conformality |
 | `LeanGeodesy/Projection/Cylindrical.lean` | Mercator, plate carrée and Lambert; uniqueness |

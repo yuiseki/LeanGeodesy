@@ -1438,3 +1438,19 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Tiles.morton_subtree_eq_interval' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.morton_subtree_eq_interval
+
+/-- info: 'Geodesy.Projection.mercatorHomeomorph' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.mercatorHomeomorph
+
+/-- info: 'Geodesy.Projection.webMercatorHomeomorph' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.webMercatorHomeomorph
+
+/-- info: 'Geodesy.Projection.webMercatorHomeomorph_eq_webMercator' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.webMercatorHomeomorph_eq_webMercator
+
+/-- info: 'Geodesy.Projection.not_continuousAt_webMercatorX_antimeridian' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.not_continuousAt_webMercatorX_antimeridian

@@ -96,6 +96,7 @@ A selection; [docs/REFERENCE.md](docs/REFERENCE.md) lists everything.
 | Constant bearing on the sphere is a straight line on Mercator | `constantBearing_iff_mercatorLine` |
 | Lambert's cylindrical projection keeps the area of every latitude-longitude cell | `lambertCylindrical_preserves_cellArea` |
 | EPSG:4326 geographic 2D and EPSG:3857 convert back and forth as a bijection | `webMercatorEquiv` |
+| Mercator is a homeomorphism onto the plane, and Web Mercator one from the globe cut along the antimeridian onto the square; without the cut it is discontinuous | `mercatorHomeomorph`, `webMercatorHomeomorph`, `not_continuousAt_webMercatorX_antimeridian` |
 | Web Mercator tiles at zoom `z`, quadtree paths of length `z` and Morton codes below `4^z` are in bijection | `tile_path_morton_bijective`, `mortonEquiv_eq_trans` |
 | Morton and Hilbert are spatial orders: every quadtree subtree is one interval of indices; only Hilbert keeps consecutive tiles adjacent, with a computable, choice-free encoder | `SpatialOrder.subtree_eq_symm_interval`, `hilbertOrder_isAdjacentOrder`, `mortonOrder_not_isAdjacentOrder` |
 

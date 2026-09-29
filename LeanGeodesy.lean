@@ -13,6 +13,7 @@ import LeanGeodesy.MeridianArc
 import LeanGeodesy.QuarterMeridian
 import LeanGeodesy.Projection.Mercator
 import LeanGeodesy.Projection.WebMercator
+import LeanGeodesy.Projection.Homeomorph
 import LeanGeodesy.Projection.CutoffLatitude
 import LeanGeodesy.Projection.Distortion
 import LeanGeodesy.Projection.Cylindrical
