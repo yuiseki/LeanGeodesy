@@ -245,3 +245,8 @@ labels outside `CRS/EPSG.lean`.
 
 The detailed account of every layer and the list of files are in
 [docs/REFERENCE.md](docs/REFERENCE.md).
+
+Which computable definitions (the Morton and Hilbert codes of tiles) could
+later be compiled to Rust with lean-rs, which theorems would then describe
+the Rust functions, and what that would not guarantee (anything over `ℝ`)
+are in [docs/LEAN_RS.md](docs/LEAN_RS.md).

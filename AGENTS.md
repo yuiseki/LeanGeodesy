@@ -132,6 +132,10 @@ machine, set `LEAN_NUM_THREADS` low.
   grid and spatial orders; `CRS/` coordinate reference systems.
 - `docs/REFERENCE.md`: the layer-by-layer account and the list of files.
   Keep it in step with the code.
+- `docs/LEAN_RS.md`: which computable definitions could be compiled to Rust
+  with lean-rs, the theorems that would describe them, and what blocks it.
+  When you change one of the definitions it lists, or the imports of
+  `Tiles/`, update it.
 - Nested Lake projects, each with its own `lean-toolchain` and
   `lake-manifest.json`, all sharing `packagesDir = "../.lake/packages"`:
   - `manual/`: the Verso books (English, Japanese, and the Japanese
@@ -162,3 +166,7 @@ machine, set `LEAN_NUM_THREADS` low.
 - State results about Mathlib's types (`EuclideanSpace ℝ (Fin n)`, `ℝ`) and
   keep definitions reducible where another library has to see through them,
   as with `E2`.
+- Keep the tile combinatorics (`Tiles.Quadtree`, `Tiles.Morton`,
+  `Tiles.Adjacency`, `Tiles.Hilbert`, `Tiles.SpatialOrder`) free of
+  real-number imports; what connects them to Web Mercator goes in
+  `Tiles.Grid` or `Tiles.TileOfPoint`.
