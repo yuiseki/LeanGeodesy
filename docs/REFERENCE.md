@@ -568,7 +568,7 @@ zoom `z`. From the pixel coordinates of `Projection.WebMercator`:
   division by 4 gives the parent with the child digit as remainder
   (`morton_div_four`, `morton_mod_four`). The Z-order jumps: at zoom 1 the
   codes 1 and 2 are `(1, 0)` and `(0, 1)` (`morton_jumps`).
-- Back to Web Mercator. Every point of the half-open square lies in a tile at
+- Back to Web Mercator (`Tiles.TileOfPoint`). Every point of the half-open square lies in a tile at
   each zoom (`tileOfPoint`), every tile contains a point
   (`tileOfPoint_surjective`), and a point's tile at zoom `z + 1` has its tile
   at zoom `z` as parent (`parent_tileOfPoint`), so its Morton code divided by
@@ -798,6 +798,7 @@ other file refers to the labels.
 | `LeanGeodesy/Tiles/Grid.lean` | The integer tile grid of Web Mercator |
 | `LeanGeodesy/Tiles/Quadtree.lean` | The tile quadtree; tiles as quadtree paths |
 | `LeanGeodesy/Tiles/Morton.lean` | Morton codes; tiles, paths and codes in bijection |
+| `LeanGeodesy/Tiles/TileOfPoint.lean` | The tile of a point of Web Mercator, and its Morton code one level up |
 | `LeanGeodesy/Tiles/Adjacency.lean` | Adjacent cells and tiles |
 | `LeanGeodesy/Tiles/SpatialOrder.lean` | Spatial orders: ancestors, subtrees as index intervals, adjacency; Morton and Hilbert instances |
 | `LeanGeodesy/Tiles/Hilbert.lean` | The Hilbert order: a bijection whose consecutive tiles share an edge, nested like the quadtree |

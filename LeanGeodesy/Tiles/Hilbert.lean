@@ -1,5 +1,7 @@
 import LeanGeodesy.Tiles.Morton
 import LeanGeodesy.Tiles.Adjacency
+import Mathlib.Tactic.IntervalCases
+import Mathlib.Tactic.Linarith
 
 /-!
 # The Hilbert order on the tile grid

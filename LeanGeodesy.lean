@@ -26,6 +26,7 @@ import LeanGeodesy.Projection.FirstForm
 import LeanGeodesy.Tiles.Grid
 import LeanGeodesy.Tiles.Quadtree
 import LeanGeodesy.Tiles.Morton
+import LeanGeodesy.Tiles.TileOfPoint
 import LeanGeodesy.Tiles.Adjacency
 import LeanGeodesy.Tiles.Hilbert
 import LeanGeodesy.Tiles.SpatialOrder
