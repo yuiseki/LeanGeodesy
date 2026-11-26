@@ -1,15 +1,9 @@
 # Toward Rust with lean-rs
 
-This note records which definitions of LeanGeodesy could later be compiled to
-Rust with [lean-rs](https://github.com/conao3/lean-rs), which theorems would
-then describe the Rust functions, and what stands in the way. Nothing here is
-generated or built yet: there is no Rust code in this repository, and CI does
-not run lean-rs.
-
-It was written against lean-rs at commit `90bdd9c` (generator version 3, Lean
-`v4.35.0`), from its README and its sources (`LeanRust/Marshal.lean`,
-`Main.lean`). lean-rs was not run on this library; every "expected" below is
-read from that code, not observed.
+This note records which definitions of LeanGeodesy are compiled to Rust with
+[lean-rs](https://github.com/conao3/lean-rs), which theorems describe the Rust
+functions, and why the real-number geometry stays out. There is no generated
+Rust code inside this repository, and CI does not run lean-rs.
 
 ## What lean-rs does, and what it guarantees
 
@@ -55,8 +49,9 @@ the real-number geometry. "As is" means no change to the Lean code is needed.
 
 | Definition | Expected Rust signature | Theorems that describe it | Status |
 | --- | --- | --- | --- |
-| `Geodesy.Tiles.childDigit` (`Tiles/Quadtree.lean`) | `(x: Nat, y: Nat) -> Nat` | `childDigit_lt`, `split`, `morton_mod_four` | as is |
+| `Geodesy.Tiles.childDigit`, `parentN`, `ancestorN` (`Tiles/Quadtree.lean`) | `(x: Nat, y: Nat) -> Nat`, `-> (Nat, Nat)` | `childDigit_lt`, `split`, `morton_mod_four`, `parentN_eq_parent`, `ancestorN_eq_ancestor` | as is |
 | `Geodesy.Tiles.morton` (`Tiles/Morton.lean`) | `(z: Nat, x: Nat, y: Nat) -> Nat` | `mortonEquiv_val` (it is the bijection `mortonEquiv` on tiles), `morton_div_four`, `morton_mod_four`, `morton_eq_interleave`, `morton_jumps`, `morton_not_adjacent`; through `mortonEquiv_val`, `tile_path_morton_bijective`, `morton_ancestor_eq_iff_mem_interval`, `morton_subtree_eq_interval` | as is |
+| `Geodesy.Tiles.mortonDecode`, `mortonInterval`, `mortonInSubtree` (`Tiles/Morton.lean`) | `(z: Nat, code: Nat) -> (Nat, Nat)`, `(k, code) -> (Nat, Nat)`, `-> bool` | `mortonDecode_morton`, `morton_mortonDecode`, `mortonDecode_lt_fst`, `mortonDecode_lt_snd`, `mortonInSubtree_iff_interval`, `mortonInSubtree_iff` | as is |
 | `Geodesy.Tiles.quadPlace` (`Tiles/Hilbert.lean`) | `(n: Nat, q: Nat, p: (Nat, Nat)) -> (Nat, Nat)` | `quadPlace_zero` … `quadPlace_three`, `quadPlace_adj`, `quadPlace_inj`, `quadPlace_halve` | as is |
 | `Geodesy.Tiles.hilbertD` | `(z: Nat, i: Nat) -> (Nat, Nat)` | `hilbertD_lt`, `hilbertD_zero`, `hilbertD_last`, `hilbertD_adj`, `hilbertD_inj`, `hilbertD_halve`, `hilbertE_hilbertD`; through `decode`, `hilbert_adjacent`, `parent_hilbert_decode`, `ancestor_decode` | as is |
 | `Geodesy.Tiles.quadUnplace` | `(n: Nat, p: (Nat, Nat)) -> (Nat, (Nat, Nat))` | `quadUnplace_quadPlace`, `quadUnplace_spec` | as is |
@@ -79,9 +74,6 @@ for `morton z x y` to be the code of a tile, `x, y < 2 ^ z`. Subtraction is
   are: the bounds in the types are what the theorems are about. Their
   computation is that of the candidates above, by definition (`decode`,
   `encode`) or by theorems (`mortonEquiv_val`, `parent_val`, `ancestor_val`).
-- No Morton decoder on natural numbers exists; the inverse is
-  `(mortonEquiv z).symm`, on `Fin` types. Exporting one would need a new
-  definition and a new theorem, which is not preparation.
 - `tileIndex`, `tileX`, `tileY` and `tileOfPoint`: `noncomputable`, floor of
   a real number.
 - Ellipsoids, geodetic coordinates, the first fundamental form, projections,
@@ -109,18 +101,21 @@ for `morton z x y` to be the code of a tile, `x, y < 2 ^ z`. Subtraction is
   declarations. A
   file that imports `LeanGeodesy.Tiles.Morton` alone and uses `tileOfPoint`
   must now import `LeanGeodesy.Tiles.TileOfPoint`.
+- `Tiles/Quadtree.lean` adds `parentN` and `ancestorN` on `ℕ`
+  (`parentN_eq_parent`, `ancestorN_eq_ancestor`), `Tiles/Morton.lean` adds
+  `mortonDecode`, `mortonInterval` and `mortonInSubtree` (`mortonDecode_morton`,
+  `morton_mortonDecode`, `mortonDecode_lt_fst`, `mortonDecode_lt_snd`,
+  `mortonInSubtree_iff_interval`), and `Tiles/SpatialOrder.lean` relates
+  `mortonInSubtree` to `ancestor` (`mortonInSubtree_iff`), so all tile, Morton
+  and Hilbert operations export directly without `Fin` bounds.
 
-## Open before starting
+## Toolchain note
 
-- Toolchain. lean-rs is pinned to Lean `v4.35.0`, and `lean-rust` reads the IR
-  stored in `.olean` files built by its own Lean version. LeanGeodesy,
-  LeanComputationalGeometry and LeanGeospatial are on Lean `v4.34.0` and
-  Mathlib `v4.34.0`. Generating Rust needs the three upgraded together (see
-  `AGENTS.md`) or a lean-rs for `v4.34.0`; neither was done here.
-- Not tried: running `lean-rust module generate` on `LeanGeodesy.Tiles.Hilbert`
-  and `LeanGeodesy.Tiles.Morton` with `--output json`, which lists exported
-  and skipped definitions; whether the anonymous `AdjN` instance is accepted
-  through `--roots`; whether the runtime has every extern the Mathlib-built IR
-  calls (exit code 254 means it does not).
+- Upstream lean-rs pins Lean `v4.35.0`, while LeanGeodesy,
+  LeanComputationalGeometry and LeanGeospatial pin Lean `v4.34.0` and Mathlib
+  `v4.34.0` together (see `AGENTS.md`). `lean-rust` builds unchanged under Lean
+  `v4.34.0` (`lake +leanprover/lean4:v4.34.0 build lean-rust`), generating Rust
+  from `LeanGeodesy.Tiles.Quadtree`, `LeanGeodesy.Tiles.Morton` and
+  `LeanGeodesy.Tiles.Hilbert`.
 - `Nat` in Rust is `lean_rust::Nat`. Narrowing to `u32` or `u64` is ordinary
   Rust, outside the theorems.

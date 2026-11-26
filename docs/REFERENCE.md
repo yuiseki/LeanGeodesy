@@ -557,7 +557,9 @@ zoom `z`. From the pixel coordinates of `Projection.WebMercator`:
   children of a tile are exactly the tiles whose parent it is, and there are
   four (`parent_eq_iff`, `card_children`). Repeating the split, tiles at zoom
   `z` are quadtree paths of length `z`, coarsest digit first
-  (`tileEquivPath`, `tileEquivPath_succ`).
+  (`tileEquivPath`, `tileEquivPath_succ`). `parentN` and `ancestorN` compute
+  parent and `k`-step ancestor coordinates directly on `ℕ`
+  (`parentN_eq_parent`, `ancestorN_eq_ancestor`).
 - Morton codes (`Tiles.Morton`). The code of a tile at zoom `z + 1` is four
   times its parent's code plus its child digit (`mortonEquiv_succ_val`), a
   bijection onto the numbers below `4^z` (`mortonEquiv`). Tiles, quadtree
@@ -566,8 +568,11 @@ zoom `z`. From the pixel coordinates of `Projection.WebMercator`:
   The code is the path read in base 4 (`mortonEquiv_val_eq_path`), it
   interleaves the bits of column and row (`morton_eq_interleave`), and
   division by 4 gives the parent with the child digit as remainder
-  (`morton_div_four`, `morton_mod_four`). The Z-order jumps: at zoom 1 the
-  codes 1 and 2 are `(1, 0)` and `(0, 1)` (`morton_jumps`).
+  (`morton_div_four`, `morton_mod_four`). `mortonDecode` inverts `morton` on
+  natural numbers (`mortonDecode_morton`, `morton_mortonDecode`), and
+  `mortonInterval` and `mortonInSubtree` give the half-open subtree interval
+  and membership test (`mortonInSubtree_iff_interval`). The Z-order jumps: at
+  zoom 1 the codes 1 and 2 are `(1, 0)` and `(0, 1)` (`morton_jumps`).
 - Back to Web Mercator (`Tiles.TileOfPoint`). Every point of the half-open square lies in a tile at
   each zoom (`tileOfPoint`), every tile contains a point
   (`tileOfPoint_surjective`), and a point's tile at zoom `z + 1` has its tile
@@ -609,7 +614,9 @@ zoom `z`. From the pixel coordinates of `Projection.WebMercator`:
   every subtree is one interval (`subtree_eq_symm_interval`). Morton and
   Hilbert are both spatial orders (`mortonOrder`, `hilbertOrder`), with the
   Morton instances stated as `morton_ancestor`,
-  `morton_ancestor_eq_iff_mem_interval` and `morton_subtree_eq_interval`.
+  `morton_ancestor_eq_iff_mem_interval`, `morton_subtree_eq_interval` and
+  `mortonInSubtree_iff` (the `Bool` test `mortonInSubtree` decides
+  `ancestor k t = s`).
   Adjacency (`Tiles.Adjacency`) tells them apart: the Hilbert order is an
   adjacent order and the Morton order is not
   (`hilbertOrder_isAdjacentOrder`, `mortonOrder_not_isAdjacentOrder`).

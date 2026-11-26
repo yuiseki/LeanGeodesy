@@ -1271,6 +1271,22 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.morton_jumps
 
+/-- info: 'Geodesy.Tiles.mortonDecode_morton' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.mortonDecode_morton
+
+/-- info: 'Geodesy.Tiles.morton_mortonDecode' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.morton_mortonDecode
+
+/-- info: 'Geodesy.Tiles.mortonDecode_lt_fst' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.mortonDecode_lt_fst
+
+/-- info: 'Geodesy.Tiles.mortonDecode_lt_snd' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.mortonDecode_lt_snd
+
 /-- info: 'Geodesy.Tiles.hilbertD_lt' depends on axioms: [propext, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.hilbertD_lt
@@ -1454,3 +1470,19 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Projection.not_continuousAt_webMercatorX_antimeridian' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Projection.not_continuousAt_webMercatorX_antimeridian
+
+/-- info: 'Geodesy.Tiles.ancestorN_eq_ancestor' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.ancestorN_eq_ancestor
+
+/-- info: 'Geodesy.Tiles.parentN_eq_parent' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.parentN_eq_parent
+
+/-- info: 'Geodesy.Tiles.mortonInSubtree_iff_interval' depends on axioms: [propext] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.mortonInSubtree_iff_interval
+
+/-- info: 'Geodesy.Tiles.mortonInSubtree_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.mortonInSubtree_iff

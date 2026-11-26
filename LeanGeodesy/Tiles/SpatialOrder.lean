@@ -156,4 +156,11 @@ theorem morton_subtree_eq_interval {z k : ℕ} (s : Tile z) :
         {i | (mortonEquiv z s).1 * 4 ^ k ≤ i.1 ∧ i.1 < ((mortonEquiv z s).1 + 1) * 4 ^ k} :=
   mortonOrder.subtree_eq_symm_interval s
 
+/-- `mortonInSubtree` decides `ancestor k t = s`. -/
+theorem mortonInSubtree_iff {z k : ℕ} (t : Tile (z + k)) (s : Tile z) :
+    ancestor k t = s ↔
+      mortonInSubtree k (morton z s.1.1 s.2.1) (morton (z + k) t.1.1 t.2.1) = true := by
+  rw [morton_ancestor_eq_iff_mem_interval, mortonInSubtree]
+  simp only [mortonEquiv_val, decide_eq_true_eq]
+
 end Geodesy.Tiles

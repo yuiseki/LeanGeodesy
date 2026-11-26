@@ -135,4 +135,98 @@ theorem morton_eq_interleave : (z x y : ℕ) →
 which do not share an edge. -/
 theorem morton_jumps : morton 1 1 0 = 1 ∧ morton 1 0 1 = 2 := by decide
 
+/-! ## Decoding Morton codes -/
+
+/-- Decode a Morton code to `(x, y)` coordinates at zoom `z`. -/
+def mortonDecode : ℕ → ℕ → ℕ × ℕ
+  | 0, _ => (0, 0)
+  | z + 1, code =>
+    let p := mortonDecode z (code / 4)
+    let d := code % 4
+    (2 * p.1 + d % 2, 2 * p.2 + d / 2)
+
+theorem mortonDecode_lt_fst (z : ℕ) (code : ℕ) : (mortonDecode z code).1 < 2 ^ z := by
+  induction z generalizing code with
+  | zero => simp [mortonDecode]
+  | succ z ih =>
+    rw [mortonDecode]
+    dsimp only
+    have := ih (code / 4)
+    rw [pow_succ]
+    omega
+
+theorem mortonDecode_lt_snd (z : ℕ) (code : ℕ) : (mortonDecode z code).2 < 2 ^ z := by
+  induction z generalizing code with
+  | zero => simp [mortonDecode]
+  | succ z ih =>
+    rw [mortonDecode]
+    dsimp only
+    have := ih (code / 4)
+    rw [pow_succ]
+    omega
+
+theorem mortonDecode_morton (z : ℕ) (x y : ℕ) (hx : x < 2 ^ z) (hy : y < 2 ^ z) :
+    mortonDecode z (morton z x y) = (x, y) := by
+  induction z generalizing x y with
+  | zero =>
+    have hx0 : x = 0 := by omega
+    have hy0 : y = 0 := by omega
+    subst hx0 hy0
+    rfl
+  | succ z ih =>
+    rw [mortonDecode]
+    rw [morton_div_four, morton_mod_four]
+    have hx2 : x / 2 < 2 ^ z := by
+      rw [pow_succ] at hx
+      omega
+    have hy2 : y / 2 < 2 ^ z := by
+      rw [pow_succ] at hy
+      omega
+    have ih_res := ih (x / 2) (y / 2) hx2 hy2
+    simp only [ih_res]
+    unfold childDigit
+    ext
+    · simp only
+      omega
+    · simp only
+      omega
+
+theorem morton_mortonDecode (z : ℕ) (code : ℕ) (hc : code < 4 ^ z) :
+    morton z (mortonDecode z code).1 (mortonDecode z code).2 = code := by
+  induction z generalizing code with
+  | zero =>
+    have hc0 : code = 0 := by omega
+    subst hc0
+    rfl
+  | succ z ih =>
+    rw [mortonDecode]
+    dsimp only
+    rw [morton]
+    have hdiv : code / 4 < 4 ^ z := by
+      rw [pow_succ] at hc
+      omega
+    have ih_res := ih (code / 4) hdiv
+    have hcd : childDigit (2 * (mortonDecode z (code / 4)).1 + code % 4 % 2)
+                          (2 * (mortonDecode z (code / 4)).2 + code % 4 / 2) = code % 4 := by
+      unfold childDigit
+      omega
+    rw [hcd]
+    have hxdiv : (2 * (mortonDecode z (code / 4)).1 + code % 4 % 2) / 2 = (mortonDecode z (code / 4)).1 := by omega
+    have hydiv : (2 * (mortonDecode z (code / 4)).2 + code % 4 / 2) / 2 = (mortonDecode z (code / 4)).2 := by omega
+    rw [hxdiv, hydiv, ih_res]
+    omega
+
+/-- Half-open Morton code interval `[lo, hi)` for a tile `k` zoom levels above. -/
+def mortonInterval (k code : ℕ) : ℕ × ℕ := (code * 4 ^ k, (code + 1) * 4 ^ k)
+
+/-- Whether `childCode` lies in the subtree of `ancestorCode` `k` zoom levels above. -/
+def mortonInSubtree (k ancestorCode childCode : ℕ) : Bool :=
+  decide (ancestorCode * 4 ^ k ≤ childCode ∧ childCode < (ancestorCode + 1) * 4 ^ k)
+
+theorem mortonInSubtree_iff_interval (k ancestorCode childCode : ℕ) :
+    mortonInSubtree k ancestorCode childCode = true ↔
+      (mortonInterval k ancestorCode).1 ≤ childCode ∧
+        childCode < (mortonInterval k ancestorCode).2 := by
+  simp [mortonInSubtree, mortonInterval]
+
 end Geodesy.Tiles

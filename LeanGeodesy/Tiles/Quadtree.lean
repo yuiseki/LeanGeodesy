@@ -131,4 +131,17 @@ theorem ancestor_val {z : ℕ} : (k : ℕ) → (t : Tile (z + k)) →
       ← pow_succ']
     exact ⟨rfl, rfl⟩
 
+/-- `Nat`-level parent coordinates `(x / 2, y / 2)`. -/
+def parentN (x y : ℕ) : ℕ × ℕ := (x / 2, y / 2)
+
+theorem parentN_eq_parent {z : ℕ} (t : Tile (z + 1)) :
+    parentN t.1.1 t.2.1 = ((parent t).1.1, (parent t).2.1) := rfl
+
+/-- `Nat`-level ancestor `k` generations up: `(x / 2^k, y / 2^k)`. -/
+def ancestorN (k x y : ℕ) : ℕ × ℕ := (x / 2 ^ k, y / 2 ^ k)
+
+theorem ancestorN_eq_ancestor {z : ℕ} (k : ℕ) (t : Tile (z + k)) :
+    ancestorN k t.1.1 t.2.1 = ((ancestor k t).1.1, (ancestor k t).2.1) :=
+  Prod.ext (ancestor_val k t).1.symm (ancestor_val k t).2.symm
+
 end Geodesy.Tiles
