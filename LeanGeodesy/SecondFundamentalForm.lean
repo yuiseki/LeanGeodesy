@@ -358,43 +358,34 @@ every tangent direction. -/
 theorem normalCurvature_bounds {φ : ℝ} (hc : 0 < cos φ) {v : ℝ × ℝ} (hv : v ≠ 0) :
     1 / E.primeVerticalRadius φ ≤ E.normalCurvature φ v ∧
       E.normalCurvature φ v ≤ 1 / E.meridianRadius φ := by
+  set M := E.meridianRadius φ
+  set N := E.primeVerticalRadius φ
   have hI := E.firstForm_pos hc hv
-  have hM := E.meridianRadius_pos φ
-  have hN := E.primeVerticalRadius_pos φ
-  have hMN := E.meridianRadius_le_primeVerticalRadius φ
+  have hM : 0 < M := E.meridianRadius_pos φ
+  have hN : 0 < N := E.primeVerticalRadius_pos φ
+  have hMN : M ≤ N := E.meridianRadius_le_primeVerticalRadius φ
   rw [normalCurvature, div_le_iff₀ hI, le_div_iff₀ hI]
   simp only [secondForm, firstForm, metric]
   constructor
-  · have h1 : E.meridianRadius φ ^ 2 / E.primeVerticalRadius φ ≤ E.meridianRadius φ := by
+  · have h1 : M ^ 2 / N ≤ M := by
       rw [div_le_iff₀ hN]
       nlinarith
     have h2 : 0 ≤ v.1 ^ 2 := sq_nonneg v.1
-    have h3 : (E.primeVerticalRadius φ * cos φ) ^ 2 / E.primeVerticalRadius φ =
-        E.primeVerticalRadius φ * cos φ ^ 2 := by field_simp
-    calc 1 / E.primeVerticalRadius φ *
-          (E.meridianRadius φ ^ 2 * v.1 * v.1 +
-            (E.primeVerticalRadius φ * cos φ) ^ 2 * v.2 * v.2)
-        = (E.meridianRadius φ ^ 2 / E.primeVerticalRadius φ) * v.1 ^ 2 +
-            ((E.primeVerticalRadius φ * cos φ) ^ 2 / E.primeVerticalRadius φ) * v.2 ^ 2 := by ring
-      _ ≤ E.meridianRadius φ * v.1 ^ 2 + E.primeVerticalRadius φ * cos φ ^ 2 * v.2 ^ 2 := by
-            rw [h3]; nlinarith
-      _ = -(-E.meridianRadius φ * v.1 * v.1 - E.primeVerticalRadius φ * cos φ ^ 2 * v.2 * v.2) := by
-            ring
-  · have h1 : E.primeVerticalRadius φ * cos φ ^ 2 ≤
-        (E.primeVerticalRadius φ * cos φ) ^ 2 / E.meridianRadius φ := by
+    have h3 : (N * cos φ) ^ 2 / N = N * cos φ ^ 2 := by field_simp
+    calc 1 / N * (M ^ 2 * v.1 * v.1 + (N * cos φ) ^ 2 * v.2 * v.2)
+        = (M ^ 2 / N) * v.1 ^ 2 + ((N * cos φ) ^ 2 / N) * v.2 ^ 2 := by ring
+      _ ≤ M * v.1 ^ 2 + N * cos φ ^ 2 * v.2 ^ 2 := by rw [h3]; nlinarith
+      _ = -(-M * v.1 * v.1 - N * cos φ ^ 2 * v.2 * v.2) := by ring
+  · have h1 : N * cos φ ^ 2 ≤ (N * cos φ) ^ 2 / M := by
       rw [le_div_iff₀ hM]
       have hc2 : 0 ≤ cos φ ^ 2 := sq_nonneg (cos φ)
       nlinarith
     have h2 : 0 ≤ v.2 ^ 2 := sq_nonneg v.2
-    have h3 : E.meridianRadius φ ^ 2 / E.meridianRadius φ = E.meridianRadius φ := by field_simp
-    calc -(-E.meridianRadius φ * v.1 * v.1 - E.primeVerticalRadius φ * cos φ ^ 2 * v.2 * v.2)
-        = E.meridianRadius φ * v.1 ^ 2 + E.primeVerticalRadius φ * cos φ ^ 2 * v.2 ^ 2 := by ring
-      _ ≤ (E.meridianRadius φ ^ 2 / E.meridianRadius φ) * v.1 ^ 2 +
-            ((E.primeVerticalRadius φ * cos φ) ^ 2 / E.meridianRadius φ) * v.2 ^ 2 := by
-            rw [h3]; nlinarith
-      _ = 1 / E.meridianRadius φ *
-            (E.meridianRadius φ ^ 2 * v.1 * v.1 +
-              (E.primeVerticalRadius φ * cos φ) ^ 2 * v.2 * v.2) := by ring
+    have h3 : M ^ 2 / M = M := by field_simp
+    calc -(-M * v.1 * v.1 - N * cos φ ^ 2 * v.2 * v.2)
+        = M * v.1 ^ 2 + N * cos φ ^ 2 * v.2 ^ 2 := by ring
+      _ ≤ (M ^ 2 / M) * v.1 ^ 2 + ((N * cos φ) ^ 2 / M) * v.2 ^ 2 := by rw [h3]; nlinarith
+      _ = 1 / M * (M ^ 2 * v.1 * v.1 + (N * cos φ) ^ 2 * v.2 * v.2) := by ring
 
 /-! ## Gaussian curvature, mean curvature, and Gauss's Theorema Egregium -/
 

@@ -41,6 +41,8 @@ namespace Geodesy.Projection
 
 open Real Geodesic
 
+/-! ## Radial projection and inverse -/
+
 /-- The dimensionless radial factor `2 cos φ / (1 + sin φ)` of the north-polar
 stereographic projection. -/
 noncomputable def stereographicFactor (φ : ℝ) : ℝ :=
@@ -140,16 +142,19 @@ theorem stereographicFactor_bijOn :
   · intro u (hu : 0 ≤ u)
     exact ⟨stereographicLat u, stereographicLat_mem hu, stereographicFactor_lat hu⟩
 
+private theorem norm_vec2_polar {r : ℝ} (hr : 0 ≤ r) (lam : ℝ) :
+    ‖vec2 (r * cos lam) (r * sin lam)‖ = r := by
+  have hsq : ‖vec2 (r * cos lam) (r * sin lam)‖ ^ 2 = r ^ 2 := by
+    rw [norm_vec2_sq]
+    linear_combination r ^ 2 * sin_sq_add_cos_sq lam
+  nlinarith [norm_nonneg (vec2 (r * cos lam) (r * sin lam))]
+
 /-- Parallels of latitude map to circles of radius `R · stereographicFactor φ`
 around the origin. -/
 theorem norm_stereographic {R : ℝ} (hR : 0 ≤ R) {φ : ℝ}
     (hφ : φ ∈ Set.Ioc (-(π / 2)) (π / 2)) (lam : ℝ) :
-    ‖stereographic R φ lam‖ = R * stereographicFactor φ := by
-  have hrf : 0 ≤ R * stereographicFactor φ := mul_nonneg hR (stereographicFactor_nonneg hφ)
-  have hsq : ‖stereographic R φ lam‖ ^ 2 = (R * stereographicFactor φ) ^ 2 := by
-    rw [stereographic, norm_vec2_sq]
-    linear_combination (R * stereographicFactor φ) ^ 2 * sin_sq_add_cos_sq lam
-  nlinarith [norm_nonneg (stereographic R φ lam)]
+    ‖stereographic R φ lam‖ = R * stereographicFactor φ :=
+  norm_vec2_polar (mul_nonneg hR (stereographicFactor_nonneg hφ)) lam
 
 /-- Polar stereographic preserves azimuths from the north pole: each point lies
 in the horizontal initial direction of the great circle from the pole to it. -/
@@ -284,56 +289,44 @@ theorem upsScale_eq_one_iff {φ : ℝ} (hd : 0 < 1 + sin φ) :
   rw [mul_div_assoc', div_eq_one_iff_eq hd.ne']
   constructor <;> intro h <;> linarith
 
-/-- Across the north UPS zone `[84° N, 90° N]`, the UPS scale stays in
-`[0.994, 1)`. -/
-theorem upsScale_bounds_84 {φ : ℝ} (hlo : degToRad 84 ≤ φ) (hhi : φ ≤ π / 2) :
-    0.994 ≤ upsScale φ ∧ upsScale φ < 1 := by
+private theorem upsScale_bounds_of_colat {φ θhi dlb hi : ℝ}
+    (hhi : φ ≤ π / 2) (hθ_hi : π / 2 - φ ≤ θhi)
+    (hd_lb : dlb < 2 - θhi ^ 2 / 2) (hpos : 0 < dlb)
+    (hhi_bound : 0.994 * 2 ≤ hi * dlb) :
+    0.994 ≤ upsScale φ ∧ upsScale φ < hi := by
   set θ := π / 2 - φ
   have hθ0 : 0 ≤ θ := by simp only [θ]; linarith
-  have hθ_hi : θ ≤ 0.104721 := by
-    simp only [θ, degToRad] at hlo ⊢
-    nlinarith [pi_lt_d6]
-  have hθ2 : θ ^ 2 ≤ 0.104721 ^ 2 := pow_le_pow_left₀ hθ0 hθ_hi 2
+  have hθ2 : θ ^ 2 ≤ θhi ^ 2 := pow_le_pow_left₀ hθ0 hθ_hi 2
   have hsin_eq : sin φ = cos θ := by
     have : φ = π / 2 - θ := by simp only [θ]; ring
     rw [this, sin_pi_div_two_sub]
   have hcos_lb : 1 - θ ^ 2 / 2 ≤ cos θ := one_sub_sq_div_two_le_cos
-  have hd_lb : 1.9945 < 1 + sin φ := by
+  have hden_lb : dlb < 1 + sin φ := by
     rw [hsin_eq]
     nlinarith
-  have hd_ub : 1 + sin φ ≤ 2 := by linarith [sin_le_one φ]
-  have hd_pos : 0 < 1 + sin φ := by linarith
+  have hden_ub : 1 + sin φ ≤ 2 := by linarith [sin_le_one φ]
+  have hden_pos : 0 < 1 + sin φ := by linarith
   unfold upsScale stereographicScale
   constructor
-  · rw [mul_div_assoc', le_div_iff₀ hd_pos]
+  · rw [mul_div_assoc', le_div_iff₀ hden_pos]
     linarith
-  · rw [mul_div_assoc', div_lt_iff₀ hd_pos]
-    linarith
+  · rw [mul_div_assoc', div_lt_iff₀ hden_pos]
+    nlinarith
+
+/-- Across the north UPS zone `[84° N, 90° N]`, the UPS scale stays in
+`[0.994, 1)`. -/
+theorem upsScale_bounds_84 {φ : ℝ} (hlo : degToRad 84 ≤ φ) (hhi : φ ≤ π / 2) :
+    0.994 ≤ upsScale φ ∧ upsScale φ < 1 :=
+  upsScale_bounds_of_colat (θhi := 0.104721) (dlb := 1.9945) hhi
+    (by simp only [degToRad] at hlo; nlinarith [pi_lt_d6])
+    (by norm_num) (by norm_num) (by norm_num)
 
 /-- Including the overlap down to `80° N`, the UPS scale stays within
 `[0.994, 1.0017)`. -/
 theorem upsScale_bounds_80 {φ : ℝ} (hlo : degToRad 80 ≤ φ) (hhi : φ ≤ π / 2) :
-    0.994 ≤ upsScale φ ∧ upsScale φ < 1.0017 := by
-  set θ := π / 2 - φ
-  have hθ0 : 0 ≤ θ := by simp only [θ]; linarith
-  have hθ_hi : θ ≤ 0.174533 := by
-    simp only [θ, degToRad] at hlo ⊢
-    nlinarith [pi_lt_d6]
-  have hθ2 : θ ^ 2 ≤ 0.174533 ^ 2 := pow_le_pow_left₀ hθ0 hθ_hi 2
-  have hsin_eq : sin φ = cos θ := by
-    have : φ = π / 2 - θ := by simp only [θ]; ring
-    rw [this, sin_pi_div_two_sub]
-  have hcos_lb : 1 - θ ^ 2 / 2 ≤ cos θ := one_sub_sq_div_two_le_cos
-  have hd_lb : 1.98476 < 1 + sin φ := by
-    rw [hsin_eq]
-    nlinarith
-  have hd_ub : 1 + sin φ ≤ 2 := by linarith [sin_le_one φ]
-  have hd_pos : 0 < 1 + sin φ := by linarith
-  unfold upsScale stereographicScale
-  constructor
-  · rw [mul_div_assoc', le_div_iff₀ hd_pos]
-    linarith
-  · rw [mul_div_assoc', div_lt_iff₀ hd_pos]
-    linarith
+    0.994 ≤ upsScale φ ∧ upsScale φ < 1.0017 :=
+  upsScale_bounds_of_colat (θhi := 0.174533) (dlb := 1.98476) hhi
+    (by simp only [degToRad] at hlo; nlinarith [pi_lt_d6])
+    (by norm_num) (by norm_num) (by norm_num)
 
 end Geodesy.Projection

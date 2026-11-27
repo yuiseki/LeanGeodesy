@@ -35,6 +35,20 @@ namespace ReferenceEllipsoid
 
 variable (E : ReferenceEllipsoid)
 
+/-! ## Strict Cauchy-Schwarz on the meridian ellipse -/
+
+private theorem W2_eq_cos_sq_add (φ : ℝ) :
+    E.W2 φ = cos φ ^ 2 + (1 - E.e2) * sin φ ^ 2 := by
+  unfold W2
+  linear_combination -sin_sq_add_cos_sq φ
+
+private theorem primeVerticalRadius_mul_sqrt_W2 (φ : ℝ) :
+    E.primeVerticalRadius φ * √(E.W2 φ) = E.a := by
+  have hs : 0 < √(E.W2 φ) := sqrt_pos.mpr (E.W2_pos φ)
+  simp only [primeVerticalRadius]
+  rw [show 1 - E.e2 * sin φ ^ 2 = E.W2 φ from rfl]
+  field_simp
+
 /-- Strict Cauchy-Schwarz inequality on the meridian ellipse: for distinct
 geodetic latitudes `φ₁ ≠ φ₂`,
 `cos φ₁ cos φ₂ + (1 - e²) sin φ₁ sin φ₂ < √(W²(φ₁)) √(W²(φ₂))`. -/
@@ -48,9 +62,8 @@ theorem meridianDot_lt_sqrt_W2_mul {φ₁ φ₂ : GeodeticLatitude} (hne : φ₁
   set A := c₁ * c₂ + (1 - E.e2) * s₁ * s₂
   have hW1 := E.W2_pos φ₁.1
   have hW2 := E.W2_pos φ₂.1
-  have hs1 : 0 < √(E.W2 φ₁.1) := sqrt_pos.mpr hW1
-  have hs2 : 0 < √(E.W2 φ₂.1) := sqrt_pos.mpr hW2
-  have hprod_pos : 0 < √(E.W2 φ₁.1) * √(E.W2 φ₂.1) := mul_pos hs1 hs2
+  have hprod_pos : 0 < √(E.W2 φ₁.1) * √(E.W2 φ₂.1) :=
+    mul_pos (sqrt_pos.mpr hW1) (sqrt_pos.mpr hW2)
   rcases le_or_gt A 0 with hAle | hApos
   · linarith
   · have hsin_ne : s₁ ≠ s₂ := by
@@ -63,9 +76,8 @@ theorem meridianDot_lt_sqrt_W2_mul {φ₁ φ₂ : GeodeticLatitude} (hne : φ₁
       intro hcross
       have hp1 := sin_sq_add_cos_sq φ₁.1
       have hp2 := sin_sq_add_cos_sq φ₂.1
-      have hsq_eq : s₂ ^ 2 - s₁ ^ 2 = 0 := by
+      have hsq : s₂ ^ 2 = s₁ ^ 2 := by
         linear_combination (c₁ * s₂ + s₁ * c₂) * hcross - s₂ ^ 2 * hp1 + s₁ ^ 2 * hp2
-      have hsq : s₂ ^ 2 = s₁ ^ 2 := by linarith
       rcases sq_eq_sq_iff_eq_or_eq_neg.mp hsq with hpos | hneg
       · exact hsin_ne hpos.symm
       · by_cases hs10 : s₁ = 0
@@ -85,21 +97,17 @@ theorem meridianDot_lt_sqrt_W2_mul {φ₁ φ₂ : GeodeticLatitude} (hne : φ₁
             rw [this]
             nlinarith [sq_nonneg s₁]
           linarith
-    have hW1_eq : E.W2 φ₁.1 = c₁ ^ 2 + (1 - E.e2) * s₁ ^ 2 := by
-      unfold W2
-      linear_combination -sin_sq_add_cos_sq φ₁.1
-    have hW2_eq : E.W2 φ₂.1 = c₂ ^ 2 + (1 - E.e2) * s₂ ^ 2 := by
-      unfold W2
-      linear_combination -sin_sq_add_cos_sq φ₂.1
     have hdiff : (√(E.W2 φ₁.1) * √(E.W2 φ₂.1)) ^ 2 - A ^ 2 =
         (1 - E.e2) * (c₁ * s₂ - s₁ * c₂) ^ 2 := by
-      rw [mul_pow, sq_sqrt hW1.le, sq_sqrt hW2.le, hW1_eq, hW2_eq]
+      rw [mul_pow, sq_sqrt hW1.le, sq_sqrt hW2.le, E.W2_eq_cos_sq_add, E.W2_eq_cos_sq_add]
       simp only [A]
       ring
     have hdiff_pos : 0 < (√(E.W2 φ₁.1) * √(E.W2 φ₂.1)) ^ 2 - A ^ 2 := by
       rw [hdiff]
       exact mul_pos E.one_sub_e2_pos (sq_pos_of_ne_zero hcross_ne)
     nlinarith
+
+/-! ## Uniqueness in the meridian plane and in ECEF -/
 
 /-- Uniqueness in the meridian plane: if two geodetic latitudes and two heights
 with `0 ≤ h₁ + h₂` determine the same `(p, z)` point, then the latitudes and
@@ -121,36 +129,22 @@ theorem lat_height_unique_of_meridian {φ₁ φ₂ : GeodeticLatitude} {h₁ h�
     set N₂ := E.primeVerticalRadius φ₂.1
     set A := c₁ * c₂ + (1 - E.e2) * s₁ * s₂
     have hdot := E.meridianDot_lt_sqrt_W2_mul hne
-    have hN1_pos : 0 < N₁ := E.primeVerticalRadius_pos φ₁.1
-    have hN2_pos : 0 < N₂ := E.primeVerticalRadius_pos φ₂.1
-    have hN1W : N₁ * √(E.W2 φ₁.1) = E.a := by
-      have hs : 0 < √(E.W2 φ₁.1) := sqrt_pos.mpr (E.W2_pos φ₁.1)
-      simp only [N₁, primeVerticalRadius]
-      rw [show 1 - E.e2 * sin φ₁.1 ^ 2 = E.W2 φ₁.1 from rfl]
-      field_simp
-    have hN2W : N₂ * √(E.W2 φ₂.1) = E.a := by
-      have hs : 0 < √(E.W2 φ₂.1) := sqrt_pos.mpr (E.W2_pos φ₂.1)
-      simp only [N₂, primeVerticalRadius]
-      rw [show 1 - E.e2 * sin φ₂.1 ^ 2 = E.W2 φ₂.1 from rfl]
-      field_simp
     have hN1A : N₁ * A < N₂ * E.W2 φ₂.1 := by
-      calc N₁ * A < N₁ * (√(E.W2 φ₁.1) * √(E.W2 φ₂.1)) := mul_lt_mul_of_pos_left hdot hN1_pos
-        _ = E.a * √(E.W2 φ₂.1) := by rw [← mul_assoc, hN1W]
+      calc N₁ * A < N₁ * (√(E.W2 φ₁.1) * √(E.W2 φ₂.1)) :=
+            mul_lt_mul_of_pos_left hdot (E.primeVerticalRadius_pos φ₁.1)
+        _ = E.a * √(E.W2 φ₂.1) := by rw [← mul_assoc, E.primeVerticalRadius_mul_sqrt_W2]
         _ = N₂ * E.W2 φ₂.1 := E.a_mul_sqrt_W2 φ₂.1
     have hN2A : N₂ * A < N₁ * E.W2 φ₁.1 := by
-      calc N₂ * A < N₂ * (√(E.W2 φ₁.1) * √(E.W2 φ₂.1)) := mul_lt_mul_of_pos_left hdot hN2_pos
+      calc N₂ * A < N₂ * (√(E.W2 φ₁.1) * √(E.W2 φ₂.1)) :=
+            mul_lt_mul_of_pos_left hdot (E.primeVerticalRadius_pos φ₂.1)
         _ = (N₂ * √(E.W2 φ₂.1)) * √(E.W2 φ₁.1) := by ring
-        _ = E.a * √(E.W2 φ₁.1) := by rw [hN2W]
+        _ = E.a * √(E.W2 φ₁.1) := by rw [E.primeVerticalRadius_mul_sqrt_W2]
         _ = N₁ * E.W2 φ₁.1 := E.a_mul_sqrt_W2 φ₁.1
-    have hW1_eq : E.W2 φ₁.1 = c₁ ^ 2 + (1 - E.e2) * s₁ ^ 2 := by
-      unfold W2; linear_combination -sin_sq_add_cos_sq φ₁.1
-    have hW2_eq : E.W2 φ₂.1 = c₂ ^ 2 + (1 - E.e2) * s₂ ^ 2 := by
-      unfold W2; linear_combination -sin_sq_add_cos_sq φ₂.1
     have hh_term : 0 ≤ (h₁ + h₂) * ((c₁ - c₂) ^ 2 + (s₁ - s₂) ^ 2) :=
       mul_nonneg hh (add_nonneg (sq_nonneg _) (sq_nonneg _))
     have hzero : 2 * (N₁ * (E.W2 φ₁.1 - A) + N₂ * (E.W2 φ₂.1 - A)) +
         (h₁ + h₂) * ((c₁ - c₂) ^ 2 + (s₁ - s₂) ^ 2) = 0 := by
-      rw [hW1_eq, hW2_eq]
+      rw [E.W2_eq_cos_sq_add, E.W2_eq_cos_sq_add]
       simp only [A]
       linear_combination
         2 * (c₁ - c₂) * hp + 2 * (s₁ - s₂) * hz
