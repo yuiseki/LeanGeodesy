@@ -840,7 +840,10 @@ other file refers to the labels.
 | `LeanGeodesy/Projection/TransverseMercator.lean` | Spherical transverse Mercator, conformality, UTM scale |
 | `LeanGeodesy/Projection/Stereographic.lean` | Polar stereographic projection, radial bijection, conformality, UPS scale bounds |
 | `LeanGeodesy/Geodesic.lean` | Central angle, haversine, great-circle distance as a metric |
-| `LeanGeodesy/Spherical/Packing.lean` | Spherical discrete geometry: unit sphere, geodesic/chord/inner-product equivalences, cap packing equivalence, orthogonal invariance, Rankin simplex & orthoplex bounds, exact Tammes optimality for `N = 2, 3, 4, 5, 6` |
+| `LeanGeodesy/Spherical/Packing.lean` | Spherical discrete geometry: unit sphere, geodesic/chord/inner-product equivalences, cap packing equivalence, orthogonal and permutation invariance, Rankin simplex/orthoplex/`2d` bounds, exact Tammes optimality for `N = 2..6` |
+| `LeanGeodesy/Spherical/Topology.lean` | Compactness of `UnitSphere`, continuity and topological equivalence of `geoDist` and `chordDist`, existence of optimal packing (`N ≥ 2`) and covering (`N ≥ 1`) configurations |
+| `LeanGeodesy/Spherical/Delsarte.lean` | Legendre polynomials `P₀..P₄`, positive semidefiniteness via traceless harmonic tensors, reusable Delsarte LP bound and tightness criterion, regular icosahedron, unconditional exact Tammes optimality for `N = 12` |
+| `LeanGeodesy/Spherical/DelsarteCert.lean` | Kernel-decidable rational Delsarte LP certificate verifier (Bernstein basis on `[-1, s]`), soundness theorem, verified examples (`N ≤ 3, 4, 6, 11`), and invalid-certificate rejection tests |
 | `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |
 | `LeanGeodesy/CRS/WGS84.lean` | The WGS 84 geographic CRS |
 | `LeanGeodesy/CRS/WebMercator.lean` | The Web Mercator projected CRS over WGS 84 |

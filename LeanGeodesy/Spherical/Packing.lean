@@ -186,6 +186,49 @@ theorem isSeparated_iff_isSphericalCode {n : ℕ} (p : Fin n → UnitSphere) {θ
     IsSeparated p θ ↔ IsSphericalCode p (cos θ) := by
   simp only [IsSeparated, IsSphericalCode, geoDist_ge_iff_inner_le h0 hπ]
 
+/-- Any configuration with strictly positive separation angle is injective. -/
+theorem IsSeparated.injective {n : ℕ} {p : Fin n → UnitSphere} {θ : ℝ}
+    (h : IsSeparated p θ) (hθ : 0 < θ) : Function.Injective p := by
+  intro i j hij
+  by_contra hne
+  have hge := h i j hne
+  rw [hij, geoDist_self] at hge
+  linarith
+
+/-- Spherical codes are invariant under relabeling of points. -/
+theorem isSphericalCode_comp_equiv {n : ℕ} (p : Fin n → UnitSphere) (σ : Equiv.Perm (Fin n))
+    (t : ℝ) :
+    IsSphericalCode (p ∘ σ) t ↔ IsSphericalCode p t := by
+  constructor
+  · intro h i j hij
+    have := h (σ.symm i) (σ.symm j) (fun e => hij (by simpa using congrArg σ e))
+    simpa using this
+  · intro h i j hij
+    exact h (σ i) (σ j) (fun e => hij (σ.injective e))
+
+/-- Separated configurations are invariant under relabeling of points. -/
+theorem isSeparated_comp_equiv {n : ℕ} (p : Fin n → UnitSphere) (σ : Equiv.Perm (Fin n))
+    (θ : ℝ) :
+    IsSeparated (p ∘ σ) θ ↔ IsSeparated p θ := by
+  constructor
+  · intro h i j hij
+    have := h (σ.symm i) (σ.symm j) (fun e => hij (by simpa using congrArg σ e))
+    simpa using this
+  · intro h i j hij
+    exact h (σ i) (σ j) (fun e => hij (σ.injective e))
+
+/-- Spherical coverings are invariant under relabeling of points. -/
+theorem isCovering_comp_equiv {n : ℕ} (p : Fin n → UnitSphere) (σ : Equiv.Perm (Fin n))
+    (r : ℝ) :
+    IsCovering (p ∘ σ) r ↔ IsCovering p r := by
+  constructor
+  · intro h x
+    obtain ⟨i, hi⟩ := h x
+    exact ⟨σ i, hi⟩
+  · intro h x
+    obtain ⟨i, hi⟩ := h x
+    exact ⟨σ.symm i, by simpa using hi⟩
+
 /-- Equivalence between the Tammes problem (`IsSeparated p θ`) and packing `n`
 equal-radius open spherical caps of radius `θ / 2` on `S²`. -/
 theorem isSeparated_iff_pairwise_disjoint_openCap {n : ℕ} (p : Fin n → UnitSphere) {θ : ℝ}
@@ -441,6 +484,159 @@ theorem isSeparated_orthoplex_bound {n : ℕ} (hn : 5 ≤ n) {p : Fin n → Unit
   calc θ ≤ geoDist (p i) (p j) := h i j hij
     _ = arccos (inner ℝ (p i).1 (p j).1) := geoDist_eq_arccos_inner (p i) (p j)
     _ ≤ arccos 0 := arccos_le_arccos_of_le hge
+    _ = π / 2 := arccos_zero
+
+/-- Rankin's `2d` bound: in a real inner product space of dimension `≤ d`,
+more than `2d` nonzero vectors cannot have all pairwise inner products `≤ 0`. -/
+theorem rankin_nonpos_bound_finrank :
+    ∀ (d : ℕ) {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [FiniteDimensional ℝ V],
+      Module.finrank ℝ V ≤ d →
+      ∀ {n : ℕ}, 2 * d < n →
+      ∀ (v : Fin n → V), (∀ i, v i ≠ 0) →
+      ∃ i j : Fin n, i ≠ j ∧ 0 < inner ℝ (v i) (v j)
+  | 0, V, _, _, _, hdim, n, hn, v, hv => by
+    have h0 : Module.finrank ℝ V = 0 := Nat.eq_zero_of_le_zero hdim
+    have hsub : Subsingleton V := Module.finrank_zero_iff.mp h0
+    exact absurd (Subsingleton.elim (v ⟨0, by omega⟩) 0) (hv ⟨0, by omega⟩)
+  | d + 1, V, _, _, _, hdim, n, hn, v, hv => by
+    classical
+    by_contra hle
+    push Not at hle
+    let i0 : Fin n := ⟨0, by omega⟩
+    let u : V := (‖v i0‖)⁻¹ • v i0
+    have hu_norm : ‖u‖ = 1 := by
+      rw [norm_smul, Real.norm_eq_abs, abs_inv, abs_of_pos (norm_pos_iff.mpr (hv i0)),
+        inv_mul_cancel₀ (norm_ne_zero_iff.mpr (hv i0))]
+    have hu_ne : u ≠ 0 := fun h => by rw [h, norm_zero] at hu_norm; norm_num at hu_norm
+    have huu : (inner ℝ u u : ℝ) = 1 := inner_self_of_norm_one hu_norm
+    let S : Submodule ℝ V := (Submodule.span ℝ {u})ᗮ
+    have hfinS : Module.finrank ℝ S ≤ d := by
+      have hadd := Submodule.finrank_add_finrank_orthogonal (Submodule.span ℝ {u})
+      have hspan : Module.finrank ℝ (Submodule.span ℝ {u}) = 1 := finrank_span_singleton hu_ne
+      dsimp only [S]
+      omega
+    have hinner_u : ∀ i : Fin n, i ≠ i0 → inner ℝ (v i) u ≤ 0 := by
+      intro i hi
+      rw [real_inner_smul_right]
+      exact mul_nonpos_of_nonneg_of_nonpos (inv_nonneg.mpr (norm_nonneg _)) (hle i i0 hi)
+    let proj : Fin n → S := fun i =>
+      ⟨v i - (inner ℝ (v i) u : ℝ) • u, by
+        rw [Submodule.mem_orthogonal_singleton_iff_inner_right]
+        rw [inner_sub_right, real_inner_smul_right, huu, mul_one, real_inner_comm, sub_self]⟩
+    have hzero_unique : ∀ i j : Fin n, i ≠ i0 → j ≠ i0 → proj i = 0 → proj j = 0 → i = j := by
+      intro i j hi hj hpi hpj
+      by_contra hij
+      have hvi : v i = (inner ℝ (v i) u : ℝ) • u := sub_eq_zero.mp (congrArg Subtype.val hpi)
+      have hvj : v j = (inner ℝ (v j) u : ℝ) • u := sub_eq_zero.mp (congrArg Subtype.val hpj)
+      have hci_ne : inner ℝ (v i) u ≠ 0 := fun hc => by
+        rw [hc, zero_smul] at hvi; exact hv i hvi
+      have hcj_ne : inner ℝ (v j) u ≠ 0 := fun hc => by
+        rw [hc, zero_smul] at hvj; exact hv j hvj
+      have hci : inner ℝ (v i) u < 0 := lt_of_le_of_ne (hinner_u i hi) hci_ne
+      have hcj : inner ℝ (v j) u < 0 := lt_of_le_of_ne (hinner_u j hj) hcj_ne
+      have hsmul : ∀ (a b : ℝ) (u' : V), inner ℝ u' u' = 1 →
+          inner ℝ (a • u') (b • u') = a * b := fun a b u' hu' => by
+        rw [real_inner_smul_left, real_inner_smul_right, hu', mul_one]
+      have hpos : 0 < inner ℝ (v i) (v j) := by
+        rw [hvi, hvj, hsmul _ _ u huu]
+        exact mul_pos_of_neg_of_neg hci hcj
+      exact not_lt_of_ge (hle i j hij) hpos
+    let good : Finset (Fin n) := Finset.univ.filter fun i => proj i ≠ 0
+    have hbad_card : (Finset.univ.filter fun i : Fin n => proj i = 0).card ≤ 2 := by
+      let bad := Finset.univ.filter fun i : Fin n => proj i = 0
+      by_cases hex : ∃ j : Fin n, j ≠ i0 ∧ proj j = 0
+      · obtain ⟨j0, hj0_ne, hj0_z⟩ := hex
+        have hsub : bad ⊆ {i0, j0} := by
+          intro i hi
+          have hpi : proj i = 0 := (Finset.mem_filter.mp hi).2
+          by_cases hi0 : i = i0
+          · simp [hi0]
+          · simp [hzero_unique i j0 hi0 hj0_ne hpi hj0_z]
+        exact (Finset.card_le_card hsub).trans Finset.card_le_two
+      · push Not at hex
+        have hsub : bad ⊆ {i0} := by
+          intro i hi
+          have hpi : proj i = 0 := (Finset.mem_filter.mp hi).2
+          by_contra hi0
+          exact hex i (by simpa using hi0) hpi
+        exact (Finset.card_le_card hsub).trans (by norm_num)
+    have hgood_card : 2 * d < good.card := by
+      have hsum : good.card + (Finset.univ.filter fun i : Fin n => proj i = 0).card = n := by
+        have h := Finset.card_filter_add_card_filter_not (s := (Finset.univ : Finset (Fin n)))
+          (p := fun i => proj i ≠ 0)
+        simpa only [good, not_not, Finset.card_univ, Fintype.card_fin] using h
+      omega
+    let e : Fin good.card ≃ good := good.equivFin.symm
+    let w : Fin good.card → S := fun k => proj (e k).1
+    have hw_ne : ∀ k : Fin good.card, w k ≠ 0 := fun k =>
+      (Finset.mem_filter.mp (e k).2).2
+    obtain ⟨a, b, hab, hpos⟩ := rankin_nonpos_bound_finrank d hfinS hgood_card w hw_ne
+    have hne_ab : (e a).1 ≠ (e b).1 := fun h => hab (e.injective (Subtype.ext h))
+    have hne_a0 : (e a).1 ≠ i0 := fun h => by
+      apply hw_ne a
+      dsimp only [w]
+      rw [h]
+      apply Subtype.ext
+      simp only [proj, ZeroMemClass.coe_zero, u, real_inner_smul_right, real_inner_self_eq_norm_sq,
+        smul_smul]
+      have hnv : ‖v i0‖ ≠ 0 := norm_ne_zero_iff.mpr (hv i0)
+      have hcoeff : ‖v i0‖⁻¹ * ‖v i0‖ ^ 2 * ‖v i0‖⁻¹ = 1 := by field_simp
+      rw [hcoeff, one_smul, sub_self]
+    have hne_b0 : (e b).1 ≠ i0 := fun h => by
+      apply hw_ne b
+      dsimp only [w]
+      rw [h]
+      apply Subtype.ext
+      simp only [proj, ZeroMemClass.coe_zero, u, real_inner_smul_right, real_inner_self_eq_norm_sq,
+        smul_smul]
+      have hnv : ‖v i0‖ ≠ 0 := norm_ne_zero_iff.mpr (hv i0)
+      have hcoeff : ‖v i0‖⁻¹ * ‖v i0‖ ^ 2 * ‖v i0‖⁻¹ = 1 := by field_simp
+      rw [hcoeff, one_smul, sub_self]
+    have hwij : (inner ℝ (w a) (w b) : ℝ) =
+        inner ℝ (v (e a).1) (v (e b).1) -
+          inner ℝ (v (e a).1) u * inner ℝ (v (e b).1) u := by
+      have haux : ∀ (u' x y : V), inner ℝ u' u' = 1 →
+          inner ℝ (x - (inner ℝ x u' : ℝ) • u') (y - (inner ℝ y u' : ℝ) • u') =
+            inner ℝ x y - inner ℝ x u' * inner ℝ y u' := by
+        intro u' x y hu'
+        rw [inner_sub_left, inner_sub_right, inner_sub_right,
+          real_inner_smul_left, real_inner_smul_right, real_inner_smul_left, real_inner_smul_right,
+          hu', real_inner_comm u' y]
+        ring
+      exact haux u (v (e a).1) (v (e b).1) huu
+    have hprod : 0 ≤ inner ℝ (v (e a).1) u * inner ℝ (v (e b).1) u :=
+      mul_nonneg_of_nonpos_of_nonpos (hinner_u _ hne_a0) (hinner_u _ hne_b0)
+    have hle_ab : inner ℝ (v (e a).1) (v (e b).1) ≤ 0 := hle _ _ hne_ab
+    linarith
+
+/-- On `S²` (`dim E3 = 3`, `2d = 6`), every configuration of `n ≥ 7` points has
+a distinct pair with strictly positive inner product (geodesic distance `< π / 2`). -/
+theorem rankin_nonpos_bound {n : ℕ} (hn : 7 ≤ n) (p : Fin n → UnitSphere) :
+    ∃ i j : Fin n, i ≠ j ∧ 0 < inner ℝ (p i).1 (p j).1 := by
+  have hdim : Module.finrank ℝ E3 ≤ 3 := by
+    rw [finrank_euclideanSpace_fin]
+  have hne : ∀ i : Fin n, (p i).1 ≠ 0 := fun i h => by
+    have := (p i).2
+    rw [h, norm_zero] at this
+    norm_num at this
+  exact rankin_nonpos_bound_finrank 3 hdim (by omega) (fun i => (p i).1) hne
+
+/-- Any `7` or more points on `S²` have minimum separation strictly less than `π / 2`. -/
+theorem isSeparated_lt_pi_div_two_of_seven_le {n : ℕ} (hn : 7 ≤ n) {p : Fin n → UnitSphere}
+    {θ : ℝ} (h : IsSeparated p θ) :
+    θ < π / 2 := by
+  obtain ⟨i, j, hij, hpos⟩ := rankin_nonpos_bound hn p
+  have hlt : arccos (inner ℝ (p i).1 (p j).1) < arccos 0 := by
+    rw [arccos, arccos]
+    have hsin : arcsin 0 < arcsin (inner ℝ (p i).1 (p j).1) := by
+      have h1 : inner ℝ (p i).1 (p j).1 ≤ 1 := inner_le_one (p i) (p j)
+      have h2 : -1 ≤ inner ℝ (p i).1 (p j).1 := neg_one_le_inner (p i) (p j)
+      rw [arcsin_zero]
+      exact arcsin_pos.mpr hpos
+    linarith
+  calc θ ≤ geoDist (p i) (p j) := h i j hij
+    _ = arccos (inner ℝ (p i).1 (p j).1) := geoDist_eq_arccos_inner (p i) (p j)
+    _ < arccos 0 := hlt
     _ = π / 2 := arccos_zero
 
 /-! ## Exact Tammes optimality for N = 2, 3, 4, 5, 6 -/
