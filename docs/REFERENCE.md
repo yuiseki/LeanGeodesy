@@ -261,8 +261,34 @@ element (`areaScale_ofEllipsoid`). The meridian arc is the curve length of the
 meridian, moving at `√I(1, 0) = M` (`meridianArc_eq_curveLength`). This metric
 is the common ground for projection distortion and for geodesics on the
 ellipsoid (`Geodesic.Ellipsoid`). The radii of curvature `M` and `N` are in
-`Curvature`; the second fundamental form, the shape operator, principal
-curvatures and Gaussian curvature are not covered yet.
+`Curvature`; the second fundamental form, Weingarten equations, Euler curvature
+and Gaussian curvature are in `SecondFundamentalForm`.
+
+### SecondFundamentalForm
+
+Against the outward unit normal `n = (cos φ cos λ, cos φ sin λ, sin φ)`
+(`unitNormal`), differentiating `n` gives the Weingarten equations
+`∂n/∂φ = (1 / M) ∂r/∂φ` and `∂n/∂λ = (1 / N) ∂r/∂λ`
+(`hasDerivAt_unitNormal_lat`, `hasDerivAt_unitNormal_lon`), and pairing the
+second derivatives of `r` with `n` gives `L = -M`, `M_II = 0`,
+`N_II = -N cos² φ` (`secondFormL_eq`, `secondFormM_eq`, `secondFormN_eq`,
+`secondForm_eq_LMN`). Along any curve on the ellipsoid, the outward normal
+component of acceleration is `II(φ', λ')`
+(`EllipsoidCurve.inner_acc_unitNormal`).
+
+- Euler's curvature formula: at azimuth `A` (`azimuthStep`), the inward normal
+  curvature is `(cos² A) / M + (sin² A) / N` (`normalCurvature_azimuth`),
+  bounded by the principal curvatures `1 / N ≤ κ_n ≤ 1 / M`
+  (`normalCurvature_bounds`, from `meridianRadius_le_primeVerticalRadius`).
+- Gaussian curvature `K = (L N_II - M_II²) / (E G - F²) = 1 / (M N) = W⁴ / (a² (1 - e²)) > 0`
+  (`gaussianCurvature_eq_det`, `gaussianCurvature_eq_W2`,
+  `gaussianCurvature_pos`), equal to `1 / b²` at the equator and `b² / a⁴` at
+  the poles (`gaussianCurvature_zero`, `gaussianCurvature_pi_div_two`).
+- Mean curvature `H = (1 / M + 1 / N) / 2` and Gaussian radius `R_G = √(M N)`
+  (`M ≤ R_G ≤ N`, `gaussianRadius_bounds`).
+- Gauss's Theorema Egregium on the ellipsoid: off the poles,
+  `K = -(1 / areaElement) · d/dφ ((d/dφ √G) / √E)`
+  (`gaussianCurvature_eq_intrinsic`), determined by `E` and `G` alone.
 
 ### Geodesic.Ellipsoid
 
@@ -787,6 +813,7 @@ other file refers to the labels.
 | `LeanGeodesy/Helmert.lean` | Helmert transformations and the linearised rotation |
 | `LeanGeodesy/Curvature.lean` | Radii of curvature `M`, `N` and their derivatives, and the tangents of the ellipsoid |
 | `LeanGeodesy/FirstFundamentalForm.lean` | E, F, G, the metric, `ds²`, speeds, angles, the area element |
+| `LeanGeodesy/SecondFundamentalForm.lean` | Unit normal, Weingarten equations, second fundamental form, Euler curvature, principal, Gaussian and mean curvatures, Theorema Egregium |
 | `LeanGeodesy/Geodesic/Ellipsoid.lean` | Affine geodesic equations in latitude and longitude, Christoffel form, and Clairaut's relation |
 | `LeanGeodesy/MeridianArc.lean` | Meridian arc length as an integral of `M`, and its bounds |
 | `LeanGeodesy/QuarterMeridian.lean` | The WGS 84 quarter meridian is 10001960 m to 10001975 m |

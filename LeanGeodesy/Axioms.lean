@@ -1486,3 +1486,35 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Tiles.mortonInSubtree_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.mortonInSubtree_iff
+
+/-- info: 'Geodesy.ReferenceEllipsoid.hasDerivAt_unitNormal_lat' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.hasDerivAt_unitNormal_lat
+
+/-- info: 'Geodesy.ReferenceEllipsoid.hasDerivAt_unitNormal_lon' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.hasDerivAt_unitNormal_lon
+
+/-- info: 'Geodesy.ReferenceEllipsoid.secondForm_eq_LMN' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.secondForm_eq_LMN
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.inner_acc_unitNormal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.inner_acc_unitNormal
+
+/-- info: 'Geodesy.ReferenceEllipsoid.normalCurvature_azimuth' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.normalCurvature_azimuth
+
+/-- info: 'Geodesy.ReferenceEllipsoid.normalCurvature_bounds' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.normalCurvature_bounds
+
+/-- info: 'Geodesy.ReferenceEllipsoid.gaussianCurvature_eq_det' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.gaussianCurvature_eq_det
+
+/-- info: 'Geodesy.ReferenceEllipsoid.gaussianCurvature_eq_intrinsic' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.gaussianCurvature_eq_intrinsic

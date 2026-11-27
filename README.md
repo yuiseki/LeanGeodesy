@@ -89,6 +89,7 @@ A selection; [docs/REFERENCE.md](docs/REFERENCE.md) lists everything.
 | Result | Theorem |
 | --- | --- |
 | `E = M²`, `F = 0`, `G = (N cos φ)²`, and `dA = M N cos φ dφ dλ` | `firstFormE_eq`, `firstFormG_eq`, `areaElement_eq` |
+| Weingarten, Euler curvature `(cos² A) / M + (sin² A) / N ∈ [1 / N, 1 / M]`, `K = 1 / (M N)`, and Gauss's Theorema Egregium | `hasDerivAt_unitNormal_lat`, `normalCurvature_azimuth`, `normalCurvature_bounds`, `gaussianCurvature_eq_det`, `gaussianCurvature_eq_intrinsic` |
 | A projection is conformal exactly when it multiplies the first fundamental form by `h²` | `isConformal_iff_firstForm` |
 | Affine geodesics on the ellipsoid are exactly the solutions of the latitude and longitude equations | `isGeodesic_iff_equations` |
 | Clairaut: `N cos φ sin A` is constant along a geodesic | `clairaut` |
@@ -131,11 +132,9 @@ problems, geodesic distance), the agreement of the metric length above with
 the arc length of smooth curves (the integral of speed), the uniqueness of
 the ellipsoidal ECEF inverse, published transformation parameters, CRS
 registries, the ellipsoidal transverse Mercator projection, ellipsoidal
-rhumb lines, azimuthal projections centred off the pole, projections other
-than those above, and the second fundamental form, shape operator, principal
-curvatures and Gaussian curvature are not covered yet. The geodesic results
-use the embedding in ℝ³; an intrinsic Levi-Civita connection is not
-formalised.
+rhumb lines, azimuthal projections centred off the pole, and projections other than those
+above are not covered yet. The geodesic results use the embedding in ℝ³; an
+intrinsic Levi-Civita connection is not formalised.
 
 ## Build
 
