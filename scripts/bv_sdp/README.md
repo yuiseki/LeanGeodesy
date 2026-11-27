@@ -18,6 +18,9 @@ depending only on `[propext]`).
 | `bv_k3_s3.py` | $S_3$-symmetry-reduced 3-point SDP formulation (4 multipliers, 10 SOS blocks) |
 | `round_k3_cert.py` | Interiority maximization (`bound <= 12.99`), rational rounding, exact $S_3$ polynomial residual elimination, and $M = R^\top R + E$ decomposition |
 | `export_k3_lean.py` | Generates `LeanGeodesy/Spherical/KissingNumber3.lean` from the exact rational certificate |
+| `export_tammes18_lean.py` | Generates `LeanGeodesy/Spherical/Tammes18.lean` (`BV(6, 12)` at $s = 313/500$) |
+| `round_bv8_18.py` | Reduced 7-block Chebyshev-basis `BV(8, 16)` solve at $s = 317/500$, exact rational QR-pivot projection, and exact integer Cholesky + DD verification (`bv8_18_cert.json`) |
+| `export_tammes18_bv8_lean.py` | Generates `LeanGeodesy/Spherical/Tammes18BV8.lean` from `bv8_18_cert.json` |
 
 ## Environment & Reproduction
 

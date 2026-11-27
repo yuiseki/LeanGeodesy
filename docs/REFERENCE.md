@@ -851,6 +851,9 @@ other file refers to the labels.
 | `LeanGeodesy/Spherical/Legendre12.lean` | Legendre polynomials `P₀..P₁₂`, positive semidefiniteness via the `bvQ` addition theorem (`sum_legendreP12_nonneg`), and `bachocVallentin_bound_with_legendre` |
 | `LeanGeodesy/Spherical/BachocVallentinCert6.lean` | Kernel-decidable exact rational degree-6 + Legendre `P₁..P₁₂` Bachoc–Vallentin SDP certificate verifier (`BVCert6`, `BVCert6.sound`) |
 | `LeanGeodesy/Spherical/Tammes18.lean` | Certified rational degree-6 + `P₁..P₁₂` SDP proof of `A(3, 313/500) ≤ 17` and `T(18) < arccos(313/500) < 51.25°` (improves Fejes Tóth 1943 and BV-17 monotonicity; weaker than Robinson 1961's `50.68095°`) |
+| `LeanGeodesy/Spherical/Legendre16.lean` | Legendre polynomials `P₀..P₁₆`, positive semidefiniteness via the `bvQ` addition theorem (`sum_legendreP16_nonneg`), and Chebyshev-basis `bachocVallentin_cheb_bound_with_legendre16` |
+| `LeanGeodesy/Spherical/BachocVallentinCert8.lean` | Kernel-decidable exact rational degree-8 + Legendre `P₁..P₁₆` Bachoc–Vallentin SDP certificate verifier (`BVCert8`, `BVCert8.sound`) with trimmed lower-triangular Cholesky (`isCholeskyDDLower`) |
+| `LeanGeodesy/Spherical/Tammes18BV8.lean` | Certified rational degree-8 + `P₁..P₁₆` SDP proof of `A(3, 317/500) ≤ 17`, `T(18) < arccos(317/500) < 50.655°`, and `robinson18_strict_improvement` (strictly improves R. M. Robinson 1961's `50.68095°`) |
 | `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |
 | `LeanGeodesy/CRS/WGS84.lean` | The WGS 84 geographic CRS |
 | `LeanGeodesy/CRS/WebMercator.lean` | The Web Mercator projected CRS over WGS 84 |
