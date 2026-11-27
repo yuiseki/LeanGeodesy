@@ -21,7 +21,7 @@ gives `T(18) ≤ 50.68095°`.
 
 The proof uses a degree-6 Bachoc–Vallentin three-point SDP certificate combined with
 two-point Legendre terms `P₁..P₁₂`, checked purely by `decide` in the Lean 4 kernel
-(no `native_decide`, no `sorry`, no custom axioms).
+(no `native_decide`, no custom axioms).
 -/
 
 namespace Geodesy.Spherical
