@@ -40,6 +40,10 @@ import LeanGeodesy.Spherical.Packing
 import LeanGeodesy.Spherical.Topology
 import LeanGeodesy.Spherical.Delsarte
 import LeanGeodesy.Spherical.DelsarteCert
+import LeanGeodesy.Spherical.ThreePoint
+import LeanGeodesy.Spherical.BachocVallentin
+import LeanGeodesy.Spherical.BachocVallentinCert
+import LeanGeodesy.Spherical.KissingNumber3
 import LeanGeodesy.CRS.Basic
 import LeanGeodesy.CRS.WGS84
 import LeanGeodesy.CRS.WebMercator

@@ -844,6 +844,10 @@ other file refers to the labels.
 | `LeanGeodesy/Spherical/Topology.lean` | Compactness of `UnitSphere`, continuity and topological equivalence of `geoDist` and `chordDist`, existence of optimal packing (`N ≥ 2`) and covering (`N ≥ 1`) configurations |
 | `LeanGeodesy/Spherical/Delsarte.lean` | Legendre polynomials `P₀..P₄`, positive semidefiniteness via traceless harmonic tensors, reusable Delsarte LP bound and tightness criterion, regular icosahedron, unconditional exact Tammes optimality for `N = 12` |
 | `LeanGeodesy/Spherical/DelsarteCert.lean` | Kernel-decidable rational Delsarte LP certificate verifier (Bernstein basis on `[-1, s]`), soundness theorem, verified examples (`N ≤ 3, 4, 6, 11`), and invalid-certificate rejection tests |
+| `LeanGeodesy/Spherical/ThreePoint.lean` | Three-point Gram matrix PSD, determinant identity `1 + 2 u v t - u² - v² - t² ≥ 0`, `S₃` symmetries, admissible three-point spherical-code domain, and off-diagonal triple decomposition |
+| `LeanGeodesy/Spherical/BachocVallentin.lean` | Arbitrary-degree Bachoc–Vallentin three-point SDP kernel on `S²` (`bvQ` via tangent-plane complex projection), PSD of weighted triple sums, Cholesky + diagonally dominant PSD criterion, and reusable `bachocVallentin_bound` |
+| `LeanGeodesy/Spherical/BachocVallentinCert.lean` | Kernel-decidable exact rational Bachoc–Vallentin SDP certificate verifier (`BVCert5`), `S₃`-symmetric SOS and `M = Rᵀ R + E` verification, and soundness theorem (`BVCert5.sound`) |
+| `LeanGeodesy/Spherical/KissingNumber3.lean` | Certified rational degree-5 three-point SDP certificate (`< 12.99`), unconditional kernel proof of `K(3) = 12` (`kissingNumber_three_upper`, `kissingNumber_three_lower`, `kissingNumber_three_exact`), and invalid-certificate rejection tests |
 | `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |
 | `LeanGeodesy/CRS/WGS84.lean` | The WGS 84 geographic CRS |
 | `LeanGeodesy/CRS/WebMercator.lean` | The Web Mercator projected CRS over WGS 84 |

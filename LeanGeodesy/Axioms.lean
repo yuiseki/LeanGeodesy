@@ -1626,3 +1626,35 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Spherical.DelsarteCert.sound' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Spherical.DelsarteCert.sound
+
+/-- info: 'Geodesy.Spherical.gramMatrix3_posSemidef' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.gramMatrix3_posSemidef
+
+/-- info: 'Geodesy.Spherical.gramDet3_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.gramDet3_nonneg
+
+/-- info: 'Geodesy.Spherical.bachocVallentin_bound' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.bachocVallentin_bound
+
+/-- info: 'Geodesy.Spherical.BVCert5.sound' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.BVCert5.sound
+
+/-- info: 'Geodesy.Spherical.kissing3Cert_valid' depends on axioms: [propext] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.kissing3Cert_valid
+
+/-- info: 'Geodesy.Spherical.kissingNumber_three_upper' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.kissingNumber_three_upper
+
+/-- info: 'Geodesy.Spherical.kissingNumber_three_lower' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.kissingNumber_three_lower
+
+/-- info: 'Geodesy.Spherical.kissingNumber_three_exact' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.kissingNumber_three_exact
