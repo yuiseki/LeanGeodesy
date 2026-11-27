@@ -1546,3 +1546,43 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Tiles.adjB_iff' depends on axioms: [propext, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Tiles.adjB_iff
+
+/-- info: 'Geodesy.Spherical.geoDist_ge_iff_inner_le' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.geoDist_ge_iff_inner_le
+
+/-- info: 'Geodesy.Spherical.geoDist_ge_iff_chordDist_ge' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.geoDist_ge_iff_chordDist_ge
+
+/-- info: 'Geodesy.Spherical.isSeparated_iff_pairwise_disjoint_openCap' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.isSeparated_iff_pairwise_disjoint_openCap
+
+/-- info: 'Geodesy.Spherical.rankin_simplex_bound' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.rankin_simplex_bound
+
+/-- info: 'Geodesy.Spherical.rankin_orthoplex_bound_finrank' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.rankin_orthoplex_bound_finrank
+
+/-- info: 'Geodesy.Spherical.tammes_2_optimal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.tammes_2_optimal
+
+/-- info: 'Geodesy.Spherical.tammes_3_optimal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.tammes_3_optimal
+
+/-- info: 'Geodesy.Spherical.tammes_4_optimal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.tammes_4_optimal
+
+/-- info: 'Geodesy.Spherical.tammes_5_optimal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.tammes_5_optimal
+
+/-- info: 'Geodesy.Spherical.tammes_6_optimal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.tammes_6_optimal

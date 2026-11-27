@@ -36,6 +36,7 @@ import LeanGeodesy.Projection.Stereographic
 import LeanGeodesy.Geodesic
 import LeanGeodesy.Geodesic.Ellipsoid
 import LeanGeodesy.SecondFundamentalForm
+import LeanGeodesy.Spherical.Packing
 import LeanGeodesy.CRS.Basic
 import LeanGeodesy.CRS.WGS84
 import LeanGeodesy.CRS.WebMercator

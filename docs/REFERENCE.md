@@ -840,6 +840,7 @@ other file refers to the labels.
 | `LeanGeodesy/Projection/TransverseMercator.lean` | Spherical transverse Mercator, conformality, UTM scale |
 | `LeanGeodesy/Projection/Stereographic.lean` | Polar stereographic projection, radial bijection, conformality, UPS scale bounds |
 | `LeanGeodesy/Geodesic.lean` | Central angle, haversine, great-circle distance as a metric |
+| `LeanGeodesy/Spherical/Packing.lean` | Spherical discrete geometry: unit sphere, geodesic/chord/inner-product equivalences, cap packing equivalence, orthogonal invariance, Rankin simplex & orthoplex bounds, exact Tammes optimality for `N = 2, 3, 4, 5, 6` |
 | `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |
 | `LeanGeodesy/CRS/WGS84.lean` | The WGS 84 geographic CRS |
 | `LeanGeodesy/CRS/WebMercator.lean` | The Web Mercator projected CRS over WGS 84 |
