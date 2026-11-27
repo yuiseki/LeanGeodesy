@@ -97,6 +97,9 @@ A selection; [docs/REFERENCE.md](docs/REFERENCE.md) lists everything.
 | Constant bearing on the sphere is a straight line on Mercator | `constantBearing_iff_mercatorLine` |
 | Lambert's cylindrical projection keeps the area of every latitude-longitude cell | `lambertCylindrical_preserves_cellArea` |
 | EPSG:4326 geographic 2D and EPSG:3857 convert back and forth as a bijection | `webMercatorEquiv` |
+| On and outside the ellipsoid (`0 ≤ height`), `toECEF` uniquely determines latitude and height everywhere, and is injective off the poles | `lat_height_eq_of_toECEF`, `toECEF_injective_off_poles` |
+| Smooth curve length on the ellipsoid equals the integral of first-fundamental-form speed `√I(φ', λ')` | `EllipsoidCurve.curveLength_eq_integral_firstForm` |
+| Polar stereographic is conformal up to the north pole, and UPS (`k₀ = 0.994`) keeps scale in `[0.994, 1)` on `[84° N, 90° N]` | `stereographic_isConformal`, `upsScale_bounds_84` |
 | Mercator is a homeomorphism onto the plane, and Web Mercator one from the globe cut along the antimeridian onto the square; without the cut it is discontinuous | `mercatorHomeomorph`, `webMercatorHomeomorph`, `not_continuousAt_webMercatorX_antimeridian` |
 | Web Mercator tiles at zoom `z`, quadtree paths of length `z` and Morton codes below `4^z` are in bijection | `tile_path_morton_bijective`, `mortonEquiv_eq_trans` |
 | Morton and Hilbert are spatial orders: every quadtree subtree is one interval of indices; only Hilbert keeps consecutive tiles adjacent, with a computable, choice-free encoder | `SpatialOrder.subtree_eq_symm_interval`, `hilbertOrder_isAdjacentOrder`, `mortonOrder_not_isAdjacentOrder` |
@@ -112,6 +115,7 @@ On the sphere unless stated. "Local" means the scale factors at a point.
 | Lambert cylindrical equal-area | not kept off the equator (`lambertCylindrical_not_isConformal`) | kept locally and for every latitude-longitude cell (`lambertCylindrical_preserves_cellArea`) | scale `cos φ` on meridians, `sec φ` on parallels | not examined |
 | Azimuthal equidistant, pole-centred | not kept off the pole (`azimuthalEquidistant_not_isConformal`) | not kept; every buffer of radius `0 < r < π R` enlarged (`azimuthalEquidistant_enlarges_buffer`) | kept from the centre (`azimuthalEquidistant_preserves_distanceFromCentre`) | kept from the pole only (`azimuthalEquidistant_preserves_azimuth`) |
 | Transverse Mercator, sphere | kept for `|λ| < π/2` (`tm_isConformal`) | enlarged off the central meridian (`one_lt_tmScale`) | true scale only on the central meridian; UTM within `[0.9996, 1.00098)` within 3° (`utmScale_bounds`) | not examined |
+| Polar stereographic / UPS, sphere | kept for `φ ∈ (-π/2, π/2)` (`stereographic_isConformal`) | enlarged off the north pole (`one_lt_stereographicScale`) | scale `2 / (1 + sin φ)`: 1 at pole, 2 at equator; UPS within `[0.994, 1)` on `[84° N, 90° N]` (`upsScale_bounds_84`) | kept from the north pole (`stereographic_preserves_azimuth`) |
 
 ## From GIS questions to theorems
 
@@ -128,9 +132,7 @@ On the sphere unless stated. "Local" means the scale factors at a point.
 ## Scope
 
 Solving for ellipsoidal geodesics (existence, the direct and inverse
-problems, geodesic distance), the agreement of the metric length above with
-the arc length of smooth curves (the integral of speed), the uniqueness of
-the ellipsoidal ECEF inverse, published transformation parameters, CRS
+problems, geodesic distance), published transformation parameters, CRS
 registries, the ellipsoidal transverse Mercator projection, ellipsoidal
 rhumb lines, azimuthal projections centred off the pole, and projections other than those
 above are not covered yet. The geodesic results use the embedding in ℝ³; an

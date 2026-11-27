@@ -810,6 +810,7 @@ other file refers to the labels.
 | `LeanGeodesy/GeodeticLatitude.lean` | Geodetic and geocentric latitude, the meridian ellipse |
 | `LeanGeodesy/GeodeticCoordinate.lean` | Latitude, longitude, height and ECEF |
 | `LeanGeodesy/ECEFInverse.lean` | From ECEF back to latitude, longitude and height |
+| `LeanGeodesy/ECEFUniqueness.lean` | Uniqueness of the ellipsoidal ECEF inverse for `0 ≤ height`, and smooth curve arc-length agreement |
 | `LeanGeodesy/Helmert.lean` | Helmert transformations and the linearised rotation |
 | `LeanGeodesy/Curvature.lean` | Radii of curvature `M`, `N` and their derivatives, and the tangents of the ellipsoid |
 | `LeanGeodesy/FirstFundamentalForm.lean` | E, F, G, the metric, `ds²`, speeds, angles, the area element |
@@ -837,6 +838,7 @@ other file refers to the labels.
 | `LeanGeodesy/Tiles/SpatialOrder.lean` | Spatial orders: ancestors, subtrees as index intervals, adjacency; Morton and Hilbert instances |
 | `LeanGeodesy/Tiles/Hilbert.lean` | The Hilbert order: a bijection whose consecutive tiles share an edge, nested like the quadtree |
 | `LeanGeodesy/Projection/TransverseMercator.lean` | Spherical transverse Mercator, conformality, UTM scale |
+| `LeanGeodesy/Projection/Stereographic.lean` | Polar stereographic projection, radial bijection, conformality, UPS scale bounds |
 | `LeanGeodesy/Geodesic.lean` | Central angle, haversine, great-circle distance as a metric |
 | `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |
 | `LeanGeodesy/CRS/WGS84.lean` | The WGS 84 geographic CRS |

@@ -56,7 +56,7 @@ the real-number geometry. "As is" means no change to the Lean code is needed.
 | `Geodesy.Tiles.hilbertD` | `(z: Nat, i: Nat) -> (Nat, Nat)` | `hilbertD_lt`, `hilbertD_zero`, `hilbertD_last`, `hilbertD_adj`, `hilbertD_inj`, `hilbertD_halve`, `hilbertE_hilbertD`; through `decode`, `hilbert_adjacent`, `parent_hilbert_decode`, `ancestor_decode` | as is |
 | `Geodesy.Tiles.quadUnplace` | `(n: Nat, p: (Nat, Nat)) -> (Nat, (Nat, Nat))` | `quadUnplace_quadPlace`, `quadUnplace_spec` | as is |
 | `Geodesy.Tiles.hilbertE` | `(z: Nat, p: (Nat, Nat)) -> Nat` | `hilbertE_lt`, `hilbertE_hilbertD`, `hilbertD_hilbertE`; through `encode`, `encode_decode`, `decode_encode`, `ancestor_eq_iff_encode_mem_interval` | as is |
-| the `DecidableRel AdjN` instance (`Tiles/Adjacency.lean`) | `(p: (Nat, Nat), q: (Nat, Nat)) -> bool` | `AdjN.symm`, `AdjN.irrefl`, `hilbertD_adj` | instance with a generated name; must be named with `--roots`, not tried |
+| `Geodesy.Tiles.adjB` (`Tiles/Adjacency.lean`) | `(p: (Nat, Nat), q: (Nat, Nat)) -> bool` | `adjB_iff`, `AdjN.symm`, `AdjN.irrefl`, `hilbertD_adj` | as is |
 | `Geodesy.CRS.EPSG.Identifier`, `Identifier.toString`, `epsg4326`, `epsg3857` | a struct of `String` and `Nat`; `-> String` | none (two `example`s); they are labels, not proved to match the EPSG dataset | as is |
 
 The hypotheses the Rust caller must establish are those of the theorems: for

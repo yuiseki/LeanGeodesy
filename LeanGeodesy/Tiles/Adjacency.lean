@@ -31,6 +31,14 @@ theorem Adjacent.symm {z : ℕ} {s t : Tile z} (h : Adjacent s t) : Adjacent t s
 
 theorem Adjacent.irrefl {z : ℕ} (s : Tile z) : ¬ Adjacent s s := AdjN.irrefl _
 
+/-- Computable `Bool` check for grid edge-adjacency (`AdjN`), exportable by lean-rs. -/
+def adjB (p q : ℕ × ℕ) : Bool :=
+  (p.1 == q.1 && (p.2 + 1 == q.2 || q.2 + 1 == p.2)) ||
+    (p.2 == q.2 && (p.1 + 1 == q.1 || q.1 + 1 == p.1))
+
+theorem adjB_iff (p q : ℕ × ℕ) : adjB p q = true ↔ AdjN p q := by
+  simp [adjB, AdjN]
+
 /-- Adjacent tiles are distinct. -/
 theorem Adjacent.ne {z : ℕ} {s t : Tile z} (h : Adjacent s t) : s ≠ t := by
   rintro rfl; exact Adjacent.irrefl s h

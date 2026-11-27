@@ -6,6 +6,7 @@ import LeanGeodesy.GeodeticLongitude
 import LeanGeodesy.GeodeticLatitude
 import LeanGeodesy.GeodeticCoordinate
 import LeanGeodesy.ECEFInverse
+import LeanGeodesy.ECEFUniqueness
 import LeanGeodesy.Helmert
 import LeanGeodesy.Curvature
 import LeanGeodesy.FirstFundamentalForm
@@ -31,6 +32,7 @@ import LeanGeodesy.Tiles.Adjacency
 import LeanGeodesy.Tiles.Hilbert
 import LeanGeodesy.Tiles.SpatialOrder
 import LeanGeodesy.Projection.TransverseMercator
+import LeanGeodesy.Projection.Stereographic
 import LeanGeodesy.Geodesic
 import LeanGeodesy.Geodesic.Ellipsoid
 import LeanGeodesy.SecondFundamentalForm

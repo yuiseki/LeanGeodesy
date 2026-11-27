@@ -1518,3 +1518,31 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.ReferenceEllipsoid.gaussianCurvature_eq_intrinsic' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.ReferenceEllipsoid.gaussianCurvature_eq_intrinsic
+
+/-- info: 'Geodesy.GeodeticCoordinate.lat_height_eq_of_toECEF' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.GeodeticCoordinate.lat_height_eq_of_toECEF
+
+/-- info: 'Geodesy.GeodeticCoordinate.toECEF_injective_off_poles' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.GeodeticCoordinate.toECEF_injective_off_poles
+
+/-- info: 'Geodesy.ReferenceEllipsoid.EllipsoidCurve.curveLength_eq_integral_firstForm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.EllipsoidCurve.curveLength_eq_integral_firstForm
+
+/-- info: 'Geodesy.Projection.stereographicFactor_bijOn' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.stereographicFactor_bijOn
+
+/-- info: 'Geodesy.Projection.stereographic_isConformal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.stereographic_isConformal
+
+/-- info: 'Geodesy.Projection.upsScale_bounds_84' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Projection.upsScale_bounds_84
+
+/-- info: 'Geodesy.Tiles.adjB_iff' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Tiles.adjB_iff
