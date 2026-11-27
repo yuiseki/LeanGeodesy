@@ -1,12 +1,15 @@
 # A Machine-Checked Three-Point Semidefinite Upper Bound for Tammes `N = 18` on `S²`
 
-> **Status:** Draft research note prepared for independent technical review.
-> Not submitted externally.
+> **Status:** Technical note documenting a Lean 4 kernel-verified three-point SDP
+> bound for Tammes `N = 18`. **Not a new mathematical upper bound**: R. M. Robinson
+> (1961, Theorem Ba, Section 9.1) already implies the strictly stronger bound
+> $T(18) \le 50.68095^\circ$.
 
-## 1. Mathematical Claim
+## 1. Mathematical Statement
 
-We establish the following unconditional upper bound on spherical codes and the
-Tammes problem on the unit 2-sphere $S^2 \subset \mathbb{R}^3$:
+We formalize and verify unconditionally in the Lean 4 kernel the following upper
+bound on spherical codes and the Tammes problem on the unit 2-sphere
+$S^2 \subset \mathbb{R}^3$:
 
 **Theorem 1 (`sphericalCode_three_upper_313_500`).**
 Every finite configuration $p_1, \dots, p_n \in S^2$ with pairwise inner products
@@ -18,22 +21,33 @@ In standard spherical-code notation, $A(3, 313/500) \le 17$.
 For any $18$ points on $S^2$, their minimum geodesic separation $\theta$ satisfies
 $$\theta < \arccos\!\left(\frac{313}{500}\right) \approx 51.24438^\circ < 51.25^\circ.$$
 
-## 2. Comparison with Prior Bounds
+## 2. Comparison with Known Literature Bounds
 
 Let $T(N)$ denote the maximum possible minimum geodesic angle among $N$ points on $S^2$.
 
 | Source / Method | Bound on $T(18)$ | Cosine threshold $s$ | Proof status |
 | --- | --- | --- | --- |
 | Tarnai–Gáspár (1983) / Cohn (`spherical-codes.org`) | $\ge 49.55665^\circ$ (lower bound) | $0.648695832223$ | Explicit algebraic configuration (degree-11 minimal poly) |
+| **R. M. Robinson (1961), Theorem Ba (Section 9.1)** (`leapsinbounds.org/constants/tammes-18/`) | **$\le 50.68095^\circ$ (best known upper bound)** | **$0.63363820$** | Classical geometric area inequality $4n\Delta + (2n-12)\Delta^* \le 12\pi$ ($n > 12$) |
+| **This work (`Tammes18.lean`)** | **$< \arccos(313/500) \approx 51.24438^\circ < 51.25^\circ$** | **$313 / 500 = 0.626$** | **Unconditional Lean 4 kernel proof (`decide`, no `native_decide`)** |
 | L. Fejes Tóth (1943) (`leapsinbounds.org/constants/tammes-18/`) | $\le 51.69012^\circ$ | $0.619914$ | Classical geometric area proof |
 | Bachoc–Vallentin (2008), Table 5.3 via monotonicity $T(18) \le T(17)$ | $\le 51.69^\circ$ | $0.619916$ | 3-point SDP for $N = 17$ |
-| Delsarte 2-point LP limit ($d_2 \to \infty$, numerical `LP(20)`–`LP(26)`) | $\approx 51.2827^\circ$ | $\approx 0.62548$ | At $s = 313/500$, `LP(20) ≈ 18.0269 > 18` (provably unreachable by 2-point LP) |
-| **This work (`Tammes18.lean`)** | **$< \arccos(313/500) \approx 51.24438^\circ < 51.25^\circ$** | **$313 / 500 = 0.626$** | **Unconditional Lean 4 kernel proof (`decide`, no `native_decide`)** |
 
-**Strict improvement:**
-- Improves L. Fejes Tóth (1943) by $> 0.4457^\circ$,
-- Improves monotonicity from Bachoc–Vallentin (2008) Table 5.3 by $> 0.4456^\circ$,
-- Strictly crosses the infinite-degree Delsarte two-point linear programming barrier ($51.2827^\circ$), demonstrating genuine three-point SDP strength.
+**Scope and limitations:**
+- **Not a new mathematical record:** Robinson (1961, Theorem Ba) proves
+  $4n\Delta + (2n - 12)\Delta^* \le 12\pi$ for all $n > 12$, which evaluates at
+  $n = 18$ to $T(18) \le 50.68094488^\circ < 50.68095^\circ$. Our bound
+  $T(18) < 51.24438^\circ$ is weaker than Robinson (1961) by $\approx 0.5634^\circ$.
+- **What this formalization establishes:** It provides an unconditional,
+  kernel-checked Lean 4 proof of $A(3, 313/500) \le 17$ ($T(18) < 51.25^\circ$)
+  using a degree-6 Bachoc–Vallentin three-point SDP certificate combined with
+  two-point Legendre terms $P_1 \dots P_{12}$. This strictly improves Fejes Tóth
+  (1943) ($51.69012^\circ$) and monotonicity from Bachoc–Vallentin (2008) Table 5.3
+  ($T(17) \le 51.69^\circ$).
+- **Empirical two-point LP note:** In finite-degree numerical experiments with
+  Clarabel at $s = 313/500$, two-point Delsarte LP up to degree $d_2 = 20$ gives
+  objective $\approx 18.0269 > 18$. This is a finite-degree numerical observation
+  only and does not constitute a proof of an infinite-degree LP barrier.
 
 ## 3. Mathematical Proof Structure
 
@@ -89,6 +103,7 @@ no `sorry`, no `admit`, no `native_decide`, and no custom axioms (`LeanGeodesy/A
 ## 6. References
 
 - L. Fejes Tóth, *Über die Abschätzung des kürzesten Abstandes zweier Punkte eines auf einer Kugelfläche liegenden Punktsystems*, Jber. Deutsch. Math.-Verein. 53 (1943), 66–68.
+- R. M. Robinson, *Arrangement of 24 points on a sphere*, Mathematische Annalen 144 (1961), 17–48 (`https://doi.org/10.1007/BF01396539`).
 - P. Delsarte, J. M. Goethals, J. J. Seidel, *Spherical codes and designs*, Geom. Dedicata 6 (1977), 363–388.
 - C. Bachoc, F. Vallentin, *New upper bounds for kissing numbers from semidefinite programming*, J. Amer. Math. Soc. 21 (2008), 909–924 (`arXiv:math/0608426`).
 - M. Dostert, D. de Laat, P. Moustrou, *Exact semidefinite programming bounds for packing problems*, SIAM J. Optim. 31 (2021), 1433–1458.

@@ -463,7 +463,7 @@ def main():
 import Mathlib.Analysis.Real.Pi.Bounds
 
 /-!
-# Certified New Upper Bound for Tammes `N = 18` on `S²`
+# Certified Three-Point SDP Upper Bound for Tammes `N = 18` on `S²`
 
 We prove unconditionally in the Lean 4 kernel that no spherical code of size `18`
 on `S²` can have maximum pairwise inner product `≤ 313 / 500 = 0.626`, i.e.,
@@ -475,11 +475,10 @@ A(3, 313/500) ≤ 17
 Equivalently, every `18`-point configuration on `S²` has minimum geodesic separation
 strictly less than `arccos (313 / 500) ≈ 51.24438° < 51.25°`.
 
-This strictly improves:
-- L. Fejes Tóth (1943): `≤ 51.69012°` (currently listed on `leapsinbounds.org/constants/tammes-18/`),
-- Monotonicity from Bachoc–Vallentin (2008) Table 5.3 (`T(17) ≤ 51.69°`), and
-- The infinite-degree Delsarte two-point LP limit (`≈ 51.2827°`, where `LP(∞)` at
-  `s = 313 / 500` is `≈ 18.0269 > 18`).
+This strictly improves L. Fejes Tóth (1943) (`≤ 51.69012°`) and monotonicity from
+Bachoc–Vallentin (2008) Table 5.3 (`T(17) ≤ 51.69°`), but is weaker than the best
+known upper bound due to R. M. Robinson (1961, Theorem Ba, Section 9.1), which
+gives `T(18) ≤ 50.68095°`.
 
 The proof uses a degree-6 Bachoc–Vallentin three-point SDP certificate combined with
 two-point Legendre terms `P₁..P₁₂`, checked purely by `decide` in the Lean 4 kernel
@@ -583,7 +582,7 @@ private theorem tammes18Cert_bound_lt_18 : tammes18Cert.bound < 18 := by
   have hnumR : (tammes18Cert.boundNum : ℝ) < 18 * (tammes18Cert.dK : ℝ) := by exact_mod_cast hnum
   linarith
 
-/-- **New certified spherical-code upper bound on `S²`**:
+/-- Certified spherical-code upper bound on `S²`:
 every `(n, 313 / 500)`-spherical code on `S²` has at most `17` points (`A(3, 313/500) ≤ 17`). -/
 theorem sphericalCode_three_upper_313_500 {n : ℕ} {p : Fin n → UnitSphere}
     (hp : IsSphericalCode p (313 / 500 : ℝ)) : n ≤ 17 := by
@@ -593,7 +592,7 @@ theorem sphericalCode_three_upper_313_500 {n : ℕ} {p : Fin n → UnitSphere}
   have hnat : n < 18 := by exact_mod_cast hlt
   omega
 
-/-- **New certified Tammes `N = 18` strict upper bound**:
+/-- Certified Tammes `N = 18` strict upper bound:
 every `18`-point configuration on `S²` with minimum separation `θ` satisfies
 `θ < arccos (313 / 500) ≈ 51.24438°`. -/
 theorem tammes_18_strict_upper {p : Fin 18 → UnitSphere} {θ : ℝ}
@@ -721,8 +720,7 @@ private theorem cos_taylor8_upper {x : ℝ} (hx : 0 ≤ x) :
       h7 (by simp)
   linarith [h8 x hx]
 
-/-- Rigorous degree bound: `arccos (313 / 500) < 51.25°` (strictly below Fejes Tóth 1943's
-`51.69012°`, Bachoc–Vallentin 2008's `T(17) ≤ 51.69°`, and Delsarte 2-point LP's `51.2827°`). -/
+/-- Rigorous degree bound: `arccos (313 / 500) < 51.25°`. -/
 theorem arccos_313_500_lt_deg :
     Real.arccos (313 / 500 : ℝ) < (51.25 : ℝ) * (Real.pi / 180) := by
   have hpi_lo : (3.141592 : ℝ) < Real.pi := Real.pi_gt_d6

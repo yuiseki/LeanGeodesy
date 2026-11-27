@@ -850,7 +850,7 @@ other file refers to the labels.
 | `LeanGeodesy/Spherical/KissingNumber3.lean` | Certified rational degree-5 three-point SDP certificate (`< 12.99`), unconditional kernel proof of `K(3) = 12` (`kissingNumber_three_upper`, `kissingNumber_three_lower`, `kissingNumber_three_exact`), and invalid-certificate rejection tests |
 | `LeanGeodesy/Spherical/Legendre12.lean` | Legendre polynomials `P₀..P₁₂`, positive semidefiniteness via the `bvQ` addition theorem (`sum_legendreP12_nonneg`), and `bachocVallentin_bound_with_legendre` |
 | `LeanGeodesy/Spherical/BachocVallentinCert6.lean` | Kernel-decidable exact rational degree-6 + Legendre `P₁..P₁₂` Bachoc–Vallentin SDP certificate verifier (`BVCert6`, `BVCert6.sound`) |
-| `LeanGeodesy/Spherical/Tammes18.lean` | Certified rational degree-6 + `P₁..P₁₂` SDP proof of `A(3, 313/500) ≤ 17` and `T(18) < arccos(313/500) < 51.25°`, strictly improving Fejes Tóth (1943), BV-17 monotonicity, and infinite-degree Delsarte 2-point LP |
+| `LeanGeodesy/Spherical/Tammes18.lean` | Certified rational degree-6 + `P₁..P₁₂` SDP proof of `A(3, 313/500) ≤ 17` and `T(18) < arccos(313/500) < 51.25°` (improves Fejes Tóth 1943 and BV-17 monotonicity; weaker than Robinson 1961's `50.68095°`) |
 | `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |
 | `LeanGeodesy/CRS/WGS84.lean` | The WGS 84 geographic CRS |
 | `LeanGeodesy/CRS/WebMercator.lean` | The Web Mercator projected CRS over WGS 84 |
