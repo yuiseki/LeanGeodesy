@@ -106,7 +106,17 @@ The hypothesis is not Wimmer's theorem. It combines
 
 A combinatorial type does not fix the symmetry, so (2) does not follow from (1).
 
-### 3.3 What is still open, and how it might be attacked
+### 3.3 Beyond symmetry: local optimality and a reduction
+
+`NINE_POINT_LOCAL.md` and `Spherical/NinePoint.lean`: the problem is split into
+optimality within the triaugmented-prism type (`TTPOptimal`) and the reduction
+of optimal configurations to that type (`OptimalIsTTP`); `P⋆` is a strict local
+optimum modulo rotations without any symmetry assumption (exact verification
+outside Lean); and `TTPOptimal` follows in Lean from one smooth inequality, the
+weighted harmonic mean of the eight active face distances being at most `h⋆`
+(`TTPHarmonic`), which holds numerically and is open.
+
+### 3.4 What is still open, and how it might be attacked
 
 * Step (2), optimality within the combinatorial type without assuming symmetry.
   Hoehner and Ledford (arXiv:2608.04392, v2) do the analogous thing for the

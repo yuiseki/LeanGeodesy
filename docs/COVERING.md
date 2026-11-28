@@ -11,9 +11,11 @@ Files: `Spherical/Topology.lean` (existing: `coveringRadius`,
 `Spherical/CoveringLowerBound.lean` (bounds for every configuration, global
 optimality for `N = 2, 3, 4`), `Spherical/Jucovic9.lean` (Jucovič's 9-point
 configuration, exact radius, optimality within its symmetric family),
+`Spherical/NinePoint.lean` (the 9-point problem decomposed, the harmonic-mean
+reduction),
 `scripts/covering_cert/gen_cert.py` (certificate generator).
 
-All five Lean files belong to the routine target `LeanGeodesy`, not to
+All six Lean files belong to the routine target `LeanGeodesy`, not to
 `LeanGeodesyResearch` (ADR-001): the first two are foundations and a reusable
 verifier, and the benchmark certificates are small (they build in seconds).
 A large certificate for a research configuration should go to
@@ -148,7 +150,12 @@ cones, and a hole). `coveringRadius_jucovicStar_le` proves optimality within the
 one-parameter `D₃h` family only. Optimality among all 9-point configurations is
 stated as `coveringRadius_jucovicStar_le_of_reduction`, conditional on an
 explicit hypothesis that is not Wimmer's theorem; see
-`research/COVERING_GLOBAL_PLAN.md`, section 3.
+`research/COVERING_GLOBAL_PLAN.md`, section 3. `NinePoint.lean` sharpens this:
+`TTPOptimal` (optimality within the combinatorial type) and `OptimalIsTTP`
+(optimal configurations have the type) are separate hypotheses, and
+`TTPOptimal` follows from the harmonic-mean inequality `TTPHarmonic`. Strict
+local optimality without symmetry is verified exactly outside Lean
+(`research/NINE_POINT_LOCAL.md`).
 
 ## 6. What this does not prove
 
