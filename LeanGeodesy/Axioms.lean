@@ -2090,3 +2090,159 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Spherical.not_TTPHarmonic_smallCircle' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Spherical.not_TTPHarmonic_smallCircle
+
+/-- info: 'Geodesy.Spherical.FaceSupport.offset_le_norm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.FaceSupport.offset_le_norm
+
+/-- info: 'Geodesy.Spherical.FaceSupport.dist_mem' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.FaceSupport.dist_mem
+
+/-- info: 'Geodesy.Spherical.exists_face_separating' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.exists_face_separating
+
+/-- info: 'Geodesy.Spherical.exists_vertex_separating' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.exists_vertex_separating
+
+/-- info: 'Geodesy.Spherical.IsTTPSupported.injective' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.IsTTPSupported.injective
+
+/-- info: 'Geodesy.Spherical.FaceSupport.separated' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.FaceSupport.separated
+
+/-- info: 'Geodesy.Spherical.unit_collinear' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.unit_collinear
+
+/-- info: 'Geodesy.Spherical.faceSupport_smul' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.faceSupport_smul
+
+/-- info: 'Geodesy.Spherical.norm_smul_div_mul' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.norm_smul_div_mul
+
+/-- info: 'Geodesy.Spherical.faceSupport_map' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.faceSupport_map
+
+/-- info: 'Geodesy.Spherical.norm_map_of_inner' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.norm_map_of_inner
+
+/-- info: 'Geodesy.Spherical.isTTP_comp_perm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.isTTP_comp_perm
+
+/-- info: 'Geodesy.Spherical.jucovic_face_strict' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovic_face_strict
+
+/-- info: 'Geodesy.Spherical.jucovic_faceSupport' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovic_faceSupport
+
+/-- info: 'Geodesy.Spherical.activeSum_jucovicStar' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.activeSum_jucovicStar
+
+/-- info: 'Geodesy.Spherical.TTPHarmonic_of_weak' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.TTPHarmonic_of_weak
+
+/-- info: 'Geodesy.Spherical.not_isTTP_allEqual' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.not_isTTP_allEqual
+
+/-- info: 'Geodesy.Spherical.not_isTTP_smallCircle' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.not_isTTP_smallCircle
+
+/-- info: 'Geodesy.Spherical.smallCircleXY_det' depends on axioms: [propext] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.smallCircleXY_det
+
+/-- info: 'Geodesy.Spherical.inner_eq_of_three_coplanar' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.inner_eq_of_three_coplanar
+
+/-- info: 'Geodesy.Spherical.gram_parallel' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.gram_parallel
+
+/-- info: 'Geodesy.Spherical.gram_antiparallel' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.gram_antiparallel
+
+/-- info: 'Geodesy.Spherical.face_pair_bound' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.face_pair_bound
+
+/-- info: 'Geodesy.Spherical.TTPHarmonic_of_relaxed' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.TTPHarmonic_of_relaxed
+
+/-- info: 'Geodesy.Spherical.faceA_of_onFace' depends on axioms: [propext, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.faceA_of_onFace
+
+/-- info: 'Geodesy.Spherical.relaxed_iff' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.relaxed_iff
+
+/-- info: 'Geodesy.Spherical.outer_congr' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.outer_congr
+
+/-- info: 'Geodesy.Spherical.sub_congr' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.sub_congr
+
+/-- info: 'Geodesy.Spherical.sideVal_bound' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.sideVal_bound
+
+/-- info: 'Geodesy.Spherical.subValues_congr' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.subValues_congr
+
+/-- info: 'Geodesy.Spherical.reducedObjective_congr' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.reducedObjective_congr
+
+/-- info: 'Geodesy.Spherical.reducedObjective_le_activeSum' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.reducedObjective_le_activeSum
+
+/-- info: 'Geodesy.Spherical.relaxed_of_reduced' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.relaxed_of_reduced
+
+/-- info: 'Geodesy.Spherical.reduced_of_relaxed' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.reduced_of_relaxed
+
+/-- info: 'Geodesy.Spherical.reduced_iff_relaxed' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.reduced_iff_relaxed
+
+/-- info: 'Geodesy.Spherical.TTPOptimal_of_reduced' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.TTPOptimal_of_reduced
+
+/-- info: 'Geodesy.Spherical.reducedObjective_jucovicStar_le' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.reducedObjective_jucovicStar_le
+
+/-- info: 'Geodesy.Spherical.reducedObjective_jucovicStar_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.reducedObjective_jucovicStar_eq
+
+/-- info: 'Geodesy.Spherical.jucovicSubMinimal_of_reduced' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovicSubMinimal_of_reduced

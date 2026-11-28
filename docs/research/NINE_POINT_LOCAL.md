@@ -117,7 +117,8 @@ section 7 for the repaired definitions.) `TTPOptimal_of_harmonic` (Lean): for an
 Only the KKT weights `wT = λ_T`, `wV = λ_V` can work (equality at `P⋆` and local
 maximality force them). With them:
 
-* **Numerical:** in multi-start local maximization of the weighted harmonic
+* **Numerical (old definition, kept for the record; not evidence for the
+  repaired statements of section 7):** in multi-start local maximization of the weighted harmonic
   mean over configurations of the type (SLSQP, the 14 supporting-plane
   conditions as constraints), 94 starts near `P⋆` and 77 starts far from it
   (Gram matrices differing by more than `0.3`) all ended at a value `≤ h⋆`
@@ -165,7 +166,8 @@ is a lower bound for the original one, and the relaxed inequality is a
 sufficient condition for `TTPHarmonic`. For fixed `B`, `C` the relaxed problem
 splits into three independent problems, one per `Aₖ`.
 
-Numerical, the relaxation that is used: minimizing the weighted harmonic sum
+Numerical (searches made before the audit of section 7, with margins
+`10⁻⁷` and sign-fixed planes; superseded by section 7.4), the relaxation that is used: minimizing the weighted harmonic sum
 with only the cross-`A` constraints dropped, from 524 starts (518 far from
 Jucovič's configuration, including fully random points), always ended at
 `1/h⋆` (within `3·10⁻¹²`). So, as far as the search shows, the decoupling
@@ -197,14 +199,21 @@ cannot be dropped.
   through the edge approaches the origin), and the admissible set in `(θ₁, θ₂)`
   is closed in `(-π/2, π/2)²` (Gram condition and the kept supporting
   conditions are closed), so sublevel sets are compact and a minimum exists
-  whenever the set is nonempty. (Not in Lean.)
+  whenever the set is nonempty. (Not in Lean.) (Correction, section 7.5: with
+  the strict conditions of the repaired definition the set is open, so this
+  gives a minimum of the closure only; `NinePointElim.lean` therefore uses the
+  infimum and never assumes a minimum.)
 * *Stationarity and boundary.* The unconstrained minimum `θ₁ = θ₂ = 0` (both
   planes orthogonal to their foot points) is admissible only if the two
   smallest circles through the edges meet; at Jucovič's configuration they do
-  not (they would meet at `x = 2t⋆ > 1`). Otherwise the minimum lies on the
-  boundary `gramDet3 = 0`, which means the line of intersection of the two
-  planes is tangent to the sphere: the two circumcircles through `A` are
-  tangent at `A`. (Lagrange condition; not in Lean.)
+  not (they would meet at `x = 2t⋆ > 1`). Otherwise a minimizer at which no
+  supporting condition is active lies on the boundary `gramDet3 = 0`, which
+  means the line of intersection of the two planes is tangent to the sphere:
+  the two circumcircles through `A` are tangent at `A`. (Lagrange condition;
+  not in Lean.) (Correction, section 7.5: this needs the extra hypothesis that
+  no supporting condition is active at the minimizer; a minimizer on the
+  boundary of the supporting conditions need not be tangent, and the
+  infimum over the open feasible set need not be attained.)
 * *Closed-form lower bound.* Under the Gram condition, `1/d₁ + 1/d₂ ≥ 2 √(2/(1 + c))`
   (Lean: `inv_add_inv_sq_ge_of_gram`), with equality exactly when `d₁ = d₂` and
   `2d₁² = 1 + c` (Lean: `eq_of_inv_add_inv_sq_eq`): tangent circles and equal
@@ -242,3 +251,191 @@ compare the two triangles through their normals (the triangle terms are
 for the equality analysis (`d₁ = d₂` and tangency at each `Aₖ`, all eight
 distances equal) to force the mirror symmetry `z ↦ -z` and the threefold
 rotation, in the manner of Hoehner–Ledford.
+
+## 7. Semantic audit and the sound reduction (2026-11-28, continued)
+
+### 7.1 Counterexamples to the non-strict definition (Lean)
+
+The definition of commits `504e62a`–`705f459` asked, for each face, a plane
+through its three vertices with `κ > 0` and `⟪N, q i⟫ ≤ κ` for all nine
+points. All fourteen planes may then be one plane:
+
+| Configuration | Planes | Weighted sum (`2wT + 6wV = 1`) | Rejected by the repaired type |
+| --- | --- | --- | --- |
+| `allEqual`: nine points at `(0, 0, 1)` (degenerate triangles) | all `z = 1` | `1` | `not_isTTP_allEqual` |
+| `smallCircle`: nine distinct points on `z = 12/13` (non-degenerate triangles, all faces in one plane, origin outside the hull) | all `z = 12/13` | `13/12` | `not_isTTP_smallCircle` |
+
+Both sums are below `1/h⋆ ≈ 1.4364`, so the old statement (kept as
+`TTPHarmonicWeak`) is false (Lean: `not_TTPHarmonic_allEqual`,
+`not_TTPHarmonic_smallCircle`), and the old `TTPOptimal_of_harmonic` was an
+empty implication. The two configurations stay in
+`Spherical/NinePointAudit.lean` as regression tests: the repaired type
+rejects them under every labelling.
+
+### 7.2 The repaired definitions and what each condition costs
+
+`FaceSupport q f N κ`: `κ > 0`, the three vertices of `f` on the plane, the
+six other points strictly inside. `IsTTPSupported`, `IsTTP`, `TTPHarmonic`
+use it; `TTPOptimal` and `OptimalIsTTP` keep their form (with the stricter
+`IsTTP`, `OptimalIsTTP` is a stronger hypothesis: optimal configurations have
+a simplicial hull of this type, which is what "has the combinatorial type"
+means). The nine candidate conditions of the audit:
+
+| Condition | Status in the repaired definition |
+| --- | --- |
+| 1. the nine points distinct | derived (Lean, `IsTTPSupported.injective`: some face contains one point and not the other) |
+| 2. the origin in the interior of the hull | assumed as `κ > 0` for every face; together with 8–9 it is the interior condition |
+| 3. non-degenerate triangles | derived: the vertices are distinct by 1, and three distinct points of the sphere are not collinear (Lean, `unit_collinear`) |
+| 4. vertices on the plane | assumed |
+| 5. the six other points strictly inside | assumed; this is the condition that was missing |
+| 6. nonzero normal | derived (Lean, `FaceSupport.norm_pos`); also `0 < κ/‖N‖ ≤ 1` (`FaceSupport.dist_mem`) |
+| 7. the fourteen faces distinct | derived (Lean, `FaceSupport.separated`: a vertex of one face is strictly inside the other) |
+| 8. completeness of the face set | derived, not in Lean: 14 distinct triangular facets on at most 9 vertices are all the facets (`F ≤ 2V - 4`) |
+| 9. the face lattice is the TTP with this labelling | derived from 5, 7, 8, not in Lean |
+
+So the definition has three assumptions per face (4, 5 and `κ > 0`), all
+necessary for a configuration whose hull is the labelled TTP containing the
+origin (facets of a polytope have strict supporting planes), and none
+excludes such a configuration. The three sets to keep apart:
+
+* the true TTP type: hull simplicial with exactly these faces, origin
+  interior. Equal to `IsTTPSupported` by the argument of rows 8–9 (not in
+  Lean; the equivalence with a face-lattice definition is not claimed as a
+  Lean theorem);
+* a relaxed set containing it: `RelaxedFaceSupport` (section 7.3), which
+  drops the cross-`A` conditions; it is not the TTP type;
+* sets sufficient for the global inequality: any set containing the TTP
+  type on which the inequality holds; `RelaxedHarmonic` is one candidate.
+
+Validation (Lean): Jucovič's configuration has the repaired type
+(`jucovic_faceSupport`, `isTTP_jucovicStar`; the 84 strict inequalities hold
+for every `1/2 < t < 1`, `jucovic_face_strict`); the active sum there is
+exactly `1/h⋆` (`activeSum_jucovicStar`), so `TTPHarmonic` would be sharp;
+invariance under positive scaling of a plane (`faceSupport_smul`,
+`norm_smul_div_mul`), under maps preserving inner products
+(`faceSupport_map`, `norm_map_of_inner`) and under relabelling
+(`isTTP_comp_perm`). `OptimalIsTTP` remains a hypothesis: Wimmer 2017 is
+still unread.
+
+### 7.3 The reduction, formally (Lean, `Spherical/NinePointElim.lean`)
+
+```
+ReducedHarmonic  ⟺  RelaxedHarmonic  ⟹  TTPHarmonic  ⟹  TTPOptimal
+   (reduced_iff_relaxed)   (TTPHarmonic_of_relaxed)  (TTPOptimal_of_harmonic)
+```
+
+for weights `wT, wV ≥ 0`, `2wT + 6wV = 1` (`TTPOptimal_of_reduced`).
+
+* *Original admissible set*: `(q, N, κ)` with `FaceSupport` for all 14 faces.
+* *Relaxed set*: `RelaxedFaceSupport`, the same without the conditions
+  "`Aⱼ` strictly inside a plane through `Aₖ`" (`CrossA`). This is the only
+  step that is not an equivalence; it can only make the inequality harder.
+* *Split*: `relaxed_iff` proves that the relaxed conditions are exactly
+  `OuterFeasible` (the two triangle planes with `B`, `C`) and three
+  `SubFeasible k` (the four faces through `Aₖ` with `Aₖ`, `B`, `C`, and `Aₖ`
+  strictly inside both triangle planes). `sub_congr` and `outer_congr` show
+  which data each part depends on, so the three subproblems are independent
+  given `B`, `C` and the triangle planes.
+* *Subproblem*: the objective `sideVal k` (the two sides through `Aₖ`), the
+  feasible set `subValues k` (values over all `Aₖ` and all planes through
+  `Aₖ`). Bounded below by `0` (`subValues_nonneg`); its infimum is used, no
+  minimum is assumed.
+* *Reduced objective*: `R = wT (1/d_T + 1/d_Bot) + wV Σₖ inf subValues k`,
+  a function of `B`, `C` and the two triangle planes
+  (`reducedObjective_congr`).
+* *Reduced inequality* `ReducedHarmonic`: `R ≥ 1/h⋆` whenever the outer
+  conditions hold and all three subproblems are feasible. An empty
+  subproblem means the outer datum belongs to no configuration, so nothing
+  is asked; this also keeps `sInf ∅ = 0` out of the statement. The
+  direction `RelaxedHarmonic → ReducedHarmonic` takes near-optimal feasible
+  points of the three subproblems and glues them into one relaxed
+  configuration, which is where independence is used.
+* *What is and is not eliminated*: `Aₖ` and the four planes through it are
+  eliminated (they range inside the infimum). The two triangle planes are
+  still arguments; for distinct `B`'s they are unique up to positive
+  scaling, so `R` is a function of the six points, but that uniqueness is
+  not proved in Lean. So this is a reduction to the six points `B`, `C`
+  plus the two triangle planes, not yet an algebraic reduction to 9
+  parameters.
+* *The two-plane bound* survives as a bound on every feasible point
+  (`sideVal_bound`: `(1 + cₖ) sideVal² ≥ 8`), but `cₖ` depends on the planes
+  through `Aₖ`, so it does not eliminate them; it is not used in the chain.
+
+### 7.4 Sharpness and counterexample search
+
+Lean: `reducedObjective ≤ 1/h⋆` at Jucovič's `B`, `C`
+(`reducedObjective_jucovicStar_le`). Equality there is equivalent to the
+three subproblem statements `JucovicSubMinimal` (Jucovič's `Aₖ` minimizes
+subproblem `k` for Jucovič's `B`, `C`): `JucovicSubMinimal → R = 1/h⋆`
+(`reducedObjective_jucovicStar_eq`), and for `wV > 0`,
+`ReducedHarmonic → JucovicSubMinimal` (`jucovicSubMinimal_of_reduced`).
+Four different things, kept apart:
+
+| Statement | Status |
+| --- | --- |
+| covering radius of Jucovič's configuration is `arccos h⋆` | Lean (`coveringRadius_jucovicStar`) |
+| Jucovič's `Aₖ` minimizes its subproblem (`JucovicSubMinimal`) | open; numerical, 7.5 |
+| equality `R = 1/h⋆` at Jucovič's `B`, `C` | Lean, conditional on `JucovicSubMinimal`; `≤` unconditional |
+| `R ≥ 1/h⋆` for all `B`, `C` (`ReducedHarmonic`) | open |
+
+Numerical (new search, `scripts/covering_cert/nine_point_search.py 40 2 16`;
+planes computed from the vertices, strict conditions as slack `≥ ε`,
+SLSQP): six start families aimed at the boundary (two points nearly
+coincident, a face shrunk towards its centroid, the origin pushed towards the
+hull boundary, top and bottom triangles of different sizes, points pushed
+onto a face plane, random far configurations), each for the strict and the
+relaxed set and `ε = 10⁻³, 10⁻⁶`: 977 feasible ends, smallest value
+`1.4364155661466 = 1/h⋆` (to `10⁻¹⁴`), all at Jucovič's configuration. On
+boundary strata (one slack, an offset, an inside condition or a face area,
+pinned to `10⁻²` or `10⁻³`): 240 feasible ends, smallest value
+`1.43891 = 1/h⋆ + 2.5·10⁻³`. No value below `1/h⋆`. Not a proof, and the
+earlier counts (524, 21) are not reused as evidence.
+
+### 7.5 Audit of the two-plane reduction
+
+* `gram_two_planes` is a necessary condition only (Gram determinant of three
+  unit vectors). The converse (for `|c| < 1`, the condition gives a common
+  point of the two planes on the sphere) is true but neither proved in Lean
+  nor used; every bound is applied to an actual common point.
+* Degenerate cases (Lean): parallel normals, `c = 1` (the two planes
+  coincide): the condition forces `d₁ = d₂` (`gram_parallel`), and the bound
+  reads `8/d² ≥ 8`, with equality only for the tangent plane `d = 1`.
+  Antiparallel normals, `c = -1`: the condition forces `d₁ + d₂ = 0`
+  (`gram_antiparallel`), impossible for two positive distances, so the
+  hypotheses of `inv_add_inv_sq_ge_of_gram` exclude it. The bound needs
+  `0 < dᵢ ≤ 1` and `-1 ≤ c ≤ 1`, which hold for planes `⟪N, ·⟫ = κ > 0`
+  through a point of the sphere (`face_pair_bound`).
+* The inequality `d₁² + d₂² - 2c d₁ d₂ ≤ 1 - c²` is `gramDet3 ≥ 0`; the bound
+  `1/d₁ + 1/d₂ ≥ 2√(2/(1 + c))` and its equality case (`d₁ = d₂`,
+  `2d₁² = 1 + c`) are as stated (Lean).
+* "The minimum of a subproblem has tangent circles" needs two hypotheses:
+  the minimum is attained (with strict conditions the feasible set is open),
+  and no supporting condition is active there; and it fails when the
+  unconstrained optimum is feasible. Numerical
+  (`scripts/covering_cert/nine_point_subproblem.py 150 3`): at Jucovič's
+  `B`, `C` each subproblem is minimized at Jucovič's `Aₖ` (grid of
+  `400 × 800` directions and local refinement; value `2/h⋆` to `3·10⁻¹⁴`,
+  smallest slack `0.696`, Gram determinant `10⁻¹⁵`). For 122 perturbed
+  `B`, `C`, the best of 12 local minimizations was interior every time (no
+  supporting condition active); 118 were tangent (`|gramDet3| < 10⁻⁷`), and
+  the other 4 were exactly the unconstrained case, with value
+  `1/δ₁ + 1/δ₂` (`δᵢ` the distance from the origin to the edge `BₖCₖ`), as the
+  Lagrange analysis predicts.
+* A closed-form bound in `B`, `C` alone follows: a plane through a line at
+  distance `δ` from the origin is at distance at most `δ`, so
+  `sideVal k ≥ 1/δ₁ + 1/δ₂`. It is valid but loses at Jucovič's
+  configuration (`2/t⋆ ≈ 2.786 < 2/h⋆ ≈ 2.873`), so replacing the infimum by
+  it gives a false inequality; not used.
+
+### 7.6 What is open, exactly
+
+* `ReducedHarmonic λ_T λ_V` (equivalently `RelaxedHarmonic λ_T λ_V`): an
+  inequality in the six points `B`, `C` (and the triangle planes they
+  determine), with three two-parameter infima inside. It implies
+  `TTPHarmonic`, hence `TTPOptimal`, in Lean.
+* `JucovicSubMinimal`: three two-dimensional statements, necessary for
+  `ReducedHarmonic` and sufficient for its equality at Jucovič's `B`, `C`.
+  The natural first target.
+* Not proved in Lean: uniqueness of the triangle planes, the equivalence of
+  `IsTTPSupported` with the face-lattice definition, the converse of the
+  Gram condition, the existence of subproblem minima.

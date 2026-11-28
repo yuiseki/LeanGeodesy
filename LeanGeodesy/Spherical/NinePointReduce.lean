@@ -12,18 +12,27 @@ make the elimination of `Aₖ` work:
 
 * `gram_two_planes`: if a unit vector `A` lies on two planes with unit normals
   `n₁, n₂` at distances `d₁, d₂`, then `gramDet3 d₁ d₂ ⟪n₁, n₂⟫ ≥ 0`, i.e.
-  `d₁² + d₂² - 2c d₁ d₂ ≤ 1 - c²`. Conversely the planes meet on the sphere
-  exactly when this holds, so eliminating `A` replaces it by this one
-  inequality between the two planes.
+  `d₁² + d₂² - 2c d₁ d₂ ≤ 1 - c²`. This is a necessary condition only. The
+  converse (for `|c| < 1` and the condition, the two planes meet on the
+  sphere) is true but neither proved in Lean nor used: every bound below is
+  applied to an actual common point `A`, never to a pair of planes alone.
 * `inv_add_inv_sq_ge_of_gram`: under that inequality,
   `(1 + c) (1/d₁ + 1/d₂)² ≥ 8`, that is `1/d₁ + 1/d₂ ≥ 2 √(2/(1 + c))`.
-* `inv_add_inv_eq_of_gram_iff`: equality holds exactly when `d₁ = d₂` and
+* `eq_of_inv_add_inv_sq_eq`: equality holds exactly when `d₁ = d₂` and
   `d₁² = (1 + c)/2`, the case in which the two circles through `A` are tangent
   at `A` and the two distances are equal. At Jucovič's configuration both
   happen at each `Aₖ` (`jucovic_pair_equality`).
 
-What the elimination leaves (a 2-parameter problem per `Aₖ`, then a
-9-parameter inequality in `B`, `C`) is described in
+Degenerate cases (`gram_parallel`, `gram_antiparallel`): for parallel normals
+(`c = 1`, the same plane) the condition forces `d₁ = d₂`, and the bound reads
+`8/d² ≥ 8`; for antiparallel normals (`c = -1`, two parallel planes on opposite
+sides of `A`) it forces `d₁ + d₂ = 0`, impossible for two positive distances,
+so the hypotheses of the bound exclude it. `face_pair_bound` restates the bound
+for planes `⟪N, ·⟫ = κ` with arbitrary nonzero normals, the form used in
+`NinePointElim.lean`.
+
+The formal elimination of `A₀, A₁, A₂` is in `NinePointElim.lean`; the
+analysis of the two-parameter subproblems is in
 `docs/research/NINE_POINT_LOCAL.md`.
 -/
 
@@ -130,5 +139,45 @@ theorem jucovic_pair_equality : (1 + (1 - 2 * tStar ^ 2)) * (1 / hStar + 1 / hSt
   have hps := hStar_pos
   field_simp
   nlinarith [h2]
+
+/-- Parallel normals (`c = 1`): the Gram condition forces equal distances. -/
+theorem gram_parallel {d₁ d₂ : ℝ} (hg : 0 ≤ gramDet3 d₁ d₂ 1) : d₁ = d₂ := by
+  unfold gramDet3 at hg
+  nlinarith [sq_nonneg (d₁ - d₂)]
+
+/-- Antiparallel normals (`c = -1`): the Gram condition forces `d₁ + d₂ = 0`, so
+two positive distances are impossible. -/
+theorem gram_antiparallel {d₁ d₂ : ℝ} (hg : 0 ≤ gramDet3 d₁ d₂ (-1)) : d₁ + d₂ = 0 := by
+  unfold gramDet3 at hg
+  nlinarith [sq_nonneg (d₁ + d₂)]
+
+/-- The two-plane bound for planes `⟪Nᵢ, ·⟫ = κᵢ` (`κᵢ > 0`) through a common
+point of the sphere: with `c = ⟪N₁, N₂⟫ / (‖N₁‖ ‖N₂‖)`,
+`(1 + c) (‖N₁‖/κ₁ + ‖N₂‖/κ₂)² ≥ 8`. -/
+theorem face_pair_bound (A : UnitSphere) {N₁ N₂ : E3} {κ₁ κ₂ : ℝ} (h1 : 0 < κ₁) (h2 : 0 < κ₂)
+    (hA1 : inner ℝ N₁ A.1 = κ₁) (hA2 : inner ℝ N₂ A.1 = κ₂) :
+    8 ≤ (1 + inner ℝ N₁ N₂ / (‖N₁‖ * ‖N₂‖)) * (‖N₁‖ / κ₁ + ‖N₂‖ / κ₂) ^ 2 := by
+  have hn1 : 0 < ‖N₁‖ := by
+    have := real_inner_le_norm N₁ A.1; rw [A.2, mul_one] at this; linarith
+  have hn2 : 0 < ‖N₂‖ := by
+    have := real_inner_le_norm N₂ A.1; rw [A.2, mul_one] at this; linarith
+  let n₁ : UnitSphere := ⟨‖N₁‖⁻¹ • N₁, by rw [norm_smul, norm_inv, norm_norm, inv_mul_cancel₀ hn1.ne']⟩
+  let n₂ : UnitSphere := ⟨‖N₂‖⁻¹ • N₂, by rw [norm_smul, norm_inv, norm_norm, inv_mul_cancel₀ hn2.ne']⟩
+  have e1 : inner ℝ A.1 n₁.1 = κ₁ / ‖N₁‖ := by
+    simp only [n₁, real_inner_smul_right, real_inner_comm, hA1]; field_simp
+  have e2 : inner ℝ A.1 n₂.1 = κ₂ / ‖N₂‖ := by
+    simp only [n₂, real_inner_smul_right, real_inner_comm, hA2]; field_simp
+  have ec : inner ℝ n₁.1 n₂.1 = inner ℝ N₁ N₂ / (‖N₁‖ * ‖N₂‖) := by
+    simp only [n₁, n₂, real_inner_smul_left, real_inner_smul_right]; field_simp
+  have hg := gram_two_planes A n₁ n₂
+  rw [e1, e2, ec] at hg
+  have hc := abs_real_inner_le_norm n₁.1 n₂.1
+  rw [n₁.2, n₂.2, mul_one, ec, abs_le] at hc
+  have hd1 : κ₁ / ‖N₁‖ ≤ 1 := by
+    rw [div_le_one hn1]; have := real_inner_le_norm N₁ A.1; rw [A.2, mul_one] at this; linarith
+  have hd2 : κ₂ / ‖N₂‖ ≤ 1 := by
+    rw [div_le_one hn2]; have := real_inner_le_norm N₂ A.1; rw [A.2, mul_one] at this; linarith
+  have key := inv_add_inv_sq_ge_of_gram (div_pos h1 hn1) (div_pos h2 hn2) hd1 hd2 hc.1 hc.2 hg
+  simpa [one_div, inv_div] using key
 
 end Geodesy.Spherical

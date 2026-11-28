@@ -153,7 +153,10 @@ explicit hypothesis that is not Wimmer's theorem; see
 `research/COVERING_GLOBAL_PLAN.md`, section 3. `NinePoint.lean` sharpens this:
 `TTPOptimal` (optimality within the combinatorial type) and `OptimalIsTTP`
 (optimal configurations have the type) are separate hypotheses, and
-`TTPOptimal` follows from the harmonic-mean inequality `TTPHarmonic`. Strict
+`TTPOptimal` follows from the harmonic-mean inequality `TTPHarmonic`, which
+`NinePointElim.lean` reduces, after one relaxation, to an equivalent inequality
+`ReducedHarmonic` in the six non-equatorial points (both open; the first,
+non-strict version of `TTPHarmonic` was false, see `NinePointAudit.lean`). Strict
 local optimality without symmetry is verified exactly outside Lean
 (`research/NINE_POINT_LOCAL.md`).
 
