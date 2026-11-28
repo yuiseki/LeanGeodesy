@@ -2078,3 +2078,15 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Spherical.jucovic_pair_equality' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Spherical.jucovic_pair_equality
+
+/-- info: 'Geodesy.Spherical.smallCircle_injective' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.smallCircle_injective
+
+/-- info: 'Geodesy.Spherical.not_TTPHarmonic_allEqual' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.not_TTPHarmonic_allEqual
+
+/-- info: 'Geodesy.Spherical.not_TTPHarmonic_smallCircle' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.not_TTPHarmonic_smallCircle

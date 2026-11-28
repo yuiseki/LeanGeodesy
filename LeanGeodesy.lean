@@ -54,6 +54,7 @@ import LeanGeodesy.Spherical.CoveringLowerBound
 import LeanGeodesy.Spherical.Jucovic9
 import LeanGeodesy.Spherical.NinePoint
 import LeanGeodesy.Spherical.NinePointReduce
+import LeanGeodesy.Spherical.NinePointAudit
 import LeanGeodesy.CRS.Basic
 import LeanGeodesy.CRS.WGS84
 import LeanGeodesy.CRS.WebMercator

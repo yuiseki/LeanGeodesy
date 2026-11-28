@@ -104,7 +104,14 @@ definition, in commit `504e62a`, omitted the condition that the planes pass
 through the vertices; with it omitted, far-away supporting planes make the
 statement false, so the implication `TTPOptimal_of_harmonic` was true but
 empty. The definition now includes the condition; the proof of the
-implication was unaffected.) `TTPOptimal_of_harmonic` (Lean): for any
+implication was unaffected.) (Second correction, 2026-11-28: the definition
+of commit `bf906c0` is still false. With non-strict support, all fourteen
+planes may coincide: nine points at the north pole with every plane `z = 1`,
+or nine distinct points on the circle `z = 12/13` with every plane `z = 12/13`,
+give the weighted sums `1` and `13/12`, both below `1/h⋆` when
+`2wT + 6wV = 1`. Lean: `not_TTPHarmonic_allEqual`,
+`not_TTPHarmonic_smallCircle` in `Spherical/NinePointAudit.lean`. See
+section 7 for the repaired definitions.) `TTPOptimal_of_harmonic` (Lean): for any
 `wT, wV ≥ 0` with `2wT + 6wV = 1`, `TTPHarmonic wT wV → TTPOptimal`.
 
 Only the KKT weights `wT = λ_T`, `wV = λ_V` can work (equality at `P⋆` and local
