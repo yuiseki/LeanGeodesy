@@ -303,4 +303,114 @@ theorem coveringRadius_tetrahedron4_le (q : Fin 4 → UnitSphere) :
   rw [coveringRadius_tetrahedron4]
   exact arccos_one_third_le_coveringRadius q
 
+/-! ## Two and three points -/
+
+/-- If all the points have the same inner product with a nonzero `w` (they lie
+in a plane), they lie in a closed hemisphere, and every covering radius
+`r ∈ [0, π]` has `cos r ≤ 0`. -/
+theorem cos_nonpos_of_inner_const {n : ℕ} {p : Fin n → UnitSphere} {r : ℝ} (h0 : 0 ≤ r)
+    (hπ : r ≤ π) (hcov : IsCovering p r) {w : E3} (hw : w ≠ 0) {κ : ℝ}
+    (hconst : ∀ i, inner ℝ w (p i).1 = κ) : cos r ≤ 0 := by
+  set s : ℝ := if κ ≤ 0 then 1 else -1 with hs
+  have hsw : s * κ ≤ 0 := by
+    rw [hs]; split_ifs with h
+    · linarith
+    · push Not at h; linarith
+  have hsabs : |s| = 1 := by rw [hs]; split_ifs <;> simp
+  have h := cos_mul_norm_le_of_halfSpace h0 hπ hcov (s • w) (c := 0) (fun i => by
+    rw [inner_smul_left, hconst i]; simpa using hsw)
+  rw [norm_smul, Real.norm_eq_abs, hsabs, one_mul] at h
+  have hwpos : 0 < ‖w‖ := norm_pos_iff.2 hw
+  by_contra hc
+  push Not at hc
+  nlinarith
+
+/-- Three points always lie in a closed hemisphere: every covering of `S²` by
+three caps of radius `r ∈ [0, π]` has `cos r ≤ 0`. -/
+theorem cos_nonpos_of_isCovering_three {p : Fin 3 → UnitSphere} {r : ℝ} (h0 : 0 ≤ r)
+    (hπ : r ≤ π) (hcov : IsCovering p r) : cos r ≤ 0 := by
+  set a := (p 1).1 - (p 0).1
+  set b := (p 2).1 - (p 0).1
+  have hperp : ∃ w : E3, w ≠ 0 ∧ inner ℝ w a = 0 ∧ inner ℝ w b = 0 := by
+    by_cases hab : cross3 a b = 0
+    · have self : cross3 b b = 0 := by ext i; fin_cases i <;> simp [cross3] <;> ring
+      have hba : cross3 b a = 0 := by
+        have hneg : cross3 b a = -cross3 a b := by
+          ext i; fin_cases i <;> simp [cross3] <;> ring
+        rw [hneg, hab, neg_zero]
+      obtain ⟨w, hw, hwa, hwb, -⟩ := exists_perp_of_cross_eq_zero hab self hba
+      exact ⟨w, hw, hwa, hwb⟩
+    · refine ⟨cross3 a b, hab, ?_, ?_⟩
+      · rw [inner_E3]; simp only [cross3, vec3_0, vec3_1, vec3_2]; ring
+      · rw [inner_E3]; simp only [cross3, vec3_0, vec3_1, vec3_2]; ring
+  obtain ⟨w, hw, hwa, hwb⟩ := hperp
+  refine cos_nonpos_of_inner_const h0 hπ hcov hw (κ := inner ℝ w (p 0).1) fun i => ?_
+  fin_cases i
+  · rfl
+  · show inner ℝ w (p 1).1 = _
+    have : (p 1).1 = a + (p 0).1 := by simp [a]
+    rw [this, inner_add_right, hwa, zero_add]
+  · show inner ℝ w (p 2).1 = _
+    have : (p 2).1 = b + (p 0).1 := by simp [b]
+    rw [this, inner_add_right, hwb, zero_add]
+
+/-- Points summing to zero cover `S²` at radius `π / 2`: for every `x` the inner
+products `⟪p i, x⟫` sum to zero, so one of them is nonnegative. -/
+theorem isCovering_pi_div_two_of_sum_eq_zero {n : ℕ} (hn : 1 ≤ n) {p : Fin n → UnitSphere}
+    (hsum : ∑ i, (p i).1 = 0) : IsCovering p (π / 2) := by
+  rw [isCovering_iff_inner p (by positivity) (by linarith [pi_pos]), cos_pi_div_two]
+  intro x
+  by_contra h
+  push Not at h
+  have hneg : ∑ i, inner ℝ (p i).1 x.1 < 0 :=
+    Finset.sum_neg (fun i _ => h i) (Finset.univ_nonempty_iff.2 ⟨⟨0, by omega⟩⟩)
+  rw [← sum_inner, hsum, inner_zero_left] at hneg
+  exact lt_irrefl _ hneg
+
+/-- Global optimality for `N = 3`: three caps of radius `r` cover `S²` exactly
+when `π / 2 ≤ r`. -/
+theorem covering_3_optimal (r : ℝ) :
+    (∃ p : Fin 3 → UnitSphere, IsCovering p r) ↔ π / 2 ≤ r := by
+  constructor
+  · rintro ⟨p, hp⟩
+    have hr := (coveringRadius_le_iff (by norm_num : 1 ≤ 3) p r).2 hp
+    have h0 := coveringRadius_nonneg (by norm_num : 1 ≤ 3) p
+    have hπ := coveringRadius_le_pi (by norm_num : 1 ≤ 3) p
+    have hcos := cos_nonpos_of_isCovering_three h0 hπ
+      (isCovering_coveringRadius (by norm_num : 1 ≤ 3) p)
+    have : π / 2 ≤ coveringRadius (by norm_num : 1 ≤ 3) p := by
+      by_contra hlt
+      push Not at hlt
+      have := cos_pos_of_mem_Ioo ⟨by linarith [pi_pos], hlt⟩
+      linarith
+    linarith
+  · intro hr
+    refine ⟨eqTriangle3, fun x => ?_⟩
+    have hsum : ∑ i, (eqTriangle3 i).1 = 0 := by
+      rw [Fin.sum_univ_three]
+      simp only [eqTriangle3, vec3_add]
+      ext i; fin_cases i <;> (simp; try ring)
+    obtain ⟨i, hi⟩ := isCovering_pi_div_two_of_sum_eq_zero (by norm_num) hsum x
+    exact ⟨i, le_trans hi hr⟩
+
+/-- Global optimality for `N = 2`: two caps of radius `r` cover `S²` exactly
+when `π / 2 ≤ r`. -/
+theorem covering_2_optimal (r : ℝ) :
+    (∃ p : Fin 2 → UnitSphere, IsCovering p r) ↔ π / 2 ≤ r := by
+  constructor
+  · rintro ⟨p, hp⟩
+    refine (covering_3_optimal r).1 ⟨![p 0, p 1, p 1], fun x => ?_⟩
+    obtain ⟨i, hi⟩ := hp x
+    fin_cases i
+    · exact ⟨0, hi⟩
+    · exact ⟨1, hi⟩
+  · intro hr
+    refine ⟨poles2, fun x => ?_⟩
+    have hsum : ∑ i, (poles2 i).1 = 0 := by
+      rw [Fin.sum_univ_two]
+      simp only [poles2, vec3_add]
+      ext i; fin_cases i <;> simp
+    obtain ⟨i, hi⟩ := isCovering_pi_div_two_of_sum_eq_zero (by norm_num) hsum x
+    exact ⟨i, le_trans hi hr⟩
+
 end Geodesy.Spherical

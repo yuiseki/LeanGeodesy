@@ -1862,3 +1862,23 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Spherical.octaCertV_valid' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Spherical.octaCertV_valid
+
+/-- info: 'Geodesy.Spherical.cos_nonpos_of_inner_const' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.cos_nonpos_of_inner_const
+
+/-- info: 'Geodesy.Spherical.cos_nonpos_of_isCovering_three' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.cos_nonpos_of_isCovering_three
+
+/-- info: 'Geodesy.Spherical.isCovering_pi_div_two_of_sum_eq_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.isCovering_pi_div_two_of_sum_eq_zero
+
+/-- info: 'Geodesy.Spherical.covering_3_optimal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.covering_3_optimal
+
+/-- info: 'Geodesy.Spherical.covering_2_optimal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.covering_2_optimal

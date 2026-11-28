@@ -8,9 +8,11 @@ Files: `Spherical/Topology.lean` (existing: `coveringRadius`,
 `exists_optimal_covering`), `Spherical/Covering.lean` (equivalences),
 `Spherical/CoveringCert.lean` (checker and its soundness),
 `Spherical/CoveringBenchmarks.lean` (octahedron and tetrahedron),
+`Spherical/CoveringLowerBound.lean` (bounds for every configuration, global
+optimality for `N = 2, 3, 4`),
 `scripts/covering_cert/gen_cert.py` (certificate generator).
 
-All three Lean files belong to the routine target `LeanGeodesy`, not to
+All four Lean files belong to the routine target `LeanGeodesy`, not to
 `LeanGeodesyResearch` (ADR-001): the first two are foundations and a reusable
 verifier, and the benchmark certificates are small (they build in seconds).
 A large certificate for a research configuration should go to
@@ -61,25 +63,87 @@ leaves name a point. On each leaf box the checker bounds `⟪q i, x⟫` below an
   box corner it shares with its neighbours. In general `R` must sit a little
   below the true `cos² r`, and the leaf count grows as the slack shrinks.
 
+### The vertex test (`checkCoverV`)
+
+For fixed `Q` and `k ≥ 0` the set `{x | k ‖x‖ ≤ ⟪Q, x⟫}` is a convex cone
+(`cone_convex`), and a box is the convex hull of its corners, so checking the
+squared inequality `R ‖q‖² ‖x‖² ≤ ⟪q, x⟫², 0 ≤ ⟪q, x⟫` at the four corners proves
+it on the box (`leafOKv`, `chkV_sound`). It accepts every box the original test
+accepts. Measured with `gen_cert.py` and `lake env lean` on the tetrahedron:
+
+| `R` | `leafOK` leaves | `leafOKv` leaves |
+| --- | --- | --- |
+| 1/10 | 192 | 132 |
+| 11/100 | 360 | 276 |
+| 111/1000 | 504 | 372 |
+| 1111/10000 | 672 | 492 |
+| 1/9 (exact) | none (depth > 34) | none (depth > 34) |
+
+Both grow by about 150 leaves per decimal digit of slack. At `R = 11/100` the
+kernel check takes about 1.6 s (`leafOK`) and 1.8 s (`leafOKv`) beyond a
+2.2 s baseline: fewer leaves, four corners each. Neither reaches an exact
+boundary unless the deep holes sit on box corners and each box lies in one cap
+(the octahedron passes at `R = 1/3` with six leaves under both tests); at the
+tetrahedron's holes three Voronoi cells meet, and axis-parallel boxes cannot
+follow their edges. Exact values come from structure instead (section 3).
+
+### Zero direction vectors and `Realizes`
+
+A zero vector passes every leaf of `checkCover` (its lower bound is `0` and its
+norm is `0`), so `checkCover` accepts a "covering" by one zero vector (an
+`example` in the benchmarks). This is not unsound: `checkCover_sound` assumes
+`Realizes q p`, and no configuration realizes a zero vector
+(`not_realizes_of_zero`). `Realizes` is otherwise exactly what it says: each
+point is its direction normalized, so it can only describe configurations
+whose points have rational directions. `checkCoverV` checks `nrm2 (q i) ≠ 0`
+itself, and `ratConfig` builds the points from the directions, so
+`isCovering_ratConfig_of_checkCoverV` has no realization hypothesis left.
+
+Not proved: that a configuration covering with strict margin always has a
+finite accepted certificate. The argument would be compactness (a uniform
+margin `δ`), then a uniform grid fine enough that each box's corners stay
+within `δ` of the centre's best point; it is written down nowhere in Lean.
+
 ## 3. Benchmarks (`CoveringBenchmarks.lean`)
 
 | Configuration | Result |
 | --- | --- |
 | Regular octahedron | `coveringRadius_octahedron6 : coveringRadius = arccos (1/√3)`, exact. Upper bound from a 6-leaf certificate at `R = 1/3`, lower bound from the hole `(1,1,1)/√3`. |
-| Regular tetrahedron | `coveringRadius_tetrahedron4_bounds`: `arccos (1/3) ≤ coveringRadius ≤ arccos √(11/100)`, i.e. `70.5288° ≤ · ≤ 70.63°` (360-leaf certificate). The exact value `arccos (1/3)` is not proved. |
+| Regular tetrahedron | `coveringRadius_tetrahedron4 : coveringRadius = arccos (1/3)`, exact, with no certificate: the six edge midpoints are the octahedron scaled by `1/√3`, so the hull of the tetrahedron contains `1/√3` times the hull of the octahedron, hence the ball of radius `1/3` (`closedBall_subset_hullOf_tetrahedron4`). The 360-leaf certificate (`coveringRadius_tetrahedron4_bounds`, `≤ arccos √(11/100)`) is kept as a test of the checker. |
 | Both | `octaCert_rejects_above`, `tetraCert_rejects_above`: no tree whatsoever is accepted for `R` above the true `cos² r` (soundness plus the hole). Concrete mutation tests (`example : checkCover … = false`): `R` too large, wrong or out-of-range leaf, a vertex removed, negative `R`, a tampered cut. |
 
 Not done: the regular icosahedron. Its vertices are irrational (`φ`), so the
 rational checker does not apply directly; it needs arithmetic in `ℚ(√5)` or a
 rational near-icosahedron (which would not be the icosahedron).
 
-## 4. What this does not prove
+## 4. Bounds for every configuration (`CoveringLowerBound.lean`)
+
+* `cos_mul_norm_le_of_halfSpace`: if all points satisfy `⟪V, p i⟫ ≤ c`, every
+  covering radius has `cos r ‖V‖ ≤ c`; summed over several half-spaces,
+  `cos r Σ ‖V k‖ ≤ Σ c k`. With balanced normals (`Σ V k = 0`) the right-hand
+  side can be computed from the points.
+* Four points: the face normals of the tetrahedron they span (the gradients of
+  its oriented volume) sum to zero, which gives `cos r ≤ 1/3` for every
+  configuration (Euler's `R ≥ 3r` in vector form); collinear configurations lie
+  in a hemisphere. `covering_4_optimal`: four caps of radius `r` cover exactly
+  when `arccos (1/3) ≤ r`; `coveringRadius_tetrahedron4_le`: the regular
+  tetrahedron is optimal.
+* Two and three points: they lie in a closed hemisphere, and points summing to
+  zero cover at `π/2`. `covering_2_optimal`, `covering_3_optimal`: the threshold
+  is `π/2`.
+
+These are global optimality theorems, statements about all configurations;
+`coveringRadius_octahedron6` and `coveringRadius_tetrahedron4` are exact values
+for one configuration each. The two are different claims, and only `N = 2, 3, 4`
+have the first kind here. For `N = 6, 12` see `research/COVERING_GLOBAL_PLAN.md`.
+
+## 5. What this does not prove
 
 * A certificate is an upper bound for one configuration. It says nothing about
   other configurations, so it never proves global optimality of a configuration.
-* Optimality of `N = 4, 6, 12` (L. Fejes Tóth) is not formalized. It needs a
-  lower bound valid for every configuration (Delaunay triangulation, area of
-  spherical triangles of bounded circumradius); see
-  `research/COVERING_LITERATURE.md` for the status of every `N`.
+* Optimality for `N = 6, 12` (L. Fejes Tóth) is not formalized; `N = 4` is.
+  The general bound needs the face structure of the hull, spherical triangle
+  areas and Euler's formula (`research/COVERING_GLOBAL_PLAN.md`);
+  `research/COVERING_LITERATURE.md` has the status of every `N`.
 * `exists_optimal_covering` (existence of a minimizer) is old; nothing here
   locates or characterizes minimizers.
