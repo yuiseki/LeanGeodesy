@@ -5,8 +5,10 @@ The output is data for LeanGeodesy.Spherical.CoveringCert.checkCover. Nothing he
 trusted: Lean re-checks every leaf in exact rational arithmetic. The search uses the same
 leaf test as the checker (fractions only, no floating point), but any other method would do.
 
-usage: gen_cert.py NAME R   (NAME in tetra, octa, ...)  prints a Lean term for the tree
-       function `fun a b => ...` over (Fin 3) x Bool.
+usage: gen_cert.py NAME R [box|vertex]
+       NAME in tetra, octa, ...; the last argument picks the leaf test (box: `leafOK` for
+       `checkCover`, the default; vertex: `leafOKv` for `checkCoverV`). Prints a Lean term
+       for the tree function `fun a b => ...` over (Fin 3) x Bool.
 """
 import sys
 from fractions import Fraction as F
@@ -28,6 +30,19 @@ def leaf_ok(R, q, t, u0, u1, v0, v1):
     return L >= 0 and R * n2 * M <= L * L
 
 
+def leaf_ok_vertex(R, q, t, u0, u1, v0, v1):
+    n2 = q[0] ** 2 + q[1] ** 2 + q[2] ** 2
+    for u in (u0, u1):
+        for v in (v0, v1):
+            d = q[0] * t + q[1] * u + q[2] * v
+            if d < 0 or R * n2 * (t * t + u * u + v * v) > d * d:
+                return False
+    return True
+
+
+LEAF = leaf_ok
+
+
 def lit(x):
     x = F(x)
     s = f"{x.numerator}" if x.denominator == 1 else f"{x.numerator}/{x.denominator}"
@@ -36,7 +51,7 @@ def lit(x):
 
 def build(R, qs, a, t, u0, u1, v0, v1, depth=0):
     for i, q in enumerate(qs):
-        if leaf_ok(R, rot(a, q), t, u0, u1, v0, v1):
+        if LEAF(R, rot(a, q), t, u0, u1, v0, v1):
             return ("leaf", i)
     if depth > 60:
         raise SystemExit("no certificate found: R too close to the true value")
@@ -60,7 +75,10 @@ def leaves(t):
 
 
 def main():
+    global LEAF
     name, R = sys.argv[1], F(sys.argv[2])
+    if len(sys.argv) > 3 and sys.argv[3] == "vertex":
+        LEAF = leaf_ok_vertex
     qs = [tuple(F(c) for c in q) for q in CONFIGS[name]]
     trees = {}
     for a in range(3):

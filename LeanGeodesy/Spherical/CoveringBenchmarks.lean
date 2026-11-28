@@ -277,4 +277,33 @@ example : checkCover tetraQ (-1 / 100) tetraTrees = false := by decide +kernel
 example : checkCover tetraQ (11 / 100) (fun a b => if a = 0 ∧ b = true then
     .cutU 0 (.leaf 0) (.leaf 0) else tetraTrees a b) = false := by decide +kernel
 
+/-! ## The vertex-test checker and zero direction vectors -/
+
+/-- The octahedron certificate also passes the vertex test, exactly at `R = 1/3`. -/
+theorem octaCertV_valid : checkCoverV octaQ (1 / 3) octaTrees = true := by decide +kernel
+
+/-- Through `ratConfig`, the vertex-test checker needs no realization
+hypothesis: the six normalized directions cover at `arccos √(1/3)`. -/
+example : IsCovering (ratConfig octaQ (checkCoverV_nonzero octaCertV_valid))
+    (arccos √((1 / 3 : ℚ) : ℝ)) :=
+  isCovering_ratConfig_of_checkCoverV octaCertV_valid
+
+/-- A zero direction vector passes every leaf of `checkCover`: this certificate
+for a single "point" is accepted. It proves nothing, because no configuration
+realizes a zero vector (`not_realizes_of_zero`), and `checkCover_sound` needs
+one. -/
+example : checkCover (fun _ : Fin 1 => ((0, 0, 0) : Q3)) 1 (fun _ _ => .leaf 0) = true := by
+  decide +kernel
+
+example (p : Fin 1 → UnitSphere) : ¬ Realizes (fun _ : Fin 1 => ((0, 0, 0) : Q3)) p :=
+  not_realizes_of_zero 0 (by decide +kernel)
+
+/-- The vertex-test checker rejects it outright. -/
+example : checkCoverV (fun _ : Fin 1 => ((0, 0, 0) : Q3)) 1 (fun _ _ => .leaf 0) = false := by
+  decide +kernel
+
+/-- Rejections under the vertex test: above the true value, and a wrong leaf. -/
+example : checkCoverV octaQ (1 / 3 + 1 / 1000) octaTrees = false := by decide +kernel
+example : checkCoverV octaQ (1 / 3) (fun _ _ => .leaf 1) = false := by decide +kernel
+
 end Geodesy.Spherical

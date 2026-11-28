@@ -367,4 +367,273 @@ theorem coveringRadius_le_of_checkCover {n : ℕ} (hn : 1 ≤ n) {q : Fin n → 
     (hp : Realizes q p) : coveringRadius hn p ≤ arccos √(R : ℝ) :=
   (coveringRadius_le_iff hn p _).2 (isCovering_of_checkCover h hp)
 
+
+/-! ## The vertex test
+
+For a fixed `Q` and `k ≥ 0` the set `{x | k ‖x‖ ≤ ⟪Q, x⟫}` is a convex cone
+(`cone_convex`). A box in a face of the cube is the convex hull of its four
+corners, so if the four corners satisfy the squared inequality, so does every
+point of the box. This test (`leafOKv`) couples the inner product and the norm
+at each corner instead of bounding them separately over the box (`leafOK`), so
+it accepts every box `leafOK` accepts and more; `checkCoverV` also rejects zero
+direction vectors, so its soundness theorem needs no realization hypothesis
+(`isCovering_ratConfig_of_checkCoverV`). -/
+
+/-- The squared cone inequality at one corner `(t, u, v)`. -/
+def cornerOK (R : ℚ) (q : Q3) (t u v : ℚ) : Bool :=
+  decide (0 ≤ q.1 * t + q.2.1 * u + q.2.2 * v ∧
+    R * nrm2 q * (t ^ 2 + u ^ 2 + v ^ 2) ≤ (q.1 * t + q.2.1 * u + q.2.2 * v) ^ 2)
+
+/-- The vertex test at a leaf: all four corners of the box. -/
+def leafOKv (R : ℚ) (q : Q3) (t u0 u1 v0 v1 : ℚ) : Bool :=
+  cornerOK R q t u0 v0 && cornerOK R q t u1 v0 && cornerOK R q t u0 v1 && cornerOK R q t u1 v1
+
+/-- Check one face tree with the vertex test. -/
+def chkV {n : ℕ} (q : Fin n → Q3) (R : ℚ) (a : Fin 3) (t : ℚ) :
+    CoverTree → ℚ → ℚ → ℚ → ℚ → Bool
+  | .leaf i, u0, u1, v0, v1 =>
+      if h : i < n then leafOKv R (rot a (q ⟨i, h⟩)) t u0 u1 v0 v1 else false
+  | .cutU m l r, u0, u1, v0, v1 =>
+      chkV q R a t l u0 m v0 v1 && chkV q R a t r m u1 v0 v1
+  | .cutV m l r, u0, u1, v0, v1 =>
+      chkV q R a t l u0 u1 v0 m && chkV q R a t r u0 u1 m v1
+
+/-- A full certificate with the vertex test; zero direction vectors are
+rejected. -/
+def checkCoverV {n : ℕ} (q : Fin n → Q3) (R : ℚ) (T : Fin 3 → Bool → CoverTree) : Bool :=
+  decide (0 ≤ R ∧ R ≤ 1) && decide (∀ i, nrm2 (q i) ≠ 0) &&
+    (List.finRange 3).all fun a =>
+      [true, false].all fun b => chkV q R a (faceSign b) (T a b) (-1) 1 (-1) 1
+
+/-- `{x | k ‖x‖ ≤ ⟪Q, x⟫}` is convex for `k ≥ 0`. -/
+theorem cone_convex (Q : E3) {k : ℝ} (hk : 0 ≤ k) {X Y : E3} (hX : k * ‖X‖ ≤ inner ℝ Q X)
+    (hY : k * ‖Y‖ ≤ inner ℝ Q Y) {α β : ℝ} (hα : 0 ≤ α) (hβ : 0 ≤ β) :
+    k * ‖α • X + β • Y‖ ≤ inner ℝ Q (α • X + β • Y) := by
+  have hn : ‖α • X + β • Y‖ ≤ α * ‖X‖ + β * ‖Y‖ := by
+    calc ‖α • X + β • Y‖ ≤ ‖α • X‖ + ‖β • Y‖ := norm_add_le _ _
+      _ = α * ‖X‖ + β * ‖Y‖ := by
+        rw [norm_smul, norm_smul, Real.norm_eq_abs, Real.norm_eq_abs, abs_of_nonneg hα,
+          abs_of_nonneg hβ]
+  rw [inner_add_right, inner_smul_right, inner_smul_right]
+  nlinarith [mul_le_mul_of_nonneg_left hn hk, mul_le_mul_of_nonneg_left hX hα,
+    mul_le_mul_of_nonneg_left hY hβ]
+
+private theorem exists_interp {a b x : ℝ} (h1 : a ≤ x) (h2 : x ≤ b) :
+    ∃ α : ℝ, 0 ≤ α ∧ α ≤ 1 ∧ x = (1 - α) * a + α * b := by
+  rcases eq_or_lt_of_le (h1.trans h2) with hab | hab
+  · exact ⟨0, le_rfl, zero_le_one, by rw [hab] at h1; linarith⟩
+  · refine ⟨(x - a) / (b - a), div_nonneg (by linarith) (by linarith),
+      (div_le_one (by linarith)).2 (by linarith), ?_⟩
+    field_simp
+    ring
+
+private theorem cornerOK_cone {R : ℚ} (hR : 0 ≤ R) {q : Q3} {t u v : ℚ}
+    (h : cornerOK R q t u v = true) :
+    √(R : ℝ) * ‖vec3 q.1 q.2.1 q.2.2‖ * ‖vec3 t u v‖ ≤
+      inner ℝ (vec3 q.1 q.2.1 q.2.2) (vec3 t u v) := by
+  obtain ⟨hd, hsq⟩ := of_decide_eq_true h
+  have hd' : (0 : ℝ) ≤ (q.1 : ℝ) * t + q.2.1 * u + q.2.2 * v := by exact_mod_cast hd
+  have hsq' : (R : ℝ) * (nrm2 q : ℝ) * ((t : ℝ) ^ 2 + u ^ 2 + v ^ 2) ≤
+      ((q.1 : ℝ) * t + q.2.1 * u + q.2.2 * v) ^ 2 := by exact_mod_cast hsq
+  have hR' : (0 : ℝ) ≤ R := by exact_mod_cast hR
+  rw [inner_vec3]
+  have hlhs : (√(R : ℝ) * ‖vec3 q.1 q.2.1 q.2.2‖ * ‖vec3 t u v‖) ^ 2 =
+      (R : ℝ) * (nrm2 q : ℝ) * ((t : ℝ) ^ 2 + u ^ 2 + v ^ 2) := by
+    rw [mul_pow, mul_pow, Real.sq_sqrt hR', norm_vec3_sq, norm_vec3_sq]
+    unfold nrm2; push_cast; ring
+  have hnn : 0 ≤ √(R : ℝ) * ‖vec3 q.1 q.2.1 q.2.2‖ * ‖vec3 t u v‖ := by positivity
+  rw [← hlhs] at hsq'
+  exact le_of_pow_le_pow_left₀ two_ne_zero hd' hsq'
+
+private theorem leafOKv_sound {R : ℚ} (hR : 0 ≤ R) {q : Q3} {t u0 u1 v0 v1 : ℚ}
+    (h : leafOKv R q t u0 u1 v0 v1 = true) (u v : ℝ) (hu0 : (u0 : ℝ) ≤ u) (hu1 : u ≤ u1)
+    (hv0 : (v0 : ℝ) ≤ v) (hv1 : v ≤ v1) :
+    0 ≤ (q.1 : ℝ) * t + q.2.1 * u + q.2.2 * v ∧
+      (R : ℝ) * (nrm2 q : ℝ) * ((t : ℝ) ^ 2 + u ^ 2 + v ^ 2) ≤
+        ((q.1 : ℝ) * t + q.2.1 * u + q.2.2 * v) ^ 2 := by
+  simp only [leafOKv, Bool.and_eq_true] at h
+  obtain ⟨⟨⟨h00, h10⟩, h01⟩, h11⟩ := h
+  set Q := vec3 (q.1 : ℝ) q.2.1 q.2.2
+  set k := √(R : ℝ) * ‖Q‖
+  have hk : 0 ≤ k := by positivity
+  have c00 := cornerOK_cone hR h00
+  have c10 := cornerOK_cone hR h10
+  have c01 := cornerOK_cone hR h01
+  have c11 := cornerOK_cone hR h11
+  obtain ⟨α, hα0, hα1, hu⟩ := exists_interp hu0 hu1
+  obtain ⟨β, hβ0, hβ1, hv⟩ := exists_interp hv0 hv1
+  have hY0 := cone_convex Q hk c00 c10 (by linarith : (0 : ℝ) ≤ 1 - α) hα0
+  have hY1 := cone_convex Q hk c01 c11 (by linarith : (0 : ℝ) ≤ 1 - α) hα0
+  have hX := cone_convex Q hk hY0 hY1 (by linarith : (0 : ℝ) ≤ 1 - β) hβ0
+  have hXeq : (1 - β) • ((1 - α) • vec3 (t : ℝ) u0 v0 + α • vec3 (t : ℝ) u1 v0) +
+      β • ((1 - α) • vec3 (t : ℝ) u0 v1 + α • vec3 (t : ℝ) u1 v1) = vec3 (t : ℝ) u v := by
+    simp only [vec3_smul, vec3_add]
+    apply vec3_congr
+    · ring
+    · rw [hu]; ring
+    · rw [hv]; ring
+  rw [hXeq, inner_vec3] at hX
+  have hnorm : ‖vec3 (t : ℝ) u v‖ ^ 2 = (t : ℝ) ^ 2 + u ^ 2 + v ^ 2 := norm_vec3_sq _ _ _
+  have hQ : ‖Q‖ ^ 2 = (nrm2 q : ℝ) := by
+    simp only [Q, norm_vec3_sq]; unfold nrm2; push_cast; ring
+  have hR' : (0 : ℝ) ≤ R := by exact_mod_cast hR
+  have hnn : 0 ≤ k * ‖vec3 (t : ℝ) u v‖ := by positivity
+  refine ⟨hnn.trans hX, ?_⟩
+  have hsq : (k * ‖vec3 (t : ℝ) u v‖) ^ 2 = (R : ℝ) * (nrm2 q : ℝ) * ((t : ℝ) ^ 2 + u ^ 2 + v ^ 2) := by
+    rw [mul_pow, mul_pow, Real.sq_sqrt hR', hQ, hnorm]
+  rw [← hsq]
+  exact pow_le_pow_left₀ hnn hX 2
+
+/-- Soundness of a face tree under the vertex test. -/
+theorem chkV_sound {n : ℕ} (q : Fin n → Q3) (R : ℚ) (hR : 0 ≤ R) (a : Fin 3) (t : ℚ) :
+    ∀ (T : CoverTree) (u0 u1 v0 v1 : ℚ), chkV q R a t T u0 u1 v0 v1 = true →
+      ∀ u v : ℝ, (u0 : ℝ) ≤ u → u ≤ u1 → (v0 : ℝ) ≤ v → v ≤ v1 →
+        ∃ i : Fin n, 0 ≤ inner ℝ (qv (q i)) (rotVec a t u v) ∧
+          (R : ℝ) * ‖qv (q i)‖ ^ 2 * ‖rotVec a t u v‖ ^ 2 ≤
+            (inner ℝ (qv (q i)) (rotVec a t u v)) ^ 2 := by
+  intro T
+  induction T with
+  | leaf i =>
+    intro u0 u1 v0 v1 h u v hu0 hu1 hv0 hv1
+    simp only [chkV] at h
+    split_ifs at h with hi
+    obtain ⟨h1, h2⟩ := leafOKv_sound hR h u v hu0 hu1 hv0 hv1
+    refine ⟨⟨i, hi⟩, ?_, ?_⟩
+    · rw [inner_qv_rotVec]; exact h1
+    · rw [inner_qv_rotVec, norm_qv_sq, norm_rotVec_sq, ← nrm2_rot a (q ⟨i, hi⟩)]
+      exact h2
+  | cutU m l r ihl ihr =>
+    intro u0 u1 v0 v1 h u v hu0 hu1 hv0 hv1
+    simp only [chkV, Bool.and_eq_true] at h
+    rcases le_total u (m : ℝ) with hm | hm
+    · exact ihl _ _ _ _ h.1 u v hu0 hm hv0 hv1
+    · exact ihr _ _ _ _ h.2 u v hm hu1 hv0 hv1
+  | cutV m l r ihl ihr =>
+    intro u0 u1 v0 v1 h u v hu0 hu1 hv0 hv1
+    simp only [chkV, Bool.and_eq_true] at h
+    rcases le_total v (m : ℝ) with hm | hm
+    · exact ihl _ _ _ _ h.1 u v hu0 hu1 hv0 hm
+    · exact ihr _ _ _ _ h.2 u v hu0 hu1 hm hv1
+
+/-- Soundness of the vertex-test checker, with a realization hypothesis: an accepted certificate gives, in every unit
+direction, a point of the configuration with inner product at least `√R`. -/
+theorem checkCoverV_sound {n : ℕ} {q : Fin n → Q3} {R : ℚ} {T : Fin 3 → Bool → CoverTree}
+    (h : checkCoverV q R T = true) {p : Fin n → UnitSphere} (hp : Realizes q p)
+    (u : UnitSphere) : ∃ i : Fin n, √(R : ℝ) ≤ inner ℝ (p i).1 u.1 := by
+  simp only [checkCoverV, Bool.and_eq_true, decide_eq_true_eq, List.all_eq_true,
+    List.mem_finRange, true_implies] at h
+  obtain ⟨⟨⟨hR0, -⟩, -⟩, hfaces⟩ := h
+  have hRr : (0 : ℝ) ≤ R := by exact_mod_cast hR0
+  have hu0 : u.1 ≠ 0 := by
+    intro h0; have := u.2; rw [h0, norm_zero] at this; exact zero_ne_one this
+  obtain ⟨a, b, u', v', lam, hl, h1, h2, h3, h4, hw⟩ := exists_face u.1 hu0
+  have hcheck : chkV q R a (faceSign b) (T a b) (-1) 1 (-1) 1 = true := by
+    exact hfaces a b (by cases b <;> simp)
+  obtain ⟨i, hi0, hi⟩ := chkV_sound q R hR0 a (faceSign b) (T a b) (-1) 1 (-1) 1 hcheck u' v'
+    (by push_cast; exact h1) (by push_cast; exact h2) (by push_cast; exact h3)
+    (by push_cast; exact h4)
+  refine ⟨i, ?_⟩
+  have hs : ((faceSign b : ℚ) : ℝ) = if b then 1 else -1 := by
+    unfold faceSign; split_ifs <;> simp
+  rw [hs] at hi0 hi
+  set x := rotVec a (if b then 1 else -1) u' v' with hx
+  set A := inner ℝ (qv (q i)) x with hA
+  have hxn : ‖x‖ ^ 2 = 1 + u' ^ 2 + v' ^ 2 := by
+    rw [hx, norm_rotVec_sq]; split_ifs <;> ring
+  have hxpos : 0 < ‖x‖ := by
+    have : 0 < ‖x‖ ^ 2 := by rw [hxn]; positivity
+    exact lt_of_le_of_ne (norm_nonneg _) (fun h => by rw [← h] at this; simp at this)
+  have hq0 : ‖qv (q i)‖ ≠ 0 := by
+    intro h0
+    have h1 := hp i
+    rw [h0, inv_zero, zero_smul] at h1
+    have := (p i).2
+    rw [h1, norm_zero] at this
+    exact zero_ne_one this
+  have hqpos : 0 < ‖qv (q i)‖ := lt_of_le_of_ne (norm_nonneg _) (Ne.symm hq0)
+  have hunit : lam * ‖x‖ = 1 := by
+    have := u.2
+    rw [hw, norm_smul, Real.norm_eq_abs, abs_of_pos hl] at this
+    exact this
+  have hinner : inner ℝ (p i).1 u.1 = A * ‖qv (q i)‖⁻¹ * lam := by
+    rw [hp i, hw, inner_smul_left, inner_smul_right]
+    simp only [conj_trivial]
+    rw [hA]; ring
+  rw [hinner]
+  have hB : 0 < ‖qv (q i)‖ * ‖x‖ := mul_pos hqpos hxpos
+  have hlam : lam = ‖x‖⁻¹ := by field_simp; linarith
+  have hfinal : A * ‖qv (q i)‖⁻¹ * lam = A / (‖qv (q i)‖ * ‖x‖) := by
+    rw [hlam]; field_simp
+  rw [hfinal, Real.sqrt_le_iff]
+  refine ⟨div_nonneg hi0 hB.le, ?_⟩
+  rw [div_pow, le_div_iff₀ (by positivity)]
+  calc (R : ℝ) * (‖qv (q i)‖ * ‖x‖) ^ 2 = (R : ℝ) * ‖qv (q i)‖ ^ 2 * ‖x‖ ^ 2 := by ring
+    _ ≤ A ^ 2 := hi
+
+/-- An accepted certificate bounds the covering radius: the configuration
+covers `S²` by closed caps of radius `arccos √R`. -/
+theorem isCovering_of_checkCoverV {n : ℕ} {q : Fin n → Q3} {R : ℚ}
+    {T : Fin 3 → Bool → CoverTree} (h : checkCoverV q R T = true) {p : Fin n → UnitSphere}
+    (hp : Realizes q p) : IsCovering p (arccos √(R : ℝ)) := by
+  have hR : 0 ≤ R ∧ R ≤ 1 := by
+    simp only [checkCoverV, Bool.and_eq_true, decide_eq_true_eq] at h
+    exact h.1.1
+  have hRr0 : (0 : ℝ) ≤ R := by exact_mod_cast hR.1
+  have hRr1 : (R : ℝ) ≤ 1 := by exact_mod_cast hR.2
+  have hs1 : √(R : ℝ) ≤ 1 := by
+    rw [Real.sqrt_le_one]; exact hRr1
+  rw [isCovering_iff_inner p (arccos_nonneg _) (arccos_le_pi _),
+    cos_arccos (by linarith [Real.sqrt_nonneg (R : ℝ)]) hs1]
+  intro x
+  exact checkCoverV_sound h hp x
+
+/-- The covering radius of a configuration with an accepted certificate is at
+most `arccos √R`. -/
+theorem coveringRadius_le_of_checkCoverV {n : ℕ} (hn : 1 ≤ n) {q : Fin n → Q3} {R : ℚ}
+    {T : Fin 3 → Bool → CoverTree} (h : checkCoverV q R T = true) {p : Fin n → UnitSphere}
+    (hp : Realizes q p) : coveringRadius hn p ≤ arccos √(R : ℝ) :=
+  (coveringRadius_le_iff hn p _).2 (isCovering_of_checkCoverV h hp)
+
+
+/-- The point of `S²` in the direction of a nonzero rational vector. -/
+noncomputable def ratPoint (q : Q3) (hq : nrm2 q ≠ 0) : UnitSphere :=
+  ⟨‖qv q‖⁻¹ • qv q, by
+    have hpos : 0 < ‖qv q‖ := by
+      have h2 : 0 < ‖qv q‖ ^ 2 := by
+        rw [norm_qv_sq]
+        exact_mod_cast lt_of_le_of_ne (nrm2_nonneg q) (Ne.symm hq)
+      exact lt_of_le_of_ne (norm_nonneg _) (fun h => by rw [← h] at h2; simp at h2)
+    rw [norm_smul, norm_inv, norm_norm, inv_mul_cancel₀ hpos.ne']⟩
+
+/-- The configuration of a list of nonzero rational directions. -/
+noncomputable def ratConfig {n : ℕ} (q : Fin n → Q3) (hq : ∀ i, nrm2 (q i) ≠ 0) :
+    Fin n → UnitSphere := fun i => ratPoint (q i) (hq i)
+
+theorem realizes_ratConfig {n : ℕ} (q : Fin n → Q3) (hq : ∀ i, nrm2 (q i) ≠ 0) :
+    Realizes q (ratConfig q hq) := fun _ => rfl
+
+/-- A zero direction vector is realized by no configuration: in the
+`checkCover` certificates it would pass every leaf test, which is why
+`checkCover_sound` carries the hypothesis `Realizes q p`. -/
+theorem not_realizes_of_zero {n : ℕ} {q : Fin n → Q3} {p : Fin n → UnitSphere} (i : Fin n)
+    (hq : nrm2 (q i) = 0) : ¬ Realizes q p := by
+  intro h
+  have h2 : ‖qv (q i)‖ ^ 2 = 0 := by rw [norm_qv_sq, hq]; simp
+  have h0 : qv (q i) = 0 := norm_eq_zero.1 (pow_eq_zero_iff two_ne_zero |>.1 h2)
+  have := (p i).2
+  rw [h i, h0, smul_zero, norm_zero] at this
+  exact zero_ne_one this
+
+theorem checkCoverV_nonzero {n : ℕ} {q : Fin n → Q3} {R : ℚ} {T : Fin 3 → Bool → CoverTree}
+    (h : checkCoverV q R T = true) : ∀ i, nrm2 (q i) ≠ 0 := by
+  simp only [checkCoverV, Bool.and_eq_true, decide_eq_true_eq] at h
+  exact h.1.2
+
+/-- Soundness of the vertex-test checker: no realization hypothesis is needed,
+the points are `ratConfig q`. -/
+theorem isCovering_ratConfig_of_checkCoverV {n : ℕ} {q : Fin n → Q3} {R : ℚ}
+    {T : Fin 3 → Bool → CoverTree} (h : checkCoverV q R T = true) :
+    IsCovering (ratConfig q (checkCoverV_nonzero h)) (arccos √(R : ℝ)) :=
+  isCovering_of_checkCoverV h (realizes_ratConfig q _)
+
 end Geodesy.Spherical

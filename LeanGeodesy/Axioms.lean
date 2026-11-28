@@ -1778,3 +1778,87 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Spherical.tetraCert_rejects_above' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Spherical.tetraCert_rejects_above
+
+/-- info: 'Geodesy.Spherical.octahedron6_scaled_mem_hullOf_tetrahedron4' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.octahedron6_scaled_mem_hullOf_tetrahedron4
+
+/-- info: 'Geodesy.Spherical.closedBall_subset_hullOf_octahedron6' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.closedBall_subset_hullOf_octahedron6
+
+/-- info: 'Geodesy.Spherical.closedBall_subset_hullOf_tetrahedron4' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.closedBall_subset_hullOf_tetrahedron4
+
+/-- info: 'Geodesy.Spherical.coveringRadius_tetrahedron4' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.coveringRadius_tetrahedron4
+
+/-- info: 'Geodesy.Spherical.cos_mul_norm_le_of_halfSpace' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.cos_mul_norm_le_of_halfSpace
+
+/-- info: 'Geodesy.Spherical.cos_mul_sum_norm_le_of_halfSpaces' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.cos_mul_sum_norm_le_of_halfSpaces
+
+/-- info: 'Geodesy.Spherical.inner_E3' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.inner_E3
+
+/-- info: 'Geodesy.Spherical.cos_le_one_third_of_isCovering_four' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.cos_le_one_third_of_isCovering_four
+
+/-- info: 'Geodesy.Spherical.arccos_one_third_le_coveringRadius' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.arccos_one_third_le_coveringRadius
+
+/-- info: 'Geodesy.Spherical.covering_4_optimal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.covering_4_optimal
+
+/-- info: 'Geodesy.Spherical.coveringRadius_tetrahedron4_le' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.coveringRadius_tetrahedron4_le
+
+/-- info: 'Geodesy.Spherical.cone_convex' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.cone_convex
+
+/-- info: 'Geodesy.Spherical.chkV_sound' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.chkV_sound
+
+/-- info: 'Geodesy.Spherical.checkCoverV_sound' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.checkCoverV_sound
+
+/-- info: 'Geodesy.Spherical.isCovering_of_checkCoverV' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.isCovering_of_checkCoverV
+
+/-- info: 'Geodesy.Spherical.coveringRadius_le_of_checkCoverV' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.coveringRadius_le_of_checkCoverV
+
+/-- info: 'Geodesy.Spherical.realizes_ratConfig' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.realizes_ratConfig
+
+/-- info: 'Geodesy.Spherical.not_realizes_of_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.not_realizes_of_zero
+
+/-- info: 'Geodesy.Spherical.checkCoverV_nonzero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.checkCoverV_nonzero
+
+/-- info: 'Geodesy.Spherical.isCovering_ratConfig_of_checkCoverV' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.isCovering_ratConfig_of_checkCoverV
+
+/-- info: 'Geodesy.Spherical.octaCertV_valid' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.octaCertV_valid
