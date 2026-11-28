@@ -131,7 +131,7 @@ noncomputable def jucovicVec (t h : ℝ) : Fin 9 → E3 :=
     vec3 (t / 2) (√3 / 2 * t) h, vec3 (-t) 0 h, vec3 (t / 2) (-(√3 / 2 * t)) h,
     vec3 (t / 2) (√3 / 2 * t) (-h), vec3 (-t) 0 (-h), vec3 (t / 2) (-(√3 / 2 * t)) (-h)]
 
-private theorem sqrt3_sq : √3 ^ 2 = 3 := Real.sq_sqrt (by norm_num)
+theorem sqrt3_sq : √3 ^ 2 = 3 := Real.sq_sqrt (by norm_num)
 
 theorem norm_jucovicVec {t h : ℝ} (hth : t ^ 2 + h ^ 2 = 1) (i : Fin 9) :
     ‖jucovicVec t h i‖ = 1 := by

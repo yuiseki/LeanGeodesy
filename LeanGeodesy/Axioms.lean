@@ -2022,3 +2022,35 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Spherical.coveringRadius_jucovicStar_le_of_reduction' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Spherical.coveringRadius_jucovicStar_le_of_reduction
+
+/-- info: 'Geodesy.Spherical.jucovicFaceNormal_norm_sq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovicFaceNormal_norm_sq
+
+/-- info: 'Geodesy.Spherical.jucovic_active_dist' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovic_active_dist
+
+/-- info: 'Geodesy.Spherical.jucovic_slope_dist' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovic_slope_dist
+
+/-- info: 'Geodesy.Spherical.arccos_le_coveringRadius_of_harmonic' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.arccos_le_coveringRadius_of_harmonic
+
+/-- info: 'Geodesy.Spherical.isTTP_jucovicStar' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.isTTP_jucovicStar
+
+/-- info: 'Geodesy.Spherical.coveringRadius_comp_perm' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.coveringRadius_comp_perm
+
+/-- info: 'Geodesy.Spherical.TTPOptimal_of_harmonic' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.TTPOptimal_of_harmonic
+
+/-- info: 'Geodesy.Spherical.coveringRadius_jucovicStar_le_of_TTP' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.coveringRadius_jucovicStar_le_of_TTP
