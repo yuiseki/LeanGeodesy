@@ -545,6 +545,28 @@ def choleskyCheckRows (m : ℕ) (dR2 dMi : ℤ) (L : List (List ℤ)) :
     decide (mRow.length = m) && choleskyCheckCols dR2 dMi i lRow 0 0 0 mRow L &&
       choleskyCheckRows m dR2 dMi L (i + 1) mRest lRest
 
+/-- Splitting lemma so `choleskyCheckRows` can be verified in small row chunks. -/
+theorem choleskyCheckRows_append (m : ℕ) (dR2 dMi : ℤ) (L : List (List ℤ)) :
+    ∀ (i : ℕ) (m1 m2 l1 l2 : List (List ℤ)),
+      m1.length = l1.length →
+      choleskyCheckRows m dR2 dMi L i m1 l1 = true →
+      choleskyCheckRows m dR2 dMi L (i + m1.length) m2 l2 = true →
+      choleskyCheckRows m dR2 dMi L i (m1 ++ m2) (l1 ++ l2) = true := by
+  intro i m1
+  induction m1 generalizing i with
+  | nil =>
+    intro m2 l1 l2 hlen _ h2
+    have hl1 : l1 = [] := List.eq_nil_of_length_eq_zero hlen.symm
+    subst hl1; simpa using h2
+  | cons r rs ih =>
+    intro m2 l1 l2 hlen h1 h2
+    cases l1 with
+    | nil => simp at hlen
+    | cons lr lrs =>
+      simp only [List.cons_append, choleskyCheckRows, Bool.and_eq_true] at h1 ⊢
+      refine ⟨h1.1, ih (i + 1) m2 lrs l2 (by simpa using hlen) h1.2 ?_⟩
+      simpa [Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using h2
+
 /-- Fast row-by-row Cholesky + DD check using lower-triangular `L = Rᵀ`
 (each row `L[i]` has length `≤ i + 1 ≤ m`, eliminating `O(m⁴)` `List.getD` traversals). -/
 def isCholeskyDDLower (m dM dR : ℕ) (M L : List (List ℤ)) : Bool :=
@@ -745,6 +767,154 @@ def quadPoly3FastAux : List (List ℤ) → List Poly3 → List Poly3 → Poly3
 
 def quadPoly3Fast (M : List (List ℤ)) (basis : List Poly3) : Poly3 :=
   quadPoly3FastAux M basis basis
+
+/-- Chunked quadratic form (10 rows per chunk), canonicalizing each chunk via `sym3Canon`
+so intermediate polynomial sizes and kernel reduction memory remain small. -/
+def quadPoly3Sym10Aux (fuel : ℕ) (mul : Option Poly3) (rows : List (List ℤ))
+    (bs allB : List Poly3) : Poly3 :=
+  match fuel, rows, bs with
+  | 0, _, _ => []
+  | _, [], _ => []
+  | _, _, [] => []
+  | fuel + 1, _, _ =>
+    let q := quadPoly3FastAux (rows.take 10) (bs.take 10) allB
+    let mq := match mul with | none => q | some p => mulPoly3Sorted p q
+    sym3Canon mq ++ quadPoly3Sym10Aux fuel mul (rows.drop 10) (bs.drop 10) allB
+
+def quadPoly3Sym10 (mul : Option Poly3) (M : List (List ℤ)) (basis : List Poly3) : Poly3 :=
+  sym3Canon (quadPoly3Sym10Aux ((M.length + 9) / 10) mul M basis basis)
+
+/-- Step lemma for unfolding `quadPoly3Sym10Aux` one 10-row chunk at a time. -/
+theorem quadPoly3Sym10Aux_step (fuel : ℕ) (mul : Option Poly3)
+    (m1 m2 : List (List ℤ)) (b1 b2 allB : List Poly3)
+    (hm1 : m1.length = 10) (hb1 : b1.length = 10) :
+    quadPoly3Sym10Aux (fuel + 1) mul (m1 ++ m2) (b1 ++ b2) allB =
+    sym3Canon (match mul with
+      | none => quadPoly3FastAux m1 b1 allB
+      | some p => mulPoly3Sorted p (quadPoly3FastAux m1 b1 allB)) ++
+      quadPoly3Sym10Aux fuel mul m2 b2 allB := by
+  cases m1 with
+  | nil => simp at hm1
+  | cons r rs =>
+    cases b1 with
+    | nil => simp at hb1
+    | cons b bs =>
+      conv_lhs => unfold quadPoly3Sym10Aux
+      have ht1 : ((r :: rs) ++ m2).take 10 = r :: rs := List.take_left' hm1
+      have hd1 : ((r :: rs) ++ m2).drop 10 = m2 := List.drop_left' hm1
+      have ht2 : ((b :: bs) ++ b2).take 10 = b :: bs := List.take_left' hb1
+      have hd2 : ((b :: bs) ++ b2).drop 10 = b2 := List.drop_left' hb1
+      simp only [List.cons_append] at ht1 hd1 ht2 hd2 ⊢
+      rw [ht1, hd1, ht2, hd2]
+
+/-- Base-chunk lemma for the final `≤ 10` rows of `quadPoly3Sym10Aux`. -/
+theorem quadPoly3Sym10Aux_last (mul : Option Poly3)
+    (mLast : List (List ℤ)) (bLast allB : List Poly3)
+    (hm_ne : mLast ≠ []) (hb_ne : bLast ≠ [])
+    (hm_le : mLast.length ≤ 10) (hb_le : bLast.length ≤ 10) :
+    quadPoly3Sym10Aux 1 mul mLast bLast allB =
+    sym3Canon (match mul with
+      | none => quadPoly3FastAux mLast bLast allB
+      | some p => mulPoly3Sorted p (quadPoly3FastAux mLast bLast allB)) := by
+  cases mLast with
+  | nil => contradiction
+  | cons r rs =>
+    cases bLast with
+    | nil => contradiction
+    | cons b bs =>
+      unfold quadPoly3Sym10Aux
+      rw [List.take_of_length_le hm_le, List.take_of_length_le hb_le,
+        List.drop_of_length_le hm_le, List.drop_of_length_le hb_le]
+      simp [quadPoly3Sym10Aux]
+
+private theorem evalPoly3_quadPoly3FastAux_append (allB : List Poly3) (u v t : ℝ) :
+    ∀ (m1 m2 : List (List ℤ)) (b1 b2 : List Poly3),
+      m1.length = b1.length →
+      evalPoly3 (quadPoly3FastAux (m1 ++ m2) (b1 ++ b2) allB) u v t =
+        evalPoly3 (quadPoly3FastAux m1 b1 allB) u v t +
+        evalPoly3 (quadPoly3FastAux m2 b2 allB) u v t := by
+  intro m1
+  induction m1 with
+  | nil =>
+    intro m2 b1 b2 hlen
+    have hb1 : b1 = [] := List.eq_nil_of_length_eq_zero hlen.symm
+    subst hb1; simp [quadPoly3FastAux, evalPoly3_nil]
+  | cons r rs ih =>
+    intro m2 b1 b2 hlen
+    cases b1 with
+    | nil => simp at hlen
+    | cons b bs =>
+      simp only [List.cons_append, quadPoly3FastAux, evalPoly3_mergePoly3]
+      rw [ih m2 bs b2 (by simpa using hlen), add_assoc]
+
+private theorem sym3_evalPoly3_quadPoly3Sym10Aux (allB : List Poly3) (mul : Option Poly3)
+    (u v t : ℝ) :
+    ∀ (fuel : ℕ) (rows : List (List ℤ)) (bs : List Poly3),
+      rows.length = bs.length → rows.length ≤ 10 * fuel →
+      sym3 (evalPoly3 (quadPoly3Sym10Aux fuel mul rows bs allB)) u v t =
+      sym3 (evalPoly3 (match mul with
+        | none => quadPoly3FastAux rows bs allB
+        | some p => mulPoly3Sorted p (quadPoly3FastAux rows bs allB))) u v t := by
+  have hadd : ∀ p q : Poly3, sym3 (evalPoly3 (p ++ q)) u v t =
+      sym3 (evalPoly3 p) u v t + sym3 (evalPoly3 q) u v t := by
+    intro p q
+    have hf : evalPoly3 (p ++ q) = fun a b d => evalPoly3 p a b d + evalPoly3 q a b d := by
+      ext a b d; exact evalPoly3_append p q a b d
+    rw [hf]; unfold sym3; ring
+  intro fuel
+  induction fuel with
+  | zero =>
+    intro rows bs hlen hle
+    have hr : rows = [] := List.eq_nil_of_length_eq_zero (by omega)
+    have hb : bs = [] := List.eq_nil_of_length_eq_zero (by omega)
+    subst hr; subst hb
+    cases mul <;> simp [quadPoly3Sym10Aux, quadPoly3FastAux, evalPoly3_mulPoly3Sorted, evalPoly3_nil, sym3]
+  | succ fuel ih =>
+    intro rows bs hlen hle
+    cases rows with
+    | nil =>
+      have hb : bs = [] := List.eq_nil_of_length_eq_zero hlen.symm
+      subst hb
+      cases mul <;> simp [quadPoly3Sym10Aux, quadPoly3FastAux, evalPoly3_mulPoly3Sorted, evalPoly3_nil, sym3]
+    | cons r rs =>
+      cases bs with
+      | nil => simp at hlen
+      | cons b bs' =>
+        unfold quadPoly3Sym10Aux
+        rw [hadd, sym3_evalPoly3_sym3Canon]
+        have hlen_drop : ((r :: rs).drop 10).length = ((b :: bs').drop 10).length := by
+          simp at hlen ⊢; omega
+        have hle_drop : ((r :: rs).drop 10).length ≤ 10 * fuel := by
+          simp at hle ⊢; omega
+        rw [ih ((r :: rs).drop 10) ((b :: bs').drop 10) hlen_drop hle_drop]
+        have hsplit : ∀ a b' d,
+            evalPoly3 (quadPoly3FastAux (r :: rs) (b :: bs') allB) a b' d =
+            evalPoly3 (quadPoly3FastAux ((r :: rs).take 10) ((b :: bs').take 10) allB) a b' d +
+            evalPoly3 (quadPoly3FastAux ((r :: rs).drop 10) ((b :: bs').drop 10) allB) a b' d := by
+          intro a b' d
+          have h1 : r :: rs = (r :: rs).take 10 ++ (r :: rs).drop 10 := (List.take_append_drop 10 _).symm
+          have h2 : b :: bs' = (b :: bs').take 10 ++ (b :: bs').drop 10 := (List.take_append_drop 10 _).symm
+          conv_lhs => rw [h1, h2]
+          exact evalPoly3_quadPoly3FastAux_append allB a b' d _ _ _ _ (by simp at hlen ⊢; omega)
+        cases mul with
+        | none =>
+          unfold sym3
+          simp only [hsplit]
+          ring
+        | some p =>
+          unfold sym3
+          simp only [evalPoly3_mulPoly3Sorted, hsplit]
+          ring
+
+private theorem sym3_evalPoly3_quadPoly3Sym10 (mul : Option Poly3) (M : List (List ℤ))
+    (basis : List Poly3) (hlen : M.length = basis.length) (u v t : ℝ) :
+    sym3 (evalPoly3 (quadPoly3Sym10 mul M basis)) u v t =
+    sym3 (evalPoly3 (match mul with
+      | none => quadPoly3Fast M basis
+      | some p => mulPoly3Sorted p (quadPoly3Fast M basis))) u v t := by
+  unfold quadPoly3Sym10 quadPoly3Fast
+  rw [sym3_evalPoly3_sym3Canon]
+  exact sym3_evalPoly3_quadPoly3Sym10Aux basis mul u v t ((M.length + 9) / 10) M basis hlen (by omega)
 
 private theorem evalPoly3_linCombPoly3 : ∀ (m : ℕ) (row : List ℤ) (bs : List Poly3) (u v t : ℝ),
     row.length = m → bs.length = m →
@@ -1001,16 +1171,17 @@ def polyDelta8 : Poly3 :=
 def polyG1_8 (sNum : ℤ) (sDen : ℕ) : Poly3 :=
   [(0, 0, 0, sNum), (1, 0, 0, sNum - (sDen : ℤ)), (2, 0, 0, -(sDen : ℤ))]
 
-/-- Canonicalized trivariate SOS RHS (scaled by `sDen * dS`), using per-block scales `sc0..sc6`. -/
+/-- Canonicalized trivariate SOS RHS (scaled by `sDen * dS`), using per-block scales `sc0..sc6`
+and 10-row chunked canonicalization (`quadPoly3Sym10`). -/
 def polyRHS3Canon (c : BVCert8) : Poly3 :=
   let sD : ℤ := (c.sDen : ℤ)
-  let q0 := sym3Canon (quadPoly3Fast c.M0 c.b0)
-  let q1 := sym3Canon (quadPoly3Fast c.M1 c.b1)
-  let q2 := sym3Canon (quadPoly3Fast c.M2 c.b2)
-  let q3 := sym3Canon (mulPoly3Sorted polyDelta8 (quadPoly3Fast c.M3 c.b3))
-  let q4 := sym3Canon (mulPoly3Sorted polyDelta8 (quadPoly3Fast c.M4 c.b4))
-  let q5 := sym3Canon (mulPoly3Sorted polyDelta8 (quadPoly3Fast c.M5 c.b5))
-  let q6 := sym3Canon (mulPoly3Sorted (polyG1_8 c.sNum c.sDen) (quadPoly3Fast c.M6 c.b6))
+  let q0 := quadPoly3Sym10 none c.M0 c.b0
+  let q1 := quadPoly3Sym10 none c.M1 c.b1
+  let q2 := quadPoly3Sym10 none c.M2 c.b2
+  let q3 := quadPoly3Sym10 (some polyDelta8) c.M3 c.b3
+  let q4 := quadPoly3Sym10 (some polyDelta8) c.M4 c.b4
+  let q5 := quadPoly3Sym10 (some polyDelta8) c.M5 c.b5
+  let q6 := quadPoly3Sym10 (some (polyG1_8 c.sNum c.sDen)) c.M6 c.b6
   sym3Canon (
     poly3Scale (sD * (c.sc0 : ℤ)) q0 ++
     poly3Scale (sD * (c.sc1 : ℤ)) q1 ++
@@ -1512,45 +1683,44 @@ theorem sound (c : BVCert8) (hvalid : c.isValid = true)
       rw [sym3_evalPoly3_sym3Canon]
       repeat rw [hadd]
       repeat rw [hsc]
-      have hq0 := hterm_nn _ (fun a b d _ =>
+      rw [sym3_evalPoly3_quadPoly3Sym10 none c.M0 c.b0 ((isCholeskyDDLower_dims hM0).1.trans hb0.symm),
+        sym3_evalPoly3_quadPoly3Sym10 none c.M1 c.b1 ((isCholeskyDDLower_dims hM1).1.trans hb1.symm),
+        sym3_evalPoly3_quadPoly3Sym10 none c.M2 c.b2 ((isCholeskyDDLower_dims hM2).1.trans hb2.symm),
+        sym3_evalPoly3_quadPoly3Sym10 (some polyDelta8) c.M3 c.b3 ((isCholeskyDDLower_dims hM3).1.trans hb3.symm),
+        sym3_evalPoly3_quadPoly3Sym10 (some polyDelta8) c.M4 c.b4 ((isCholeskyDDLower_dims hM4).1.trans hb4.symm),
+        sym3_evalPoly3_quadPoly3Sym10 (some polyDelta8) c.M5 c.b5 ((isCholeskyDDLower_dims hM5).1.trans hb5.symm),
+        sym3_evalPoly3_quadPoly3Sym10 (some (polyG1_8 c.sNum c.sDen)) c.M6 c.b6 ((isCholeskyDDLower_dims hM6).1.trans hb6.symm)]
+      have hq0 := hsym_nn _ (fun a b d _ =>
         evalPoly3_quadPoly3Fast_nonneg hdM0 (isCholeskyDDLower_sound hM0) c.b0
           (isCholeskyDDLower_dims hM0).1 hb0 (isCholeskyDDLower_dims hM0).2 a b d)
-      have hq1 := hterm_nn _ (fun a b d _ =>
+      have hq1 := hsym_nn _ (fun a b d _ =>
         evalPoly3_quadPoly3Fast_nonneg hdM1 (isCholeskyDDLower_sound hM1) c.b1
           (isCholeskyDDLower_dims hM1).1 hb1 (isCholeskyDDLower_dims hM1).2 a b d)
-      have hq2 := hterm_nn _ (fun a b d _ =>
+      have hq2 := hsym_nn _ (fun a b d _ =>
         evalPoly3_quadPoly3Fast_nonneg hdM2 (isCholeskyDDLower_sound hM2) c.b2
           (isCholeskyDDLower_dims hM2).1 hb2 (isCholeskyDDLower_dims hM2).2 a b d)
-      have hq3 := hterm_nn _ (fun a b d hd => by
+      have hq3 := hsym_nn (evalPoly3 (mulPoly3Sorted polyDelta8 (quadPoly3Fast c.M3 c.b3))) (fun a b d hd => by
         rw [evalPoly3_mulPoly3Sorted]
         exact mul_nonneg (hDelta_nn a b d hd)
           (evalPoly3_quadPoly3Fast_nonneg hdM3 (isCholeskyDDLower_sound hM3) c.b3
             (isCholeskyDDLower_dims hM3).1 hb3 (isCholeskyDDLower_dims hM3).2 a b d))
-      have hq4 := hterm_nn _ (fun a b d hd => by
+      have hq4 := hsym_nn (evalPoly3 (mulPoly3Sorted polyDelta8 (quadPoly3Fast c.M4 c.b4))) (fun a b d hd => by
         rw [evalPoly3_mulPoly3Sorted]
         exact mul_nonneg (hDelta_nn a b d hd)
           (evalPoly3_quadPoly3Fast_nonneg hdM4 (isCholeskyDDLower_sound hM4) c.b4
             (isCholeskyDDLower_dims hM4).1 hb4 (isCholeskyDDLower_dims hM4).2 a b d))
-      have hq5 := hterm_nn _ (fun a b d hd => by
+      have hq5 := hsym_nn (evalPoly3 (mulPoly3Sorted polyDelta8 (quadPoly3Fast c.M5 c.b5))) (fun a b d hd => by
         rw [evalPoly3_mulPoly3Sorted]
         exact mul_nonneg (hDelta_nn a b d hd)
           (evalPoly3_quadPoly3Fast_nonneg hdM5 (isCholeskyDDLower_sound hM5) c.b5
             (isCholeskyDDLower_dims hM5).1 hb5 (isCholeskyDDLower_dims hM5).2 a b d))
-      have hq6 := hterm_nn _ (fun a b d hd => by
+      have hq6 := hsym_nn (evalPoly3 (mulPoly3Sorted (polyG1_8 c.sNum c.sDen) (quadPoly3Fast c.M6 c.b6))) (fun a b d hd => by
         rw [evalPoly3_mulPoly3Sorted]
         exact mul_nonneg (hg1_nn a b d hd)
           (evalPoly3_quadPoly3Fast_nonneg hdM6 (isCholeskyDDLower_sound hM6) c.b6
             (isCholeskyDDLower_dims hM6).1 hb6 (isCholeskyDDLower_dims hM6).2 a b d))
       push_cast
-      have hsD_nn : (0 : ℝ) ≤ (c.sDen : ℝ) := by positivity
-      have h0 : (0 : ℝ) ≤ (c.sDen : ℝ) * (c.sc0 : ℝ) * sym3 (evalPoly3 (sym3Canon (quadPoly3Fast c.M0 c.b0))) u v t := by positivity
-      have h1 : (0 : ℝ) ≤ (c.sDen : ℝ) * (c.sc1 : ℝ) * sym3 (evalPoly3 (sym3Canon (quadPoly3Fast c.M1 c.b1))) u v t := by positivity
-      have h2' : (0 : ℝ) ≤ (c.sDen : ℝ) * (c.sc2 : ℝ) * sym3 (evalPoly3 (sym3Canon (quadPoly3Fast c.M2 c.b2))) u v t := by positivity
-      have h3' : (0 : ℝ) ≤ (c.sDen : ℝ) * (c.sc3 : ℝ) * sym3 (evalPoly3 (sym3Canon (mulPoly3Sorted polyDelta8 (quadPoly3Fast c.M3 c.b3)))) u v t := by positivity
-      have h4 : (0 : ℝ) ≤ (c.sDen : ℝ) * (c.sc4 : ℝ) * sym3 (evalPoly3 (sym3Canon (mulPoly3Sorted polyDelta8 (quadPoly3Fast c.M4 c.b4)))) u v t := by positivity
-      have h5 : (0 : ℝ) ≤ (c.sDen : ℝ) * (c.sc5 : ℝ) * sym3 (evalPoly3 (sym3Canon (mulPoly3Sorted polyDelta8 (quadPoly3Fast c.M5 c.b5)))) u v t := by positivity
-      have h6 : (0 : ℝ) ≤ (c.sc6 : ℝ) * sym3 (evalPoly3 (sym3Canon (mulPoly3Sorted (polyG1_8 c.sNum c.sDen) (quadPoly3Fast c.M6 c.b6)))) u v t := by positivity
-      linarith
+      positivity
     have hcoeff_pos : (0 : ℝ) < (c.sDen : ℝ) * (c.dS : ℝ) * (c.dK : ℝ) := by positivity
     rw [hlhs_eval] at hsym_eq
     nlinarith
