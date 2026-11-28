@@ -143,3 +143,95 @@ optimality within the type. What blocks a proof:
   result of section 3 to close the neighbourhood (the margin vanishes there);
   away from it, the numerical margin is what an interval method would have to
   certify.
+
+## 6. Eliminating `A₀, A₁, A₂` (2026-11-28, continued)
+
+**Independence.** In the weighted harmonic sum each `Aₖ` appears in exactly two
+active faces, `Vₖ = AₖBₖCₖ` (edge `eₖ = BₖCₖ`) and `Wₖ₋₁ = AₖBₖ₋₁Cₖ₋₁` (edge
+`eₖ₋₁`). The constraints of the type that involve `Aₖ` are of three kinds: the
+planes of the faces through `Aₖ` support the other points; the planes of other
+faces have `Aₖ` on their inner side; and planes through `Aₖ` must have `Aⱼ`
+(`j ≠ k`) on their inner side. Only the last kind couples two different `A`s.
+Dropping it (and only it) is a relaxation: every configuration of the type
+satisfies the remaining constraints, so a lower bound for the relaxed minimum
+is a lower bound for the original one, and the relaxed inequality is a
+sufficient condition for `TTPHarmonic`. For fixed `B`, `C` the relaxed problem
+splits into three independent problems, one per `Aₖ`.
+
+Numerical, the relaxation that is used: minimizing the weighted harmonic sum
+with only the cross-`A` constraints dropped, from 524 starts (518 far from
+Jucovič's configuration, including fully random points), always ended at
+`1/h⋆` (within `3·10⁻¹²`). So, as far as the search shows, the decoupling
+loses nothing.
+
+Numerical, a relaxation that is too strong: dropping every supporting-plane
+constraint and keeping only positive distances lets the minimum fall to
+about `1.000` (`< 1/h⋆ ≈ 1.436`, 1119 starts) at configurations where all
+points cluster and every face is small; so the type constraints on `B`, `C`
+cannot be dropped.
+
+**The subproblem.** Fix the edges `e = eₖ`, `e' = eₖ₋₁` and minimize
+`g(A) = 1/d(A, e) + 1/d(A, e')` over `A ∈ S²` (with the constraints above).
+
+* *Algebraic form.* For a line `L` at distance `δ` from the origin (foot point
+  `m`, direction `u`, `w = u × m/δ`) and `A = αu + β m/δ + γ w`,
+  `d(A, L) = δ |γ| / √((β - δ)² + γ²)`: the distance of the plane through `L`
+  and `A` depends only on the projection of `A` to the plane normal to `L`, and
+  equals `δ cos θ`, `θ` the angle of that plane from the plane through `L`
+  orthogonal to `m`. So `1/d(A, L) = sec θ / δ`.
+* *Elimination.* With unit normals `n₁`, `n₂` of the two planes and
+  `c = ⟨n₁, n₂⟩`, a common point `A` on the sphere exists exactly when
+  `gramDet3 d₁ d₂ c ≥ 0` (Gram determinant of `A, n₁, n₂`; Lean:
+  `gram_two_planes`, from the existing `gramDet3_nonneg`). Eliminating `A`
+  turns the subproblem into: minimize `1/(δ₁ cos θ₁) + 1/(δ₂ cos θ₂)` over the
+  two rotation angles `θ₁, θ₂` of the planes about their edges, subject to that
+  one inequality. Two parameters instead of a point plus constraints.
+* *Existence of a minimum.* `g → ∞` when a distance tends to `0` (the plane
+  through the edge approaches the origin), and the admissible set in `(θ₁, θ₂)`
+  is closed in `(-π/2, π/2)²` (Gram condition and the kept supporting
+  conditions are closed), so sublevel sets are compact and a minimum exists
+  whenever the set is nonempty. (Not in Lean.)
+* *Stationarity and boundary.* The unconstrained minimum `θ₁ = θ₂ = 0` (both
+  planes orthogonal to their foot points) is admissible only if the two
+  smallest circles through the edges meet; at Jucovič's configuration they do
+  not (they would meet at `x = 2t⋆ > 1`). Otherwise the minimum lies on the
+  boundary `gramDet3 = 0`, which means the line of intersection of the two
+  planes is tangent to the sphere: the two circumcircles through `A` are
+  tangent at `A`. (Lagrange condition; not in Lean.)
+* *Closed-form lower bound.* Under the Gram condition, `1/d₁ + 1/d₂ ≥ 2 √(2/(1 + c))`
+  (Lean: `inv_add_inv_sq_ge_of_gram`), with equality exactly when `d₁ = d₂` and
+  `2d₁² = 1 + c` (Lean: `eq_of_inv_add_inv_sq_eq`): tangent circles and equal
+  distances.
+* *Equality at Jucovič's configuration.* At each `Aₖ` the two sides have
+  distance `h⋆` and normals with cosine `1 - 2t⋆² = 2h⋆² - 1`, which is the
+  quartic equation for `t⋆` (Lean: `jucovic_side_normals_inner`,
+  `jucovic_pair_equality`). So the bound is attained, and (Numerical) for the
+  `B`, `C` of Jucovič's configuration the minimum over each `Aₖ` is attained at
+  Jucovič's `Aₖ` (distance `< 2·10⁻⁸`, the optimizer's tolerance).
+* *Convexity and closed form of the minimum.* Not established. `sec` is convex,
+  but the admissible set in `(θ₁, θ₂)` is not known to be convex, and the
+  tangency condition gives an algebraic equation of high degree, so no closed
+  form for the minimum itself is claimed. The closed-form bound above depends
+  on `c`, which still depends on the planes; it eliminates `A` but not the
+  plane orientations.
+
+**The reduced inequality.** Let `m(e, e')` be the minimum of the subproblem.
+Then `TTPHarmonic` follows from
+
+`R(B, C) = λ_T (1/d_T + 1/d_Bot) + λ_V (m(e₀, e₂) + m(e₁, e₀) + m(e₂, e₁)) ≥ 1/h⋆`
+
+over the six points `B`, `C` satisfying the constraints of the type that do not
+involve `A` (9 parameters modulo rotations). Numerical: `R = 1/h⋆` at Jucovič's
+`B`, `C` (to `3·10⁻¹²`), and 21 multi-start minimizations of `R` from perturbed
+configurations of the type all ended at `1/h⋆`.
+
+**Further reduction (open, directions).** The six remaining points carry the
+two triangles and the three vertical edges. Candidates, none carried out:
+replace each `m(eₖ, eₖ₋₁)` by the closed-form bound `2√(2/(1+cₖ))` and keep
+the plane orientations as variables (this makes the inequality polynomial
+after squaring); use the Gram matrix of the six points to remove rotations;
+compare the two triangles through their normals (the triangle terms are
+`1/d_T`, `1/d_Bot` and depend only on each triangle's circumradius); and look
+for the equality analysis (`d₁ = d₂` and tangency at each `Aₖ`, all eight
+distances equal) to force the mirror symmetry `z ↦ -z` and the threefold
+rotation, in the manner of Hoehner–Ledford.

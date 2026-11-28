@@ -2054,3 +2054,27 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Spherical.coveringRadius_jucovicStar_le_of_TTP' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Spherical.coveringRadius_jucovicStar_le_of_TTP
+
+/-- info: 'Geodesy.Spherical.gram_two_planes' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.gram_two_planes
+
+/-- info: 'Geodesy.Spherical.sum_sq_le_of_gram' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.sum_sq_le_of_gram
+
+/-- info: 'Geodesy.Spherical.inv_add_inv_sq_ge_of_gram' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.inv_add_inv_sq_ge_of_gram
+
+/-- info: 'Geodesy.Spherical.eq_of_inv_add_inv_sq_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.eq_of_inv_add_inv_sq_eq
+
+/-- info: 'Geodesy.Spherical.jucovic_side_normals_inner' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovic_side_normals_inner
+
+/-- info: 'Geodesy.Spherical.jucovic_pair_equality' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovic_pair_equality
