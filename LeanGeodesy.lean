@@ -51,6 +51,7 @@ import LeanGeodesy.Spherical.Covering
 import LeanGeodesy.Spherical.CoveringCert
 import LeanGeodesy.Spherical.CoveringBenchmarks
 import LeanGeodesy.Spherical.CoveringLowerBound
+import LeanGeodesy.Spherical.Jucovic9
 import LeanGeodesy.CRS.Basic
 import LeanGeodesy.CRS.WGS84
 import LeanGeodesy.CRS.WebMercator
