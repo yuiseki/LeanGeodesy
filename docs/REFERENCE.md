@@ -858,6 +858,7 @@ other file refers to the labels.
 | `LeanGeodesy/Spherical/CoveringCert.lean` | Exact rational covering-radius checkers: `CoverTree` subdivisions of the six cube faces, box test `checkCover` and vertex (convex cone) test `checkCoverV` that rejects zero directions, `ratConfig`, soundness theorems; no hull or facet list needed |
 | `LeanGeodesy/Spherical/CoveringBenchmarks.lean` | Octahedron (`coveringRadius_octahedron6`) and tetrahedron (`coveringRadius_tetrahedron4`, through the octahedron scaled into its edge midpoints) exact covering radii, hole lower bounds, `*_rejects_above`, vertex-test and zero-vector tests |
 | `LeanGeodesy/Spherical/CoveringLowerBound.lean` | Bounds for every configuration from balanced supporting half-spaces (`cos_mul_sum_norm_le_of_halfSpaces`), global optimality `covering_2_optimal`, `covering_3_optimal`, `covering_4_optimal` (regular tetrahedron optimal) |
+| `LeanGeodesy/Spherical/Jucovic9.lean` | Jucovič's 9-point covering (1960): quartic root `t⋆`, the nine points and their `D₃h` symmetries, the 14 hull faces as supporting planes, exact covering radius `coveringRadius_jucovicStar = arccos h⋆`, optimality within the symmetric family, and a conditional global statement under the explicit hypothesis `NinePointReduction` |
 | `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |
 | `LeanGeodesy/CRS/WGS84.lean` | The WGS 84 geographic CRS |
 | `LeanGeodesy/CRS/WebMercator.lean` | The Web Mercator projected CRS over WGS 84 |

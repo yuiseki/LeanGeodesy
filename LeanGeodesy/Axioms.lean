@@ -1882,3 +1882,143 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Spherical.covering_2_optimal' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Spherical.covering_2_optimal
+
+/-- info: 'Geodesy.Spherical.jucovicQuartic_strictMonoOn' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovicQuartic_strictMonoOn
+
+/-- info: 'Geodesy.Spherical.exists_jucovicQuartic_root' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.exists_jucovicQuartic_root
+
+/-- info: 'Geodesy.Spherical.tStar_mem' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.tStar_mem
+
+/-- info: 'Geodesy.Spherical.jucovicQuartic_tStar' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovicQuartic_tStar
+
+/-- info: 'Geodesy.Spherical.eq_tStar_of_jucovicQuartic' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.eq_tStar_of_jucovicQuartic
+
+/-- info: 'Geodesy.Spherical.tStar_bracket' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.tStar_bracket
+
+/-- info: 'Geodesy.Spherical.hStar_sq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.hStar_sq
+
+/-- info: 'Geodesy.Spherical.hStar_pos' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.hStar_pos
+
+/-- info: 'Geodesy.Spherical.hStar_octic' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.hStar_octic
+
+/-- info: 'Geodesy.Spherical.norm_jucovicVec' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.norm_jucovicVec
+
+/-- info: 'Geodesy.Spherical.jucovic_injective' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovic_injective
+
+/-- info: 'Geodesy.Spherical.inner_symZ' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.inner_symZ
+
+/-- info: 'Geodesy.Spherical.inner_symS' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.inner_symS
+
+/-- info: 'Geodesy.Spherical.inner_symR' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.inner_symR
+
+/-- info: 'Geodesy.Spherical.inner_symRi' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.inner_symRi
+
+/-- info: 'Geodesy.Spherical.support_of_sym' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.support_of_sym
+
+/-- info: 'Geodesy.Spherical.perm_symZ' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.perm_symZ
+
+/-- info: 'Geodesy.Spherical.perm_symS' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.perm_symS
+
+/-- info: 'Geodesy.Spherical.perm_symR' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.perm_symR
+
+/-- info: 'Geodesy.Spherical.perm_symRi' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.perm_symRi
+
+/-- info: 'Geodesy.Spherical.face_support' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.face_support
+
+/-- info: 'Geodesy.Spherical.jucovic_support_sector' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovic_support_sector
+
+/-- info: 'Geodesy.Spherical.jucovic_support' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovic_support
+
+/-- info: 'Geodesy.Spherical.isCovering_jucovicStar' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.isCovering_jucovicStar
+
+/-- info: 'Geodesy.Spherical.jucovicStar_hole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovicStar_hole
+
+/-- info: 'Geodesy.Spherical.coveringRadius_jucovicStar' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.coveringRadius_jucovicStar
+
+/-- info: 'Geodesy.Spherical.jucovic_face_on' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovic_face_on
+
+/-- info: 'Geodesy.Spherical.jucovic_face_supporting' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovic_face_supporting
+
+/-- info: 'Geodesy.Spherical.jucovic_top_valid' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovic_top_valid
+
+/-- info: 'Geodesy.Spherical.jucovic_side_valid' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovic_side_valid
+
+/-- info: 'Geodesy.Spherical.jucovic_equator_hole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovic_equator_hole
+
+/-- info: 'Geodesy.Spherical.jucovic_side_mono' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.jucovic_side_mono
+
+/-- info: 'Geodesy.Spherical.coveringRadius_jucovicStar_le' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.coveringRadius_jucovicStar_le
+
+/-- info: 'Geodesy.Spherical.closedBall_subset_hullOf_jucovicStar' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.closedBall_subset_hullOf_jucovicStar
+
+/-- info: 'Geodesy.Spherical.coveringRadius_jucovicStar_le_of_reduction' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.Spherical.coveringRadius_jucovicStar_le_of_reduction

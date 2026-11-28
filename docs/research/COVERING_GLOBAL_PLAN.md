@@ -56,75 +56,78 @@ The cheapest next increments:
    case split on the combinatorial type looks unavoidable. Not attempted.
 3. `N = 12` needs everything in the table.
 
-## 3. N = 9: the problem, reduced
+## 3. N = 9
 
-What is proved (literature):
+### 3.1 Proved here, unconditionally (`Spherical/Jucovic9.lean`)
 
-* Wimmer 2017 (DCG 57, 763–781): the combinatorial type of the optimal
-  covering for `N = 9` is determined, and `N = 8` is solved (the optimum is
-  Schütte's 1955 arrangement, per the zbMATH review). THEOREM by the refereed
-  abstract; the body could not be read (paywalled), so the type itself, the
-  method and any computer part are UNVERIFIED. An undated note on the author's
-  web page claims more (both 8 and 9 solved) from a preprint that could not be
-  found; the refereed abstract claims only the type for 9.
-* Lower bound: L. Fejes Tóth's bound gives `ρ₉ ≥ arccos(tan(2π/7)/√3) ≈ 43.61°`
-  (closed form THEOREM; the number is a hand evaluation).
+Jucovič's configuration (Mat.-fyz. časopis 10 (1960), §2, read in the original
+Slovak and checked against its figures): an equilateral triangle `A₀A₁A₂` on
+the equator and the apexes `Bₖ`, `Cₖ` of congruent isosceles triangles over its
+sides, legs `68°58'`, radius `45°53'`; the graph has two edge lengths, `45°53'`
+and `42°38'`, and 12 congruent parts. In coordinates `Aₖ = (cos θₖ, sin θₖ, 0)`,
+`Bₖ = (t cos(θₖ + π/3), t sin(θₖ + π/3), h)`, `Cₖ` mirrored, `t² + h² = 1`.
 
-Best known configuration (NUMERICAL): Rathbun 2020 (arXiv:2008.04441), `D3h`,
-three coplanar equilateral triples, radius `45.8788878287°`, `cos ρ` a root of
-`16x⁸ − 72x⁶ + 129x⁴ − 66x² + 9` (a numerical identification, not proved). The
-gap between the proved lower bound and the best known radius is about `2.27°`.
+| Statement | Theorem |
+| --- | --- |
+| `4t⁴ - 4t³ + 3t² + 4t - 4` is strictly increasing on `[0, ∞)`; its only nonnegative root `t⋆` lies in `(2/3, 1)`, in fact in `(0.7178, 0.7179)` | `jucovicQuartic_strictMonoOn`, `tStar_mem`, `eq_tStar_of_jucovicQuartic`, `tStar_bracket` |
+| `h⋆ = √(1 - t⋆²)` is a root of `16x⁸ - 72x⁶ + 129x⁴ - 66x² + 9` (Rathbun's numerically identified polynomial, now proved for this configuration: it is `f(t⋆) f(-t⋆)` in `h⋆²`) | `hStar_octic` |
+| the nine points lie on `S²` and are distinct | `norm_jucovicVec`, `jucovic_injective` |
+| the 14 faces (two triangles, six slopes, six sides) are supporting planes with the listed vertices, for `1/2 ≤ t ≤ 1` | `jucovic_face_on`, `jucovic_face_supporting` |
+| the covering radius is exactly `arccos h⋆` (`≈ 45.8789°`, a number not used in any proof) | `coveringRadius_jucovicStar` |
+| the ball of radius `h⋆` lies in the hull | `closedBall_subset_hullOf_jucovicStar` |
+| within the family `jucovic t`, `0 < t < 1`, no member does better | `coveringRadius_jucovicStar_le` |
 
-What is not proved: that the `D3h` configuration is optimal within Wimmer's
-type (or at all); uniqueness; the exact algebraic value.
+How the radius is proved: the north pole is a hole (lower bound); for the upper
+bound every direction is mapped by `D₃h` into the sector `0 ≤ y ≤ √3 x`, `z ≥ 0`,
+which is covered by the cones over three faces (`B₀B₁B₂`, `A₀B₀C₀`, `A₀B₂B₀`),
+chosen by two linear tests; a direction over a face whose plane is at distance
+`≥ h⋆` sees a vertex of that face at inner product `≥ h⋆` (`face_support`). The
+face distances at `t⋆` are `h⋆` (triangles and sides, equal by the quartic) and
+more than `h⋆` (slopes, since `t⋆ > 2/3`). The family statement uses the top
+face for `t ≥ t⋆`, the side face (a supporting plane for `t ≥ 1/2`, its distance
+increasing in `t`) for `1/2 ≤ t < t⋆`, and the equatorial hole of depth `60°`
+for `t < 1/2`.
 
-Reduction to finitely many constraints (assessment, not literature): once the
-combinatorial type is fixed (9 vertices, 14 triangles), the covering radius of
-a configuration of that type is the largest angular circumradius of its 14
-triangles, as long as the type stays a Delaunay triangulation. Optimality
-within the type is then a min-max over `(S²)⁹ / SO(3)`, 15 real parameters,
-with 14 circumradius constraints and the Delaunay (empty-circle) conditions,
-all polynomial in the coordinates after squaring.
+Cross-check (NUMERICAL, not used): the archived Hardin–Sloane–Smith coordinates
+for `N = 9` (`cover.3.9.txt`, "putatively optimal", radius `45.8788878°`) have the
+same sorted multiset of 36 inner products as `jucovicStar` to six decimals.
 
-What could verify it, and what each needs:
+### 3.2 Conditional (`coveringRadius_jucovicStar_le_of_reduction`)
 
-* Upper bound: the checker here can certify `ρ₉ ≤` any rational bound above
-  `45.8788878…°` for a rational approximation of the `D3h` configuration
-  (moderate size, by the tetrahedron numbers). Exact `ρ₉` for that
-  configuration needs algebraic arithmetic (the degree-8 polynomial), not more
-  boxes.
-* Local optimality of `D3h` within the type: exact second-order (KKT)
-  conditions at an algebraic point, checkable with exact algebraic numbers.
-* Global optimality within the type: interval branch-and-bound over the 15
-  parameters, or an SOS/Positivstellensatz certificate, both large. This is
-  where the work is.
-* Exhaustiveness: that no other combinatorial type does better. This is
-  Wimmer's result, which would have to be read and re-proved (possibly with a
-  verified enumeration of triangulations, e.g. by plantri, which his
-  references cite).
-* The NACO moment hierarchy (Riener, Rolfes, Vallentin, NACO 16 (2026) 157–170;
-  arXiv:2312.11267) gives lower bounds on the covering number; level 1 equals
-  the volume bound on `S²` (weaker than Fejes Tóth), level 2 is set up but not
-  computed, and finite convergence needs an a priori separation `ε`. The exact
-  rational PSD checking here would carry over, but certificates would have to
-  hold for every radius below the target and over orbits of 4-point sets. At
-  best a new non-sharp lower bound; not a route to `N = 9` optimality.
+`NinePointReduction` (an ordinary hypothesis, not an axiom): every 9-point
+configuration is matched or beaten by some member of the family `jucovic t`.
+Under it, Jucovič's configuration is optimal among all 9-point configurations.
+The hypothesis is not Wimmer's theorem. It combines
 
-Research plan for `N = 9`, in order, each step useful on its own:
+1. an optimal configuration has the combinatorial type of the triaugmented
+   triangular prism (what the abstract of Wimmer 2017 reports; the statement's
+   exact hypotheses and the proof are unread), and
+2. within that type, the optimum lies in the `D₃h`-symmetric family.
 
-1. Obtain and read Wimmer 2017 (needs institutional access). Without the
-   combinatorial type the rest cannot be stated.
-2. Certified upper bound for a rational near-`D3h` configuration with the
-   existing checker (a research-size certificate goes to
-   `LeanGeodesyResearch`, not the routine target).
-3. Exact radius of the `D3h` configuration: prove that the claimed degree-8
-   polynomial vanishes at `cos ρ` for that configuration (algebraic identity),
-   and that the deep holes are the claimed triangles.
-4. Local optimality within the type by exact second-order conditions.
-5. Global optimality within the type: decide between interval arithmetic and
-   SOS after step 4 shows how much slack there is away from the optimum.
-6. Exhaustiveness over types: re-prove Wimmer's reduction.
+A combinatorial type does not fix the symmetry, so (2) does not follow from (1).
 
-The smallest unproved piece is step 4 (or step 3 if the polynomial is wrong);
-the hardest is step 5 together with step 6. Nothing here starts a numerical
-search.
+### 3.3 What is still open, and how it might be attacked
+
+* Step (2), optimality within the combinatorial type without assuming symmetry.
+  Hoehner and Ledford (arXiv:2608.04392, v2) do the analogous thing for the
+  maximum-volume 9-vertex polytope: within the same combinatorial type, they
+  derive the symmetry from equality cases instead of assuming it, by hand,
+  without computer assistance (`HOEHNER_LEDFORD_WIMMER_THESIS.md`). Their
+  volume-specific reductions do not transfer; the pattern does. For covering,
+  the type fixes which 14 triangles are faces, and the radius is the largest of
+  their 14 circumradii; the task is to show that minimizing that maximum over
+  the 15 remaining parameters forces `D₃h` symmetry.
+* Step (1), re-proving the combinatorial type. Wimmer's dissertation (Salzburg
+  1998, author-hosted) is about maximum volume, not covering; the covering
+  classification is in Wimmer 2017, whose body is unread.
+* The lower bound side: L. Fejes Tóth's bound gives `ρ₉ ≥ arccos(tan(2π/7)/√3)
+  ≈ 43.61°`, about `2.27°` below `45.879°`; not formalized (section 2).
+
+Research plan, in order: (a) formalize step (2) for configurations of the
+triaugmented-prism type, starting with local optimality (second-order
+conditions at `jucovicStar`, exact in `ℚ(√3, t⋆)`); (b) global optimality within
+the type, choosing between an equality-case argument in the style of
+Hoehner–Ledford and interval arithmetic once (a) shows the structure; (c) read
+Wimmer 2017 to state step (1) exactly, then decide whether to formalize it or
+keep it a hypothesis. NACO 2025 (moment hierarchy) remains a possible source of
+non-sharp lower bounds, not of `N = 9` optimality.

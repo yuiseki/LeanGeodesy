@@ -9,10 +9,11 @@ Files: `Spherical/Topology.lean` (existing: `coveringRadius`,
 `Spherical/CoveringCert.lean` (checker and its soundness),
 `Spherical/CoveringBenchmarks.lean` (octahedron and tetrahedron),
 `Spherical/CoveringLowerBound.lean` (bounds for every configuration, global
-optimality for `N = 2, 3, 4`),
+optimality for `N = 2, 3, 4`), `Spherical/Jucovic9.lean` (Jucovič's 9-point
+configuration, exact radius, optimality within its symmetric family),
 `scripts/covering_cert/gen_cert.py` (certificate generator).
 
-All four Lean files belong to the routine target `LeanGeodesy`, not to
+All five Lean files belong to the routine target `LeanGeodesy`, not to
 `LeanGeodesyResearch` (ADR-001): the first two are foundations and a reusable
 verifier, and the benchmark certificates are small (they build in seconds).
 A large certificate for a research configuration should go to
@@ -137,8 +138,22 @@ These are global optimality theorems, statements about all configurations;
 for one configuration each. The two are different claims, and only `N = 2, 3, 4`
 have the first kind here. For `N = 6, 12` see `research/COVERING_GLOBAL_PLAN.md`.
 
-## 5. What this does not prove
+## 5. Nine points (`Jucovic9.lean`)
 
+Jucovič's 1960 configuration is formalized exactly: the parameter `t⋆` is the
+root in `(2/3, 1)` of `4t⁴ - 4t³ + 3t² + 4t - 4`, the 14 hull faces are
+certified by supporting planes, and `coveringRadius_jucovicStar` proves the
+covering radius `arccos √(1 - t⋆²)` with no certificate (symmetry, three face
+cones, and a hole). `coveringRadius_jucovicStar_le` proves optimality within the
+one-parameter `D₃h` family only. Optimality among all 9-point configurations is
+stated as `coveringRadius_jucovicStar_le_of_reduction`, conditional on an
+explicit hypothesis that is not Wimmer's theorem; see
+`research/COVERING_GLOBAL_PLAN.md`, section 3.
+
+## 6. What this does not prove
+
+* Optimality of Jucovič's 9-point configuration among all configurations: only
+  conditional (section 5).
 * A certificate is an upper bound for one configuration. It says nothing about
   other configurations, so it never proves global optimality of a configuration.
 * Optimality for `N = 6, 12` (L. Fejes Tóth) is not formalized; `N = 4` is.
