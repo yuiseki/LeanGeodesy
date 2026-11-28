@@ -97,8 +97,14 @@ covering radius is `≥ arccos ρ`. It is `cos_mul_sum_norm_le_of_halfSpaces` wi
 the weights `w_f / κ_f`.
 
 `TTPHarmonic wT wV`: for every configuration of the type and every choice of
-its supporting planes, `Σ_f w_f / d_f ≥ 1/h⋆` over the eight faces active at
-`P⋆` (triangles `wT`, sides `wV`). `TTPOptimal_of_harmonic` (Lean): for any
+supporting planes through its faces (each plane contains the three vertices of
+its face), `Σ_f w_f / d_f ≥ 1/h⋆` over the eight faces active at `P⋆`
+(triangles `wT`, sides `wV`). (Correction, 2026-11-28: the first version of this
+definition, in commit `504e62a`, omitted the condition that the planes pass
+through the vertices; with it omitted, far-away supporting planes make the
+statement false, so the implication `TTPOptimal_of_harmonic` was true but
+empty. The definition now includes the condition; the proof of the
+implication was unaffected.) `TTPOptimal_of_harmonic` (Lean): for any
 `wT, wV ≥ 0` with `2wT + 6wV = 1`, `TTPHarmonic wT wV → TTPOptimal`.
 
 Only the KKT weights `wT = λ_T`, `wV = λ_V` can work (equality at `P⋆` and local

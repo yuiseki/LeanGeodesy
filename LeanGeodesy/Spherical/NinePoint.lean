@@ -177,10 +177,14 @@ def OptimalIsTTP : Prop :=
 /-- The weighted harmonic-mean inequality over the eight faces that are active at
 Jucovič's configuration (two triangles with weight `wT`, six sides with weight
 `wV`), for every configuration of the type and every choice of supporting
-planes (open). -/
+planes through the faces (open). The planes must pass through the three
+vertices of their face: without that, a supporting plane far from the points
+would make `‖N‖ / κ` as small as wanted and the statement false. -/
 def TTPHarmonic (wT wV : ℝ) : Prop :=
   ∀ q : Fin 9 → UnitSphere, ∀ (N : Fin 14 → E3) (κ : Fin 14 → ℝ),
-    (∀ f, 0 < κ f ∧ ∀ i, inner ℝ (N f) (q i).1 ≤ κ f) →
+    (∀ f, 0 < κ f ∧ inner ℝ (N f) (q (jucovicFaceVerts f).1).1 = κ f ∧
+      inner ℝ (N f) (q (jucovicFaceVerts f).2.1).1 = κ f ∧
+      inner ℝ (N f) (q (jucovicFaceVerts f).2.2).1 = κ f ∧ ∀ i, inner ℝ (N f) (q i).1 ≤ κ f) →
       1 / hStar ≤ wT * ‖N 0‖ / κ 0 + wT * ‖N 1‖ / κ 1 + wV * ‖N 8‖ / κ 8 + wV * ‖N 9‖ / κ 9 +
         wV * ‖N 10‖ / κ 10 + wV * ‖N 11‖ / κ 11 + wV * ‖N 12‖ / κ 12 + wV * ‖N 13‖ / κ 13
 
@@ -211,7 +215,7 @@ theorem TTPOptimal_of_harmonic {wT wV : ℝ} (hT : 0 ≤ wT) (hV : 0 ≤ wV)
     (hsum : 2 * wT + 6 * wV = 1) (hH : TTPHarmonic wT wV) : TTPOptimal := by
   intro p ⟨σ, hσ⟩
   rw [← coveringRadius_comp_perm p σ]
-  choose N κ hκ _ _ _ hsupp using hσ
+  choose N κ hκ hv1 hv2 hv3 hsupp using hσ
   have hps := hStar_pos
   let idx : Fin 8 → Fin 14 := ![0, 1, 8, 9, 10, 11, 12, 13]
   let w : Fin 8 → ℝ := ![wT, wT, wV, wV, wV, wV, wV, wV]
@@ -219,7 +223,7 @@ theorem TTPOptimal_of_harmonic {wT wV : ℝ} (hT : 0 ≤ wT) (hV : 0 ≤ wV)
     w (fun k => hκ _) (fun k => by fin_cases k <;> simp [w, hT, hV]) ?_
     (fun k i => hsupp _ i) hps ?_
   · simp [w, Fin.sum_univ_eight]; linarith
-  · have := hH (p ∘ σ) N κ (fun f => ⟨hκ f, hsupp f⟩)
+  · have := hH (p ∘ σ) N κ (fun f => ⟨hκ f, hv1 f, hv2 f, hv3 f, hsupp f⟩)
     simp only [Fin.sum_univ_eight]
     simpa [w, idx] using this
 
