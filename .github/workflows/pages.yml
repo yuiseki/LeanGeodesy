@@ -17,6 +17,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      LEAN_NUM_THREADS: 2
     steps:
       - uses: actions/checkout@v5
       # One cache for the library and every nested project, saved at the end
@@ -37,6 +39,7 @@ jobs:
       - uses: leanprover/lean-action@v1
         with:
           use-github-cache: false
+          build-args: "-j 2"
       - name: Build the Verso book
         working-directory: manual
         run: |

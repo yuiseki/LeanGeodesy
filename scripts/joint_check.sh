@@ -116,7 +116,7 @@ LEAN
 
 lake update
 lake exe cache get
-lake build
+lake build ${LAKE_BUILD_ARGS:-}
 
 if lake env lean False.lean > /dev/null 2>&1; then
   echo "A false statement was accepted: the joint check is not running" >&2
