@@ -43,13 +43,10 @@ import LeanGeodesy.Spherical.DelsarteCert
 import LeanGeodesy.Spherical.ThreePoint
 import LeanGeodesy.Spherical.BachocVallentin
 import LeanGeodesy.Spherical.BachocVallentinCert
-import LeanGeodesy.Spherical.KissingNumber3
 import LeanGeodesy.Spherical.Legendre12
 import LeanGeodesy.Spherical.BachocVallentinCert6
-import LeanGeodesy.Spherical.Tammes18
 import LeanGeodesy.Spherical.Legendre16
 import LeanGeodesy.Spherical.BachocVallentinCert8
-import LeanGeodesy.Spherical.Tammes18BV8
 import LeanGeodesy.CRS.Basic
 import LeanGeodesy.CRS.WGS84
 import LeanGeodesy.CRS.WebMercator

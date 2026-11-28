@@ -1,0 +1,3 @@
+import LeanGeodesy.Spherical.KissingNumber3
+import LeanGeodesy.Spherical.Tammes18
+import LeanGeodesy.Spherical.Tammes18BV8

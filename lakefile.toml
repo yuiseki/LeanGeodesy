@@ -4,7 +4,11 @@ defaultTargets = ["LeanGeodesy"]
 
 [[lean_lib]]
 name = "LeanGeodesy"
-globs = ["LeanGeodesy.*"]
+globs = ["LeanGeodesy", "LeanGeodesy.Axioms"]
+
+[[lean_lib]]
+name = "LeanGeodesyResearch"
+globs = ["LeanGeodesyResearch", "LeanGeodesyResearch.Axioms"]
 
 [[require]]
 name = "mathlib"

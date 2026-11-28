@@ -35,7 +35,9 @@ jobs:
             manual/.lake
             blueprint/.lake
             blueprint-yaruo/.lake
-          key: pages-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', '*/lean-toolchain', '*/lake-manifest.json') }}
+          key: pages-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', '*/lean-toolchain', '*/lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            pages-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', '*/lean-toolchain', '*/lake-manifest.json') }}-
       - uses: leanprover/lean-action@v1
         with:
           use-github-cache: false

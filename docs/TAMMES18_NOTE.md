@@ -99,7 +99,7 @@ and no custom axioms (`LeanGeodesy/Axioms.lean`):
 - **Reduced 7-block numerical `BV(8, 16)` optimum at $s = 317/500$:** `17.87327 < 18` (Clarabel, Chebyshev basis)
 - **Interiority-maximized solve (`bound <= 17.98`):** Clarabel ~61 s; post-projection SPD margin `min_eig = +1.296e-7` vs projection shift `‖ΔM‖₂ ≤ 2.36e-10` (~550× safety margin)
 - **Exact rational certificate:** `dK = 10⁹`, `dR = 10¹⁰`, `dS0 = 33554432000000000000` (20 digits), `dS` 52 digits, `dM6 = 10¹²` (13 digits), exact bound `17979999983 / 10⁹ = 17.979999983 < 18`, zero polynomial residual, all 18 matrices strictly diagonally dominant after Cholesky subtraction
-- **Lean 4 kernel verification:** `cd LeanGeodesy && LEAN_NUM_THREADS=4 lake build LeanGeodesy.Spherical.Tammes18BV8 LeanGeodesy.Axioms` (~19m 49s on Apple Silicon, `Tammes18BV8.lean` 554 lines / ~550 KB)
+- **Lean 4 kernel verification:** `cd LeanGeodesy && LEAN_NUM_THREADS=2 lake build LeanGeodesyResearch` (verifies `KissingNumber3`, `Tammes18`, `Tammes18BV8`, and `LeanGeodesyResearch/Axioms.lean`; see [ADR-001](ADR-001-separate-research-proofs-ci.md) for the separation from routine `lake build`)
 - **Script reproduction (untrusted generator):**
   ```bash
   uv run --with cvxpy --with clarabel --with numpy --with scipy \
