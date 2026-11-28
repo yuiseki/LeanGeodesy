@@ -20,7 +20,8 @@ come from `scripts/covering_cert/gen_cert.py`; Lean re-checks every leaf.
   `cos² r = 1/9`), with 360 leaves. The hole direction `-(1,1,1)/√3` gives the
   lower bound `arccos (1/3)`. The two bounds bracket the covering radius of the
   tetrahedron between `arccos (1/3) ≈ 70.5288°` and `arccos √(11/100) ≈ 70.63°`.
-  (The exact value `arccos (1/3)` is not proved here.)
+  The exact value `arccos (1/3)` is proved separately, without any certificate,
+  from the octahedron (`coveringRadius_tetrahedron4`).
 -/
 
 namespace Geodesy.Spherical
@@ -146,6 +147,78 @@ theorem coveringRadius_tetrahedron4_bounds :
   refine arccos_le_coveringRadius_of_hole (by norm_num) tetrahedron4
     ⟨vec3 (-(1 / √3)) (-(1 / √3)) (-(1 / √3)), hu⟩ (c := 1 / 3) fun i => ?_
   fin_cases i <;> simp only [tetrahedron4, inner_vec3] <;> field_simp <;> nlinarith
+
+/-! ## The tetrahedron exactly, through the octahedron
+
+The six edge midpoints of the regular tetrahedron are the vertices of the
+regular octahedron scaled by `1/√3`. So the hull of the tetrahedron contains
+`1/√3` times the hull of the octahedron, which contains the ball of radius
+`1/√3` (the octahedron covers at `arccos (1/√3)`); scaling, the hull of the
+tetrahedron contains the ball of radius `1/3`, and the tetrahedron covers at
+`arccos (1/3)`. No certificate is involved. -/
+
+/-- Each vertex of the octahedron, scaled by `1/√3`, is the midpoint of an edge
+of the tetrahedron. -/
+theorem octahedron6_scaled_mem_hullOf_tetrahedron4 (k : Fin 6) :
+    (1 / √3) • (octahedron6 k).1 ∈ hullOf tetrahedron4 := by
+  have mid : ∀ i j : Fin 4,
+      (1 / 2 : ℝ) • (tetrahedron4 i).1 + (1 / 2 : ℝ) • (tetrahedron4 j).1 ∈
+        hullOf tetrahedron4 := fun i j =>
+    convex_convexHull ℝ (Set.range fun i => (tetrahedron4 i).1)
+      (subset_convexHull ℝ _ (Set.mem_range_self i)) (subset_convexHull ℝ _ (Set.mem_range_self j))
+      (by norm_num) (by norm_num) (by norm_num)
+  fin_cases k
+  · convert mid 0 1 using 1
+    simp only [octahedron6, tetrahedron4, vec3_smul, vec3_add]; apply vec3_congr <;> ring
+  · convert mid 2 3 using 1
+    simp only [octahedron6, tetrahedron4, vec3_smul, vec3_add]; apply vec3_congr <;> ring
+  · convert mid 0 2 using 1
+    simp only [octahedron6, tetrahedron4, vec3_smul, vec3_add]; apply vec3_congr <;> ring
+  · convert mid 1 3 using 1
+    simp only [octahedron6, tetrahedron4, vec3_smul, vec3_add]; apply vec3_congr <;> ring
+  · convert mid 0 3 using 1
+    simp only [octahedron6, tetrahedron4, vec3_smul, vec3_add]; apply vec3_congr <;> ring
+  · convert mid 1 2 using 1
+    simp only [octahedron6, tetrahedron4, vec3_smul, vec3_add]; apply vec3_congr <;> ring
+
+/-- The ball of radius `1/√3` lies in the hull of the octahedron. -/
+theorem closedBall_subset_hullOf_octahedron6 :
+    Metric.closedBall (0 : E3) (1 / √3) ⊆ hullOf octahedron6 := by
+  have h := isCovering_coveringRadius (by norm_num : 1 ≤ 6) octahedron6
+  rw [coveringRadius_octahedron6] at h
+  have hpos : (0 : ℝ) ≤ 1 / √3 := by positivity
+  have hle : 1 / √3 ≤ 1 := by
+    rw [div_le_one (sqrt_pos.2 (by norm_num))]
+    exact one_le_sqrt.2 (by norm_num)
+  have hsub := (isCovering_iff_closedBall_subset_hullOf octahedron6 (arccos_nonneg _)
+    (arccos_le_pi_div_two.2 hpos)).1 h
+  rwa [cos_arccos (by linarith) hle] at hsub
+
+/-- The ball of radius `1/3` lies in the hull of the tetrahedron. -/
+theorem closedBall_subset_hullOf_tetrahedron4 :
+    Metric.closedBall (0 : E3) (1 / 3) ⊆ hullOf tetrahedron4 := by
+  have hS : hullOf octahedron6 ⊆ (fun z => (1 / √3 : ℝ) • z) ⁻¹' hullOf tetrahedron4 :=
+    convexHull_min (by rintro _ ⟨k, rfl⟩; exact octahedron6_scaled_mem_hullOf_tetrahedron4 k)
+      ((convex_convexHull ℝ _).smul_preimage _)
+  intro y hy
+  have h3pos : 0 < √3 := sqrt_pos.2 (by norm_num)
+  have h3 : √3 * √3 = 3 := mul_self_sqrt (by norm_num)
+  have hy' : √3 • y ∈ Metric.closedBall (0 : E3) (1 / √3) := by
+    rw [mem_closedBall_zero_iff] at hy ⊢
+    rw [norm_smul, Real.norm_eq_abs, abs_of_pos h3pos]
+    calc √3 * ‖y‖ ≤ √3 * (1 / 3) := mul_le_mul_of_nonneg_left hy h3pos.le
+      _ = 1 / √3 := by field_simp; linarith
+  have hmem := hS (closedBall_subset_hullOf_octahedron6 hy')
+  simp only [Set.mem_preimage, smul_smul] at hmem
+  rwa [one_div, inv_mul_cancel₀ h3pos.ne', one_smul] at hmem
+
+/-- The covering radius of the regular tetrahedron is exactly `arccos (1/3)`. -/
+theorem coveringRadius_tetrahedron4 :
+    coveringRadius (by norm_num : 1 ≤ 4) tetrahedron4 = arccos (1 / 3) := by
+  refine le_antisymm ?_ coveringRadius_tetrahedron4_bounds.1
+  rw [coveringRadius_le_iff_closedBall_subset_hullOf _ _ (arccos_nonneg _)
+    (arccos_le_pi_div_two.2 (by norm_num)), cos_arccos (by norm_num) (by norm_num)]
+  exact closedBall_subset_hullOf_tetrahedron4
 
 /-! ## Rejected certificates -/
 
