@@ -39,7 +39,6 @@ jobs:
       - uses: leanprover/lean-action@v1
         with:
           use-github-cache: false
-          build-args: "-j 2"
       - name: Build the Verso book
         working-directory: manual
         run: |

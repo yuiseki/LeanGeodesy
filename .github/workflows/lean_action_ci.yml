@@ -14,8 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: leanprover/lean-action@v1
-        with:
-          build-args: "-j 2"
       - name: No sorry or admit
         run: |
           if grep -R -nE '\b(sorry|admit)\b' LeanGeodesy LeanGeodesy.lean; then
@@ -35,7 +33,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       LEAN_NUM_THREADS: 2
-      LAKE_BUILD_ARGS: "-j 2"
 
     steps:
       - uses: actions/checkout@v5
