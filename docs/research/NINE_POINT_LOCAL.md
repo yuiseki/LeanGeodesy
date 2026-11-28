@@ -435,7 +435,15 @@ earlier counts (524, 21) are not reused as evidence.
   `TTPHarmonic`, hence `TTPOptimal`, in Lean.
 * `JucovicSubMinimal`: three two-dimensional statements, necessary for
   `ReducedHarmonic` and sufficient for its equality at Jucovič's `B`, `C`.
-  The natural first target.
+  The natural first target. At Jucovič's `B`, `C` the edges `BₖCₖ` are
+  vertical, so every plane through one is vertical and its distance is the
+  planar distance from the origin to the line through `ℓᵢ` (the foot of the
+  edge, at radius `t⋆`) and the projection `P` of `Aₖ`. Numerical
+  (`400`-step grid over the unit disk, no supporting condition imposed): the
+  minimum of `1/d(O, Pℓ₁) + 1/d(O, Pℓ₂)` over `|P| ≤ 1` is `2/h⋆`, at
+  `P = (1, 0)`, Jucovič's `A₀`. So `JucovicSubMinimal` would follow from this
+  planar inequality alone, without the supporting conditions; a proof is
+  not attempted here.
 * Not proved in Lean: uniqueness of the triangle planes, the equivalence of
   `IsTTPSupported` with the face-lattice definition, the converse of the
   Gram condition, the existence of subproblem minima.
