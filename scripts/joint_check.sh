@@ -8,6 +8,15 @@
 # It fails if the three pin different Lean toolchains or Mathlib revisions, if
 # the joint project does not build, or if a deliberately false line is not
 # rejected (which would mean the check itself is not running).
+#
+# The joint project is the library in LeanGeodesy's `joint/` directory
+# (`Joint.lean` and `Joint/*.lean`): the theorems that join the three
+# libraries (one plane, one space, one unit sphere, the projections, the
+# metric and topological correspondences, and a worked cross-library proof),
+# with its own axiom audit (`Joint/Axioms.lean`). None of the three libraries
+# imports another; only this throwaway project imports all three.
+#
+# This script is identical in the three repositories.
 set -euo pipefail
 
 geodesy=$(cd "$1" && pwd)
@@ -43,6 +52,7 @@ defaultTargets = ["Joint"]
 
 [[lean_lib]]
 name = "Joint"
+globs = ["Joint", "Joint.*"]
 
 [[require]]
 name = "lean-geodesy"
@@ -57,54 +67,9 @@ name = "lean-computational-geometry"
 path = "$compgeom"
 TOML
 
-cat > Joint.lean <<'LEAN'
-import LeanGeodesy
-import LeanGeospatial
-import LeanComputationalGeometry
-
-/-! The three libraries' planes are one type, Mathlib's Euclidean plane. -/
-
-example : Geodesy.E2 = Geospatial.Point2D := rfl
-example : Geodesy.E2 = ComputationalGeometry.Point2D := rfl
-example : Geospatial.Point2D = ComputationalGeometry.Point2D := rfl
-
-/-- A point a LeanGeodesy projection draws is a point of a LeanGeospatial
-region, with no conversion. -/
-example (R φ lam : ℝ) (A : Geospatial.Region) : Prop :=
-  Geodesy.Projection.mercator R φ lam ∈ A
-
-/-- LeanGeospatial's distance is Mathlib's distance on that plane. -/
-example (p q : Geodesy.E2) : Geospatial.distance p q = dist p q := rfl
-
-/-- Points that LeanGeodesy's Mercator projection draws feed
-LeanComputationalGeometry's orientation test directly. -/
-example (R φ₁ l₁ φ₂ l₂ φ₃ l₃ : ℝ) :
-    ComputationalGeometry.orient (Geodesy.Projection.mercator R φ₂ l₂)
-        (Geodesy.Projection.mercator R φ₁ l₁) (Geodesy.Projection.mercator R φ₃ l₃) =
-      -ComputationalGeometry.orient (Geodesy.Projection.mercator R φ₁ l₁)
-        (Geodesy.Projection.mercator R φ₂ l₂) (Geodesy.Projection.mercator R φ₃ l₃) :=
-  ComputationalGeometry.orient_swap₁₂ _ _ _
-
-/-- Two Mercator maps of one globe at different scales differ by a
-homeomorphism of the plane, so they agree on every RCC8 relation between the
-areas drawn on them. -/
-example (R₁ R₂ : ℝ) (h₁ : R₁ ≠ 0) (h₂ : R₂ ≠ 0)
-    (A B : Geospatial.RegularClosedRegion Geospatial.Point2D)
-    (r : Geospatial.RCC8.Relation) :
-    let e := (Geodesy.Projection.mercatorHomeomorph R₁ h₁).symm.trans
-      (Geodesy.Projection.mercatorHomeomorph R₂ h₂)
-    r.holds (A.map e) (B.map e) ↔ r.holds A B :=
-  Geospatial.RCC8.Relation.holds_map_iff _ A B r
-
-/-- On the globe itself: the RCC8 relation between two areas of the Web
-Mercator chart (latitude and longitude, cut along the antimeridian) is the
-relation between their images on the map. -/
-example (A B : Geospatial.RegularClosedRegion Geodesy.Projection.webMercatorChart)
-    (r : Geospatial.RCC8.Relation) :
-    r.holds (A.map Geodesy.Projection.webMercatorHomeomorph)
-      (B.map Geodesy.Projection.webMercatorHomeomorph) ↔ r.holds A B :=
-  Geospatial.RCC8.Relation.holds_map_iff _ A B r
-LEAN
+rm -rf Joint Joint.lean
+cp -R "$geodesy/joint/Joint" Joint
+cp "$geodesy/joint/Joint.lean" Joint.lean
 
 cat > False.lean <<'LEAN'
 import LeanGeodesy
@@ -122,4 +87,4 @@ if lake env lean False.lean > /dev/null 2>&1; then
   echo "A false statement was accepted: the joint check is not running" >&2
   exit 1
 fi
-echo "LeanGeodesy, LeanGeospatial and LeanComputationalGeometry share one plane"
+echo "LeanGeodesy, LeanGeospatial and LeanComputationalGeometry share one plane, one space and one sphere"
