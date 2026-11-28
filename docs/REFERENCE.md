@@ -64,6 +64,30 @@ and `ellipsoid_self` proves that an ellipsoid with equal radii is exactly the
 sphere of that radius. The rest of the library works on the ellipsoid, and
 this is the bridge back to the spherical picture.
 
+`SphereEllipsoid` makes the bridge explicit for unequal radii. The unit
+sphere is a set (`sphere 1 = Metric.sphere 0 1`) and, separately, a type: the
+library's `UnitSphere := {x : E3 // ‖x‖ = 1}` and Mathlib's subtype of the set
+are homeomorphic by the identity on points (`unitSphereHomeomorph`). Scaling
+by `R` maps the unit sphere onto the sphere of radius `R` (`sphereScale`,
+distances times `R`). The linear map `axisScale a b = diag(a, a, b)` maps the
+unit sphere onto the ellipsoid (`axisScale_image_metricSphere`), giving a
+homeomorphism (`sphereEllipsoidHomeomorph`, `ReferenceEllipsoid.sphereHomeomorph`)
+that moves distances by factors between `b` and `a`, both attained
+(`dist_axisScale_bounds`, `dist_axisScale_equator`, `dist_axisScale_poles`), so
+the ellipsoid is compact and connected like the sphere. This linear
+correspondence keeps the *parametric* latitude, not the geodetic one: the
+sphere point at latitude `β` goes to the ellipsoid point of parametric latitude
+`β` (`axisScale_spherePoint`), the ellipsoid point of geodetic latitude `φ` is
+the image of parametric latitude `arctan ((b / a) tan φ)`
+(`ellipsoidPoint_eq_axisScale_spherePoint`), and for a flattened ellipsoid the
+geodetic latitude is never kept strictly between the equator and the poles
+(`axisScale_spherePoint_ne_ellipsoidPoint`). `StereographicMercator` writes the
+polar stereographic projection through the Mercator ordinate,
+`2 R exp (-y) (cos λ, sin λ)` (`stereographic_eq_mercator`, false at the pole
+where Mathlib's `tan (π / 2) = 0`), and `ChordApprox` bounds the error of the
+chord as an approximation of the arc on the unit sphere by `θ³ / 24`
+(`geoDist_sub_chordDist_le`).
+
 ### ReferenceEllipsoid
 
 A geodetic datum fixes its ellipsoid by two numbers, the semi-major axis `a`
@@ -804,6 +828,9 @@ other file refers to the labels.
 | --- | --- |
 | `LeanGeodesy/Angle.lean` | Degrees, radians, degrees-minutes-seconds |
 | `LeanGeodesy/Surface.lean` | Points in space, spheres, ellipsoids of revolution |
+| `LeanGeodesy/SphereEllipsoid.lean` | Unit sphere as set and as type, spheres of radius `R`, the linear homeomorphism onto the ellipsoid, its distance bounds, parametric vs geodetic latitude |
+| `LeanGeodesy/SphereEllipsoid/StereographicMercator.lean` | Polar stereographic through the Mercator ordinate |
+| `LeanGeodesy/SphereEllipsoid/ChordApprox.lean` | Arc minus chord at most `θ³ / 24` |
 | `LeanGeodesy/ReferenceEllipsoid.lean` | `a`, `f` and the derived `b`, `e²`, `e'²` |
 | `LeanGeodesy/WGS84.lean` | WGS 84 and GRS 80, with bounds on derived values |
 | `LeanGeodesy/GeodeticLongitude.lean` | Longitude as an angle modulo a full turn |

@@ -62,3 +62,6 @@ import LeanGeodesy.CRS.WebMercator
 import LeanGeodesy.CRS.WebMercatorConversion
 import LeanGeodesy.CRS.Transformation
 import LeanGeodesy.CRS.EPSG
+import LeanGeodesy.SphereEllipsoid
+import LeanGeodesy.SphereEllipsoid.StereographicMercator
+import LeanGeodesy.SphereEllipsoid.ChordApprox

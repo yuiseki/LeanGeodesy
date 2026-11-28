@@ -2246,3 +2246,123 @@ This file is not imported by `LeanGeodesy`; the library's glob builds it.
 /-- info: 'Geodesy.Spherical.jucovicSubMinimal_of_reduced' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs (whitespace := lax) in
 #print axioms Geodesy.Spherical.jucovicSubMinimal_of_reduced
+
+/-- info: 'Geodesy.SphereEllipsoid.sphere_one_eq_setOf' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.sphere_one_eq_setOf
+
+/-- info: 'Geodesy.SphereEllipsoid.unitSphereHomeomorph' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.unitSphereHomeomorph
+
+/-- info: 'Geodesy.SphereEllipsoid.sphereScale' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.sphereScale
+
+/-- info: 'Geodesy.SphereEllipsoid.dist_sphereScale' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.dist_sphereScale
+
+/-- info: 'Geodesy.SphereEllipsoid.axisScaleEquiv' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.axisScaleEquiv
+
+/-- info: 'Geodesy.SphereEllipsoid.axisScale_image_sphere' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.axisScale_image_sphere
+
+/-- info: 'Geodesy.SphereEllipsoid.axisScale_image_metricSphere' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.axisScale_image_metricSphere
+
+/-- info: 'Geodesy.SphereEllipsoid.sphereEllipsoidHomeomorph' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.sphereEllipsoidHomeomorph
+
+/-- info: 'Geodesy.ReferenceEllipsoid.sphereHomeomorph' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.sphereHomeomorph
+
+/-- info: 'Geodesy.ReferenceEllipsoid.unitSphereHomeomorph' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.unitSphereHomeomorph
+
+/-- info: 'Geodesy.SphereEllipsoid.dist_axisScale_bounds' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.dist_axisScale_bounds
+
+/-- info: 'Geodesy.SphereEllipsoid.lipschitzWith_axisScale' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.lipschitzWith_axisScale
+
+/-- info: 'Geodesy.SphereEllipsoid.dist_axisScale_equator' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.dist_axisScale_equator
+
+/-- info: 'Geodesy.SphereEllipsoid.dist_axisScale_poles' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.dist_axisScale_poles
+
+/-- info: 'Geodesy.SphereEllipsoid.isCompact_ellipsoid' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.isCompact_ellipsoid
+
+/-- info: 'Geodesy.SphereEllipsoid.isConnected_ellipsoid' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.isConnected_ellipsoid
+
+/-- info: 'Geodesy.SphereEllipsoid.isClosed_ellipsoid' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.isClosed_ellipsoid
+
+/-- info: 'Geodesy.ReferenceEllipsoid.isCompact_toSet' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.isCompact_toSet
+
+/-- info: 'Geodesy.ReferenceEllipsoid.isConnected_toSet' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.ReferenceEllipsoid.isConnected_toSet
+
+/-- info: 'Geodesy.SphereEllipsoid.axisScale_spherePoint' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.axisScale_spherePoint
+
+/-- info: 'Geodesy.SphereEllipsoid.axisScale_spherePoint_ne_ellipsoidPoint' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.axisScale_spherePoint_ne_ellipsoidPoint
+
+/-- info: 'Geodesy.SphereEllipsoid.ellipsoidPoint_eq_axisScale_spherePoint' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.ellipsoidPoint_eq_axisScale_spherePoint
+
+/-- info: 'Geodesy.SphereEllipsoid.exists_parametricLatitude' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.exists_parametricLatitude
+
+/-- info: 'Geodesy.SphereEllipsoid.axisScale_spherePoint_eq_ellipsoidPoint_of_f_eq_zero' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.axisScale_spherePoint_eq_ellipsoidPoint_of_f_eq_zero
+
+/-- info: 'Geodesy.SphereEllipsoid.axisScale_spherePoint_zero_eq_ellipsoidPoint' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.axisScale_spherePoint_zero_eq_ellipsoidPoint
+
+/-- info: 'Geodesy.SphereEllipsoid.axisScale_spherePoint_pi_div_two_eq_ellipsoidPoint' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.axisScale_spherePoint_pi_div_two_eq_ellipsoidPoint
+
+/-- info: 'Geodesy.SphereEllipsoid.exp_mercatorY' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.exp_mercatorY
+
+/-- info: 'Geodesy.SphereEllipsoid.stereographic_eq_mercator' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.stereographic_eq_mercator
+
+/-- info: 'Geodesy.SphereEllipsoid.stereographic_eq_mercator_fails_at_northPole' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.stereographic_eq_mercator_fails_at_northPole
+
+/-- info: 'Geodesy.SphereEllipsoid.geoDist_sub_chordDist_le' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs (whitespace := lax) in
+#print axioms Geodesy.SphereEllipsoid.geoDist_sub_chordDist_le

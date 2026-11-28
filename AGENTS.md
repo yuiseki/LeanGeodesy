@@ -75,20 +75,19 @@ What joins them:
   because areas live in any space, the relations between areas of the globe
   itself (the Web Mercator chart) are those between their images on the map.
 
-Checking the link. `scripts/joint_check.sh`, identical in both repositories,
-builds a throwaway project that requires both libraries by path. It fails if
-the two pin different toolchains or Mathlib revisions, or if these no longer
-hold:
-
-```lean
-example : Geodesy.E2 = Geospatial.Point2D := rfl
-example (R φ lam : ℝ) (A : Geospatial.Region) : Prop :=
-  Geodesy.Projection.mercator R φ lam ∈ A
-example (p q : Geodesy.E2) : Geospatial.distance p q = dist p q := rfl
-```
-
-and it checks that LeanGeospatial's `RCC8.Relation.holds_map_iff` applies to
-the transition between two Mercator maps built by LeanGeodesy.
+Checking the link. `scripts/joint_check.sh`, identical in the three
+repositories, builds a throwaway project that requires the three libraries by
+path and builds the joint library in this repository's `joint/` directory
+(`joint/Joint.lean`, `joint/Joint/*.lean`). That library is where theorems that
+need two or three of the libraries live, since none of them imports another:
+one plane, one space and one unit sphere (`rfl`, and the homeomorphism between
+the sphere as a subtype and `UnitSphere`), the correspondence of the
+stereographic, gnomonic and radial projections, spherical Voronoi cells for
+geodesic and chord distance, RCC8 and DE-9IM on the sphere and the ellipsoid,
+and a worked proof that decides a question about great-circle arcs with
+LeanComputationalGeometry's exact segment test. It has its own axiom audit
+(`joint/Joint/Axioms.lean`). The check fails if the three pin different
+toolchains or Mathlib revisions, or if the joint library does not build.
 
 It also feeds Lean a deliberately false line and fails if that is accepted,
 so a check that silently stopped running cannot pass. CI runs it in the
@@ -147,6 +146,8 @@ machine, set `LEAN_NUM_THREADS` low.
 - `LeanGeodesy/`: the library. `Surface.lean` defines space `E3` and the
   plane `E2`; `Projection/` holds the map projections; `Tiles/` the tile
   grid and spatial orders; `CRS/` coordinate reference systems.
+- `joint/`: the joint library built only by `scripts/joint_check.sh`, which
+  imports all three sibling libraries. It is not part of this package's build.
 - `docs/REFERENCE.md`: the layer-by-layer account and the list of files.
   Keep it in step with the code.
 - `docs/COVERING.md`: certified spherical covering (what is proved, the certificate format, its limits); `docs/research/` holds literature surveys of the open problems and the choice of the next one, not proofs
