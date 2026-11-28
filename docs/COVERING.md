@@ -10,6 +10,12 @@ Files: `Spherical/Topology.lean` (existing: `coveringRadius`,
 `Spherical/CoveringBenchmarks.lean` (octahedron and tetrahedron),
 `scripts/covering_cert/gen_cert.py` (certificate generator).
 
+All three Lean files belong to the routine target `LeanGeodesy`, not to
+`LeanGeodesyResearch` (ADR-001): the first two are foundations and a reusable
+verifier, and the benchmark certificates are small (they build in seconds).
+A large certificate for a research configuration should go to
+`LeanGeodesyResearch` instead.
+
 ## 1. Exact reformulations (`Covering.lean`)
 
 For a configuration `p : Fin n → UnitSphere` and `0 ≤ r ≤ π`:
