@@ -52,6 +52,7 @@ import LeanGeodesy.Spherical.BachocVallentinCert8
 import LeanGeodesy.Spherical.Tammes18BV8
 import LeanGeodesy.Spherical.Covering
 import LeanGeodesy.Spherical.CoveringCert
+import LeanGeodesy.Spherical.CoveringBenchmarks
 import LeanGeodesy.CRS.Basic
 import LeanGeodesy.CRS.WGS84
 import LeanGeodesy.CRS.WebMercator

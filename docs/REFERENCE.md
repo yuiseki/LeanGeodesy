@@ -854,6 +854,9 @@ other file refers to the labels.
 | `LeanGeodesy/Spherical/Legendre16.lean` | Legendre polynomials `P₀..P₁₆`, positive semidefiniteness via the `bvQ` addition theorem (`sum_legendreP16_nonneg`), and Chebyshev-basis `bachocVallentin_cheb_bound_with_legendre16` |
 | `LeanGeodesy/Spherical/BachocVallentinCert8.lean` | Kernel-decidable exact rational degree-8 + Legendre `P₁..P₁₆` Bachoc–Vallentin SDP certificate verifier (`BVCert8`, `BVCert8.sound`) with trimmed lower-triangular Cholesky (`isCholeskyDDLower`) |
 | `LeanGeodesy/Spherical/Tammes18BV8.lean` | Certified rational degree-8 + `P₁..P₁₆` SDP proof of `A(3, 317/500) ≤ 17`, `T(18) < arccos(317/500) < 50.655°`, and `robinson18_strict_improvement` (strictly improves R. M. Robinson 1961's `50.68095°`) |
+| `LeanGeodesy/Spherical/Covering.lean` | Covering by caps as inner products (`mem_closedCap_iff`), as the support function of the convex hull (`isCovering_iff_inner_support`), as containment of the ball of radius `cos r` in the hull (`isCovering_iff_closedBall_subset_hullOf`), supporting-plane lower bound (`cos_le_of_supportPlane`), spherical Voronoi cells as half-space intersections, repeated and degenerate configurations; see `docs/COVERING.md` |
+| `LeanGeodesy/Spherical/CoveringCert.lean` | Exact rational covering-radius checker: `CoverTree` subdivisions of the six cube faces, `checkCover`, `checkCover_sound`, `coveringRadius_le_of_checkCover`; no hull or facet list needed |
+| `LeanGeodesy/Spherical/CoveringBenchmarks.lean` | Octahedron (`coveringRadius_octahedron6`, exact) and tetrahedron (bracketed) certificates, hole lower bounds, `*_rejects_above` and rejected-certificate tests |
 | `LeanGeodesy/CRS/Basic.lean` | Geographic and projected CRSs as mathematical objects |
 | `LeanGeodesy/CRS/WGS84.lean` | The WGS 84 geographic CRS |
 | `LeanGeodesy/CRS/WebMercator.lean` | The Web Mercator projected CRS over WGS 84 |

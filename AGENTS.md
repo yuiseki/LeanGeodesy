@@ -136,6 +136,7 @@ machine, set `LEAN_NUM_THREADS` low.
   grid and spatial orders; `CRS/` coordinate reference systems.
 - `docs/REFERENCE.md`: the layer-by-layer account and the list of files.
   Keep it in step with the code.
+- `docs/COVERING.md`: certified spherical covering (what is proved, the certificate format, its limits); `docs/research/` holds literature surveys of the open problems and the choice of the next one, not proofs
 - `docs/LEAN_RS.md`: which computable definitions could be compiled to Rust
   with lean-rs, the theorems that would describe them, and what blocks it.
   When you change one of the definitions it lists, or the imports of
